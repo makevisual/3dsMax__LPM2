@@ -1,0 +1,1 @@
+LPM_VersionNumber = "2.5.2"

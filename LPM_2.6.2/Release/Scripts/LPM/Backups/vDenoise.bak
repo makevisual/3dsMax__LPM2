@@ -1,0 +1,431 @@
+clearListener()
+
+global LPM_Vdenoise_Info
+
+struct LPM_Vdenoise_Info_Str --Holds all the job information to write
+(
+
+	SubmitDir = "C:\\temp", --Where to store temp files
+	TempDataDir = (SubmitDir + "\\JobOutput1.txt"),
+	vdEnabled = false,
+	vdJobArray = #(),
+	vdOutputDirHold = "",
+	vdSuspendState = false,
+
+--Job Info
+	dlPlugin = "Plugin=VDenoise",
+	vdFrames = "Frames=",
+	MachineID = "MachineName=",
+	JobName = "Name=",
+	vdPriority = "Priority=95",
+	vdDependency = "JobDependency0=",
+	User = "UserName=",
+	vdJobBatch = "BatchName=",
+	
+--Plugin Info
+
+	ElementsBool = "DenoiseElements=True",
+	Mode = "DenoiseMode=Default",
+	UIStickyMode = 2,
+	fBlend = "FrameBlend=1",
+	PathOut = "InputPath=????.exr",
+	Radius = "PixelRadius=10.0",
+	Strips = "RenderStrips=-1",
+	Existing = "SkipExisting=False",
+	Strength = "Strength=1.0",
+	Threshhold = "Threshold=0.001",
+	FramesBool = "UsingFrames=True"
+
+)
+
+struct LPM_Vdenoise_Job_Str -- Struct for storing Jobinfo and Plugininfo locations
+(
+
+	ParentJobID = "",
+	JobInfoFile = "",
+	PluginInfoFile = "",
+	vdRenderable = true,
+	vdJobOutput = ""
+
+)
+function vdGetJobInfo qJobID = --Gathers information from Deadline about the most recently submitted job. (Called in WriteJobFiles function)
+(
+
+	vdRenCheck = #()
+
+
+	--print ("Getting Job Information")
+
+	HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" -getjobdetails " + qJobID as string + " > " + LPM_Vdenoise_Info.TempDataDir) --Outputs job information to temp text file
+
+	--Parse temp text file for information and add data to struct variables
+
+	LPM_Vdenoise_Info.vdDependency = ("JobDependency0=" + qJobID)
+
+
+	qResult = openFile (LPM_Vdenoise_Info.TempDataDir)
+
+
+	skipToString qResult "Name:"
+
+	vdNameTemp = readLine qResult
+
+	LPM_Vdenoise_Info.JobName = ("Name=" + vdNameTemp + "__Vedenoise_Post_Process")
+
+	vdRenCheck = filterString vdNameTemp  "_"
+
+	if vdRenCheck[vdRenCheck.count] == "Utility" then --Marks probable utility passes so that they're not submitted
+	(
+		qJobInfoOutput = false
+	)
+	else (qJobInfoOutput = true)
+
+
+	seek qResult 0 
+
+	skipToString qResult "User:"
+
+	LPM_Vdenoise_Info.User = ("UserName=" + readLine qResult)
+
+
+	seek qResult 0 
+
+	skipToString qResult "Submit Machine:"
+
+	LPM_Vdenoise_Info.MachineID = ("MachineName=" + readLine qResult)
+
+
+	seek qResult 0 
+
+	skipToString qResult "Frames:"
+
+	LPM_Vdenoise_Info.vdFrames = ("Frames=" + readLine qResult)
+
+
+	seek qResult 0 
+
+	skipToString qResult "Output Path 1:"
+
+	vdPTemp = readLine qResult
+
+	seek qResult 0 
+
+	skipToString qResult "Output File 1:"
+
+
+	LPM_Vdenoise_Info.PathOut = ("InputPath=" + vdPTemp + "\\" + (substituteString (readLine qResult) "#" "?" )) --Configures input path - frame number wild cards changed to "?"
+
+	LPM_Vdenoise_Info.vdOutputDirHold = (substituteString (LPM_Vdenoise_Info.PathOut) "?" "" )
+
+	seek qResult 0
+
+	skipToString qResult "Batch Name:"
+
+	LPM_Vdenoise_Info.vdJobBatch = ("BatchName="+readLine qResult)
+
+
+	seek qResult 0
+
+
+
+	close qResult
+
+
+
+	deleteFile LPM_Vdenoise_Info.TempDataDir -- Removes temp text file
+
+
+
+	return qJobInfoOutput
+
+)
+
+
+function WriteJobFiles inputJobID = --Writes all collected information to the Jobinfo and Plugininfo Files
+(
+	vdrCheck = true
+	makeDir LPM_Vdenoise_Info.SubmitDir
+
+	vdrCheck = vdGetJobInfo(inputJobID)
+
+	WriteOutput = #()
+
+	vdJobID = Random 10000 99999
+
+	if LPM_Vdenoise_Info.vdEnabled == True then
+	(
+
+		InfoFile = createfile (LPM_Vdenoise_Info.SubmitDir + "\\vdJob_Info_" + vdJobID as string + ".job")
+	
+		PluginFile = createFile (LPM_Vdenoise_Info.SubmitDir + "\\vdPlugin_Info_" + vdJobID as string + ".job")
+
+	)
+
+	append WriteOutput (LPM_Vdenoise_Info.SubmitDir + "\\vdJob_Info_" + vdJobID as string + ".job")
+
+	append WriteOutput (LPM_Vdenoise_Info.SubmitDir + "\\vdPlugin_Info_" + vdJobID as string + ".job")
+
+	append WriteOutput vdrCheck
+
+	vdTempTrim = (trimleft (LPM_Vdenoise_Info.vdOutputDirHold) "InputPath")
+
+	append WriteOutput (trimLeft vdTempTrim "=")
+
+
+	if LPM_Vdenoise_Info.vdEnabled == True then
+	--Write Info File
+	(
+		Format "%\n" LPM_Vdenoise_Info.dlPlugin to: InfoFile
+		Format "%\n" LPM_Vdenoise_Info.vdFrames to: InfoFile
+		Format "%\n" LPM_Vdenoise_Info.MachineID to: InfoFile
+		Format "%\n" LPM_Vdenoise_Info.JobName to: InfoFile
+		Format "%\n" LPM_Vdenoise_Info.vdDependency to: InfoFile
+		Format "%\n" LPM_Vdenoise_Info.vdPriority to: InfoFile
+		Format "%\n" LPM_Vdenoise_Info.vdJobBatch to: InfoFile
+		Format "%" LPM_Vdenoise_Info.User to: InfoFile
+	
+	--Write Plugin File
+	
+		Format "%\n" LPM_Vdenoise_Info.ElementsBool to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.Mode to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.fBlend to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.PathOut to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.Radius to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.Strips to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.Existing to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.Strength to: PluginFile
+		Format "%\n" LPM_Vdenoise_Info.Threshhold to: PluginFile
+		Format "%" LPM_Vdenoise_Info.FramesBool to: PluginFile
+	
+	
+	
+		close InfoFile
+	
+		close PluginFile
+	)
+	return WriteOutput
+
+)
+
+function VdenoiseSubmitJobs JobArray = --Submits .job files through Deadlinecommand.exe 
+(
+	for i=1 to JobArray.count do
+	(
+
+		if JobArray[i].vdRenderable == true then
+		(
+
+			HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" " + JobArray[i].JobInfoFile + " " + JobArray[i].PluginInfoFile)
+		
+		)
+
+		deleteFile JobArray[i].JobInfoFile -- Removes temp files
+
+		deleteFile JobArray[i].PluginInfoFile -- Removes temp files
+
+	)
+)
+
+fn vdGenerateElement = --Creates vdenoise render element(s)
+(
+
+	re = maxOps.GetCurRenderElementMgr()
+
+	ElementArray = #()
+
+	if re.NumRenderElements() > 0 then -- Looks through render elements and deletes vDenoise elements created by the submitter (Others will be left alone)
+	(
+		for i = 0 to re.NumRenderElements() - 1 do
+		(
+	
+			append ElementArray ( re.GetRenderElement i )
+	
+		)
+	
+		for d = 1 to ElementArray.count do
+		(
+			if ElementArray[d].elementName == "AutoGen_DenoiseElement" then
+			(
+	
+				re.RemoveRenderElement ElementArray[d]
+			)
+		)
+	)
+
+
+
+	--Render Element Settings
+
+	DeNoiseElement = VRayDenoiser()
+	DeNoiseElement.enabled = true
+	DeNoiseElement.filterOn = true
+	DeNoiseElement.elementName = "AutoGen_DenoiseElement"
+	DeNoiseElement.preset = 1
+	DeNoiseElement.mode = 0
+	DeNoiseElement.type = 1
+	DeNoiseElement.generate_render_elements = 2
+
+
+	--LPM_Root.rootDir
+
+	re.addrenderelement DeNoiseElement -- Create Element
+
+
+)
+
+
+fn vdDeleteRenElement = --removes the render elements after submition
+(
+
+	re = maxOps.GetCurRenderElementMgr()
+
+	ElementArray = #()
+
+	for i = 0 to re.NumRenderElements() - 1 do
+	(
+
+		append ElementArray ( re.GetRenderElement i )
+
+	)
+
+
+	for d = 1 to ElementArray.count do
+	(
+		if ElementArray[d].elementName == "AutoGen_DenoiseElement" then
+		(
+
+			re.RemoveRenderElement ElementArray[d]
+		)
+	)
+)
+
+
+fn vdConfigureVFB SMode dlJobID = -- Changes the output famebuffer to SPlit element Framebuffer
+(
+
+	if SMode == "Setup" then
+	(
+
+		renderers.current.output_saveRawFile = true
+		renderers.current.output_rawFileName = rendOutputFilename
+		renderers.current.output_rawExrDeep = false
+		renderers.current.fileName_addDot = false
+		renderers.current.output_rawExrUseHalf = false
+		LPM_Vdenoise_Info.vdSuspendState = SMTDSettings.SubmitAsSuspended
+		SMTDSettings.SubmitAsSuspended = true
+
+	)
+
+	if SMode == "Rendertime" then
+	(
+
+		--print ("Configuring job in deadline")
+
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " SaveFile " + "false")
+
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " vray_output_rawFileName " + LPM_Vdenoise_Info.vdOutputDirHold)
+
+		if LPM_Vdenoise_Info.vdSuspendState == false then
+		(
+			HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" ResumeJob " + dlJobID as string)
+		)
+
+
+	)
+
+	if SMode == "Revert" then
+	(
+		renderers.current.output_rawFileName = ""
+		renderers.current.output_saveRawFile = false
+	)
+
+
+)
+
+fn VFB_SplitRender_Configure splitMode JobOutput dlJobID = 
+(
+
+	if splitMode == "PreRenderTime" then
+	(
+
+
+
+		LPM_Vdenoise_Info.vdSuspendState = SMTDSettings.SubmitAsSuspended
+		SMTDSettings.SubmitAsSuspended = true
+
+		renderers.current.output_splitgbuffer = true
+
+		renderers.current.output_splitRGB = true
+		renderers.current.output_splitAlpha = true
+		renderers.current.output_separateFolders = true
+		renderers.current.output_splitgbuffer = false
+
+
+		--renderers.current.output_fileName : string
+		--renderers.current.output_saveFile : boolean
+
+	)
+
+
+	if splitMode == "PostRenderTime" then
+	(
+		SplitOutput = ""
+		ParsedOutput = ""
+
+
+
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " SaveFile " + "false")
+
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " vray_output_saveRawFile " + "false")
+
+		--HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " vray_output_rawFileName " + JobOutput)
+
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " vray_output_saveFile " + "true")
+		
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " vray_output_splitfilename " + ParsedOutput)
+		
+		HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" SetJobPluginInfoKeyValue " + dlJobID as string + " vray_output_splitgbuffer " + "true")
+
+		if LPM_Vdenoise_Info.vdSuspendState == false then
+		(
+			HiddenDOSCommand ("\"C:\\Program Files\\Thinkbox\\Deadline10\\bin\\deadlinecommand.exe\" ResumeJob " + dlJobID as string)
+		)
+
+
+	)
+
+	if splitMode == "Cleanup" then
+	(
+
+		renderers.current.output_splitgbuffer = false
+
+	)
+
+)
+
+fn VFB_SplitElementCheck = 
+(
+
+	re = maxOps.GetCurRenderElementMgr()
+	
+	ElementArray = #()
+	if re.NumRenderElements() > 0 then -- Looks through render elements and deletes vDenoise elements created by the submitter (Others will be left alone)
+	(
+		for i = 0 to re.NumRenderElements() - 1 do
+		(
+	
+			append ElementArray ( re.GetRenderElement i )
+	
+		)
+	)
+
+	for x = 1 to ElementArray.count do
+	(
+
+		if ElementArray[x].elementName == "AutoGen_DenoiseElement" then
+		(
+			re.SetrenderElementFilename (x - 1) (LPM_Root.rootDir + "AutoGen_DenoiseElement.exr")
+
+		)
+	)
+)
