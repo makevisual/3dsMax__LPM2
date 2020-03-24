@@ -1071,6 +1071,7 @@ struct LPM_DeadlineAPI
 
 				renderCollect = LPM_Fun.getWhoToRender()
 				flag=true
+
 				-- Loop through the passes, and prepare them
 				for i=1 to renderCollect.count where flag do
 				(
@@ -1100,6 +1101,7 @@ struct LPM_DeadlineAPI
 						-- Name the Job
 						TmpPass = renderCollect[i][1]
 
+
 						try
 						(
 							if theShot.children[1].commonProps.cameraTgl == True then
@@ -1118,6 +1120,7 @@ struct LPM_DeadlineAPI
 							)
 						)
 						catch(SMTDLPMInterface.log_append ("Failed to Export Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 1)
+
 						TmpPassName = (LPM_Fun.getName TmpPass.name)
 						
 						if TmpPass.isAdjustment and (TmpPass.AdjustmentFor != undefined) then

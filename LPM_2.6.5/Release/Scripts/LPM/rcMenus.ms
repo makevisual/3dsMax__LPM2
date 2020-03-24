@@ -1955,8 +1955,10 @@ rollout commonRollout "Common Properties" width:370 height:640
 	checkbox _rendSuperBlack "Super Black" pos:[173,304] width:96 height:19 enabled:false
 	checkbox _useAdvancedLighting "Use Advanced Lighting" pos:[33,362] width:143 height:15 enabled:false
 	checkbox _computeAdvancedLighting "Compute Advanced Lighting" pos:[33,377] width:143 height:15 enabled:false
+
 	dropdownList _CameraDdl "" pos:[31,467] width:270 height:21 enabled:false items:#("--") --120 width
 	checkbutton _CameraExport "Export" pos:[305,467] enabled:false check:true
+
 	edittext _fileType "" pos:[91,418] width:53 height:19 readOnly:true
 	button pickTypeButton "Pick" pos:[39,419] width:47 height:16 enabled:false
 	
@@ -2055,7 +2057,9 @@ rollout commonRollout "Common Properties" width:370 height:640
 			state=cameraTgl.checked
 			grp7.enabled=state
 			_CameraDDl.enabled=state
+
 			_CameraExport.enabled=state
+
 			
 			state=renderTypeTgl.checked
 			renderTypeDDL.enabled=state
@@ -2328,7 +2332,9 @@ rollout commonRollout "Common Properties" width:370 height:640
 		gammaTgl.checked=cp.gammaTgl
 		_fileOutGamma.value=cp._fileOutGamma
 		renderTypeTgl.checked=cp.renderTypeTgl
+
 		_CameraExport.checked=cp._CameraExport
+
 		for i=1 to renderTypeDDL.items.count where renderTypeDDL.items[i]==cp.renderType do 
 			renderTypeDDL.selection=i
 		
@@ -2338,8 +2344,8 @@ rollout commonRollout "Common Properties" width:370 height:640
 			x=(findItem  _cameraDDl.items cp._camera.name) 
 			if (x!=0) then
 				_cameraDDl.selection=x
-
 		)
+
 		
 		usePreScript.checked=cp.usePreScript
 		preScript.text=cp.preScript
@@ -2395,6 +2401,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 		cp.autoUpdateName=autoUpdateName.checked
 		cp.disableFinalOutput=disableFinalOutput.checked
 		cp.cameraTgl=cameraTgl.checked
+
 		cp._CameraExport=_CameraExport.checked
 
 		if(cameraTgl.checked) then
@@ -2404,7 +2411,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 					theCam=cameraList[_cameraDDL.selection]
 					if (isvalidnode theCam) then
 						cp._Camera=theCam
-						
+
 				)
 		)
 		theNode.text=LPM_Fun.generateCommonPropName cp

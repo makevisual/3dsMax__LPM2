@@ -1,3 +1,4 @@
+
 ---- LPM_2.6.4 ----
 -- Date: 2019-09-03
 -- Modifications by: Aaron Dabelow theonlyaaron@gmail.com
@@ -229,10 +230,10 @@ LPM++ Deadline 7.1 submitter hybridized with LPM2 Deadline 7 submitter as well.
 LPM is the render pass manager for 3ds Max, which was developed by me in Altspace.
 It significantly simplifies the process of creating and managing render passes.
 With the intuitive user interface you can quickly create an unlimited number of passes in a single output file.
-LPM is easy to install and configure, it’s based on native Max script and works with 3ds Max 2012 and above.
-It supports network rendering using Autodesk Backburner and Thinkbox Deadline, and does not require separate installation on a render farm’s computers.
+LPM is easy to install and configure, itÂ’s based on native Max script and works with 3ds Max 2012 and above.
+It supports network rendering using Autodesk Backburner and Thinkbox Deadline, and does not require separate installation on a render farmÂ’s computers.
 LPM supports all popular rendering systems, including V-Ray 3.0 and Corona renderer.
 LPM provides a large variety of different settings in each pass, making possibilities limitless, also the handy system of file naming templates lets you easily find your rendered output.
 
-Thanks to all who participated in “lpm_pro_v1.096_max2014_beta1” developing (Lukas Lepicovsky, Jakub Jeziorski, Mike Samoilov, John Martini, Royce Ghost).
+Thanks to all who participated in Â“lpm_pro_v1.096_max2014_beta1Â” developing (Lukas Lepicovsky, Jakub Jeziorski, Mike Samoilov, John Martini, Royce Ghost).
 It was good start for me in august 2014.

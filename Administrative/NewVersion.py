@@ -7,9 +7,9 @@ from datetime import date
 
 # Source information to be populated throughout the installation
 versionedBy = "Aaron Dabelow theonlyaaron@gmail.com"
-srcVersion = "2.6.0"
-newVersion = "2.6.4"
-curDir = "U:/Make_Tools/LPM2/"
+srcVersion = "2.6.4"
+newVersion = "2.6.5"
+curDir = "U:/Git/aarond/3dsMax__LPM2/"
 folderName = "LPM_"
 
 # Copy the current state to a new directory

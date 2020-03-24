@@ -361,6 +361,7 @@ attribID:#(0x01028309, 0x03010930)
 		--Camera
 		cameraTgl type:#boolean
 		_Camera type:#node
+
 		_CameraExport type:#boolean default:true
 
 

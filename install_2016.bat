@@ -1,0 +1,1 @@
+call %~dp0LPM_2.6.5\install_2016.bat
