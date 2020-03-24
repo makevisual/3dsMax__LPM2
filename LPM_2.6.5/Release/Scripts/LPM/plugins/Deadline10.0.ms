@@ -1100,6 +1100,27 @@ struct LPM_DeadlineAPI
 					(
 						-- Name the Job
 						TmpPass = renderCollect[i][1]
+
+
+						try
+						(
+							if theShot.children[1].commonProps.cameraTgl == True then
+							(
+								if theShot.children[1].commonProps._CameraExport == true then
+								(
+									nukeEm_GetSettings theShot
+									nukeEm_CameraExport (LPM_Fun.getName renderCollect[i][2].name)
+									SMTDLPMInterface.log_append ("Exporting Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 4
+									if theShot.children[1].commonProps._rendTimeType == 4 then
+									(
+										SMTDLPMInterface.log_append ("Cannot Render in \"Frames\". Using \"Range\" Instead ") 1
+
+									)
+								)
+							)
+						)
+						catch(SMTDLPMInterface.log_append ("Failed to Export Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 1)
+
 						TmpPassName = (LPM_Fun.getName TmpPass.name)
 						
 						if TmpPass.isAdjustment and (TmpPass.AdjustmentFor != undefined) then

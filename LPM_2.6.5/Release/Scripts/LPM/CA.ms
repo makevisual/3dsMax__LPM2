@@ -344,6 +344,7 @@ attribID:#(0x01028309, 0x03010930)
 		_rendForce2Side type:#boolean
 		_rendSuperBlack type:#boolean
 		
+
 		--Advanced Lighting
 		advancedLightingTgl type:#boolean
 		_useAdvancedLighting type:#boolean
@@ -360,7 +361,10 @@ attribID:#(0x01028309, 0x03010930)
 		--Camera
 		cameraTgl type:#boolean
 		_Camera type:#node
-		
+
+		_CameraExport type:#boolean default:true
+
+
 		--preScript
 		usePreScript type:#boolean
 		preScript type:#string
