@@ -694,7 +694,6 @@ attribID:#(0x46a023af, 0x761d5f73)
 
 
 
-
 /*EXAMPLE
 x=point()
 a1=sphere()

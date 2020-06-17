@@ -23,7 +23,7 @@
 			
 			dropdownList symbolDDL "" pos:[55,89] width:218 height:21 items:#("Symbols", "\ = Directory", "$Cam = Camera", "$Max = Max Filename", "$Pass = Pass Name", "$APass = Adjustment Pass Name", "$Shot = Shot Name", "$Element=Element Name", "$Ver = File version (ex: box_v01.max)", "$Date = Current date", "$RDate = YYYY.MM.DD")
 			button resetName "Reset" pos:[277,89] width:70 height:21
-			button setAsDefault "Set as Default" pos:[350,89] width:80 height:21		
+			--button setAsDefault "Set as Default" pos:[350,89] width:80 height:21 --Disabled by Neil
 		
 		
 			dropdownList previewDDL "" pos:[8,113] width:483 height:21 items:#("File Path Preview")
@@ -71,6 +71,17 @@
 							append theNames (LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewmode:true RendPreviewMode:true elementName:"ElementName") 
 				previewDDL.items=theNames
 			)
+
+			fn setPathDefault=
+			(
+
+				LPM_Root.pathString=customPath.text="$Shot\\$APass$Pass$Element\\$APass$Pass$Element"
+				
+				updatePathPreview()
+				
+				LPM_Fun.SetIni "LPM Render" "Path"  customPath.text
+
+			)
 			
 			on customPath entered text do
 			(
@@ -99,9 +110,7 @@
 			on resetName pressed do
 			(
 -- 				LPM_Root.pathString=customPath.text="$APass$Pass\\$Element\\$Max_$APass$Pass_$Element"	
-				LPM_Root.pathString=customPath.text="$Shot\\$APass$Pass$Element\\$APass$Pass$Element_"
-				
-				updatePathPreview()
+				setPathDefault()
 			)
 			
 			on symbolDDL selected i do
@@ -212,6 +221,7 @@
 			
 			on setAsDefault pressed do
 			(
+				setPathDefault()
 				LPM_Fun.SetIni "LPM Render" "Path"  customPath.text
 				messageBox ("Default Path String set to "+customPath.text)
 				

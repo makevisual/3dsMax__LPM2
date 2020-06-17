@@ -18,10 +18,13 @@ filein (LPM_Dir+"treeView.ms")
 LPM_PluginFiles=getfiles(LPM_Dir+"plugins/*")
 for f in LPM_PluginFiles do filein f
 filein (LPM_Dir+"operatorsAPI.ms")
-
 filein (LPM_Dir+"MAKE_nukeem.ms")
 --Load network submission plugins
 
 
 
 --Load network submission plugins
+
+
+--Set Fileoutput Path Token String to default
+LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass$Element\\$APass$Pass$Element"
