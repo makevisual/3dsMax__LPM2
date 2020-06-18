@@ -290,6 +290,8 @@ struct LPM_DeadlineAPI
  				submitLog.Multiline 		= true
  				submitLog.ReadOnly 			= true
  				submitLog.ForeColor 		= (dotNetClass "System.Drawing.Color").FromArgb 200 200 200
+ 				submitLog.WordWrap = off
+				submitLog.ScrollBars = submitLog.ScrollBars.Both
 				log_append ( "Connecting..." ) 4
 			)
 
@@ -377,12 +379,8 @@ struct LPM_DeadlineAPI
 								if allClasses[k].creatable then
 								(
 									newInst = createInstance allClasses[k]
- 									-- try
-									-- (
- 										q = replaceInstances missingInstance newInst  ---TODO fin
-										exit
-									-- )
- 									-- catch(print "FAIL")
+									q = replaceInstances missingInstance newInst  
+									exit
 								)else()
 							) 
 						)else()
@@ -504,7 +502,9 @@ struct LPM_DeadlineAPI
 				ts = timeStamp()
 
 				log_append "Running idiot checks" 4
+
 				checks = getpropnames SMTDIdiotCheck
+
 				collectMissingPluginInstances()
 
 				LPM_deadlineInfo.ic_failCount 		= 0
@@ -532,15 +532,30 @@ struct LPM_DeadlineAPI
 							)
 							else ()
 
+							
 							append resultsArray result
 						)
 					)
-					else()
+					
+					log_append curCheckResult[4] 3
 				)
 
 				-- Print results to the log
 				log_append ( "All checks took " + ( ( (timeStamp() - ts ) / 1000.000 ) as string ) + " seconds" ) 4
 				for result in resultsArray do ( log_append result 5	)
+			)
+
+			-- Adds a time penalty to skipping the idiot checks
+			fn idiotCheck_skip =
+			(
+				timePenalty = 5
+
+				for i in 1 to timePenalty do 
+				(
+					curMessage = ( "Waiting... " + ( ( timePenalty - i + 1 ) as string ) )
+					log_append curMessage 1
+					sleep 1 
+				)
 			)
 
 			-- Connects to the repository and loads various auxilary files and retrieves data from the deadline database
@@ -893,10 +908,11 @@ struct LPM_DeadlineAPI
 	 				ui_loadStickySettings()
 	 				ui_update()	 				
 
-	 				-- Perform Idiot checks 
- 					idiotCheck_run()
-
-
+	 				-- Perform Idiot checks, or skip if enabled
+	 				if LPM_treeview_rollout.skipIdiotChecks.checked 
+	 				then ( idiotCheck_skip() )
+ 					else ( idiotCheck_run() )
+ 					
 	 				-- Move Log to bottom of Dialog 
 	 				submitLog.pos=[ 3 , 735 ]
 	 				submitLog.height=138
@@ -1217,11 +1233,6 @@ struct LPM_DeadlineAPI
 						submit_fail()
 					)
 
-					SMTDLPMInterface.prg_submitProgress2.value=25
-
-					-- Modify and LPM Submission specific overrides 
-					-- TODO - add the custom override switches in here
-									
 					SMTDLPMInterface.prg_submitProgress2.value=30
 
 					-- Submit Deadline Job

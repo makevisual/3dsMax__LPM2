@@ -1,44 +1,45 @@
 struct SMTDIdiotCheck
 (
-	function getCameras =
-	(
-		(for obj in objects where (iskindof obj camera) collect obj)
-	),
 
 	function fileSizeChk = 
 	(
-		return #("pass")
-		
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking FileSize" 3)catch()
+		chkMessage = "IC: Checked FileSize"
 		curSize = ( getFileSize ( maxFilePath + maxFileName ) ) as integer 
 		
 		if curSize > 100000000 then
 		(
 			if curSize > 500000000 then ( return #("fail", 1, #( "Filesize over 500MB, reference or cache scene elements externally." ) )	)
-			else ( return #("fail", 1, #( "Filesize over 100MB, reference or cache scene elements externally." ) )	)
+			else ( return #("fail", 1, #( "Filesize over 100MB, reference or cache scene elements externally." ), chkMessage) )
 		)
-		else( return #("pass") )
+
+		return #("pass", 0,"0", chkMessage )
 	),
 	
 	-- Ensures there is a camera in your scene
 	function noCamerasChk =
 	(
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking for cameras" 3)catch()
-		if (SMTDIdiotCheck.getCameras()).count != 0 then()else
+		chkMessage = "IC: Checked that there is a camera in scene"
+
+		camObjs = (for obj in objects where (iskindof obj camera) collect obj)
+
+		if camObjs.count != 0 then()else
 		(
-			return #("fail", 1, #( "No cameras in your scene!" ) )
+			return #("fail", 1, #( "No cameras in your scene!" ),  chkMessage )
 		)
-		return #("pass")
+
+		return #("pass", 0,"0", chkMessage )
 	),
 	
 	-- checks to see if any cameras have a multipass camera effect enabled
 	function cameraMultiPassChk =
 	(
 		results = #()
+		chkMessage = "IC: Checked Cameras for multipass effects"
 
-		for cam in SMTDIdiotCheck.getCameras() do
+		camObjs = (for obj in objects where (iskindof obj camera) collect obj)
+
+		for cam in camObjs do
 		(			
-			try(LPM_DeadlineSubmitRo.log_append ( "IC: Checking '" + ( cam.name as string ) + "' for enabled multipass camera effects" ) 3)catch()
 			try
 			(
 				if cam.mpassEnabled == true then
@@ -52,36 +53,31 @@ struct SMTDIdiotCheck
 		if results.count >= 1
 		then
 		(
-			return #("fail", 3, results )
+			return #("fail", 3, results, chkMessage )
 		)
-		else
-		(
-			return #("pass")
-		)
+
+		return #("pass", 0,"0", chkMessage )
 	),
 
 	-- checks to see if the frame rate is set to 24 fps
 	function frameRateChk =
 	(
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking frame rate" 3)catch()
+		chkMessage = "IC: Checked frame rate"
 
 		if framerate != 24
 		then
 		(
-			return #("fail", 4, #( "Framerate not set to 24fps!"  ) )
+			return #("fail", 4, #( "Framerate not set to 24fps!"  ) , chkMessage )
 		)
-		else
-		(
-			return #("pass")
-		)
+
+		return #("pass", 0,"0", chkMessage )
 	),
 
 	-- checks to see if the file is saved into an autoback folder
 	function MTautobackChk =
 	(
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking to make sure scene file not saved in the MT_Autobak Folder" 3)catch()
-
 		fileString = maxFilePath 
+		chkMessage = "IC: Checked to make sure scene file not saved in the MT_Autobak Folder"
 
 		if fileString == ""
 		then
@@ -95,21 +91,19 @@ struct SMTDIdiotCheck
 		if fileStringEnd == @"MT_autoback\" 
 		then
 		(
-			return #("fail", 1, #( "Move your scene out of the Autobak folder to be able to submit!!!"  ) )
+			return #("fail", 1, #( "Move your scene out of the Autobak folder to be able to submit!!!"  ) , chkMessage )
 		)
-		else
-		(
-			return #("pass")
-		)
+
+		return #("pass", 0,"0", chkMessage )
+
 	),
 
 	-- Examines if there are any render elements set to active, and warns user against it. All elements shold be handled by an LPM elements operator
 	function RenderElementsEnabled = 
 	(
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking to make sure render elements are enabled" 3)catch()
-
 		re = maxOps.GetCurRenderElementMgr() 						-- Get the render elements manager
 		numElements = re.NumRenderElements() 						-- Get the number of render elements
+		chkMessage = "IC: Checked to make sure render elements are not active"
 
 		theElements = #()
 		for i in 1 to numElements do
@@ -124,30 +118,29 @@ struct SMTDIdiotCheck
 		message = ( "There are " +  ( errors as string ) + " render elements active, they should be disabled and handled through and Elements and effects override.")
 
 		if errors > 0
-		then ( return #( "fail", 4, #( message ) ) )
-		else ( return #("pass") )
+		then ( return #( "fail", 4, #( message ), chkMessage ) )
+		return #("pass", 0,"0", chkMessage )
 	),
 
 	-- Looks for any active hairfarm render effects, which probably shouldnt be on if you are rendering with Vray
 	function activeHairFarmEffects =
 	(
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking to make sure render elements are enabled" 3)catch()
-
 		collectedEffects = for num in 1 to numEffects collect (getEffect num)
+		chkMessage = "IC: Checked to make hair farm is not rendering as an render effect"
 
 		for collectedEffect in collectedEffects do 
 		(
 		 	if ( ( classof collectedEffect ) == Hair_Farm_RendererrenderEffect ) and ( IsActive collectedEffect ) 
-			then ( return #( "fail", 4, #( "ATTN: '"+ (collectedEffect as string) +"' is enabled, not advised if rendering using vray hair." ) ) )
+			then ( return #( "fail", 4, #( "ATTN: '"+ (collectedEffect as string) +"' is enabled, not advised if rendering using vray hair." ) , chkMessage ) )
 		)
 
-		return #("pass")
+		return #("pass", 0,"0", chkMessage )
 	),
 
 	function getMissingPluginsChk =
 	(
 		results = #()
-		try(LPM_DeadlineSubmitRo.log_append "IC: Checking for Missing Plugins" 3)catch()
+		chkMessage = "IC: Checked to make hair farm is not rendering as an render effect"
 
 		missingInstances = LPM_deadlineInfo.plugins_missingInstances
 
@@ -160,33 +153,81 @@ struct SMTDIdiotCheck
 		if results.count >= 1
 		then
 		(
-			return #("fail", 2, results )
+			return #("fail", 2, results, chkMessage )
 		)
-		else
-		(
-			return #("pass")
-		)
+
+		return #("pass", 0,"0", chkMessage )
 	),
 
 	function normalBump_check =
 	(
- return #("pass")
+
+		chkMessage = "IC: Checked for any Normal_Bump texturemap instances"
+
+		results = #()
+		nb_instances = #()
+		nb_instances = getClassInstances Normal_Bump 
+
+
+
+		if nb_instances.count > 0
+		then
+		(
+			result = (  " There are " + ( nb_instances.count as string ) + " instances of the Normal_Bump texturemap, it should be switched to a vray normal map"  ) 
+			join results #( result )
+
+			return #("fail", 2, results, chkMessage )
+		)
+
+	 	return #("pass", 0,"0", chkMessage )
 	),
 
 	function renderLockedView =
 	(
- return #("pass")
+
+		chkMessage = "IC: Checked if rendereing a locked viewport"
+		results = #()
+
+		if rendUseActiveView == false
+		then
+		(
+
+			result = (  " A locked view is set to render, this will be unlocked to ensure the correct camera is being rendered"  )
+			join results #( result )
+
+			return #("fail", 2, results, chkMessage )
+		)
+
+	 	return #("pass", 0,"0", chkMessage )
 	),
 
-	function renderLockedView =
-	(
- return #("pass")
-	),
+ 	function renderHiddenLights =
+ 	(
+
+	 	results = #()
+	 	chkMessage = "IC: Checked if rendereing hidden lights disabled"
+	 	re = renderers.current 
+
+		if re.options_hiddenLights == false 
+		then 
+		(
+			result = (  " Hidden lights are disabled and will not render, this is not advised"  )
+			join results #( result )
+
+			return #("fail", 2, results, chkMessage )
+		)
+
+	  	return #("pass", 0,"0", chkMessage )
+
+ 	),
 
 	function checkAssetsAreInProject =
 	(
-		curFile = pathConfig.convertPathToUnc maxFilePath -- From Asset Switch - Finds Project Directory and Converts to UNC path
-		curFileParts = (filterString curFile @"\")
+		-- Setup
+		chkMessage = "IC: Checked if all references are in the current project"
+		sceneAssets = #()
+		curFileParts = (filterString maxFilePath @"\")
+		outList = #()
 		str = ""
 
 		-- Get the project folder
@@ -203,80 +244,32 @@ struct SMTDIdiotCheck
 				exit
 			)
 			else ( str = "" )
-
-			str = "\\\\" + str
 		)
 
-		pFDArray = #()
+		-- collect all referenced things in the scene
+		curProjectDir = str
+		ATSOps.Refresh() 
+		ATSOps.getFiles &sceneAssets 
 
-		pFDArray = (for o in geometry where classOf o == FireSmokeSim or classOf o == LiquidSim  collect o)
-
-		ATSOps.CheckNetworkPaths = true -- Turns on status checking for network filepaths 
-
-		atsops.Refresh() -- Updates Asset Tracker
-
-		ATSOps.getFiles &pList -- Gets list of asset paths
-
-		if pFDArray.count > 0 then(for i = 1 to pFDArray.count do(if pFDArray[i].rendinput != "$(same_as_output)" then (append pList pFDArray[i].rendinput)))
-
-		outList = #() 
-		totalPathErrorCount = 0
-
-		for i = 1 to pList.count do -- Runs through  
+		-- Check if the assets match the project 
+		for sceneAsset in sceneAssets do 
 		(
-			pPath = trimRight str "\\" -- Trims off trailing slash if there is one for any strange reason
-
-			inPathFlag = false -- Resets flag
-
-			timeout = 0 -- Resets Timeout Counter
-
-			checkTemp = pathConfig.convertPathToUnc pList[i] -- Converts to UNC path
-
-
-			while checkTemp != "" do -- Chops off end of file path and moves up folder by folder
+			if curProjectDir == ( substring sceneAsset 1 curProjectDir.count) 
+			then ()
+			else
 			(
-			
-				checkTemp = trimRight checkTemp " *`~1234567890-=!@#$%^&*()_+qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM,./<>?;':[]{}|" -- Trims all characters up to slash
-			
-				checkTemp = trimRight checkTemp "\\" -- Trims slash
-			
-				if pathConfig.pathsResolveEquivalent checkTemp str == true then -- Checks if path is a match with project directory
-				(
-					inPathFlag = true
-				) 
-
-				if timeout == 100 then -- exits while loop in event the trim function encounters an unknown character
-				(
-					checkTemp = ""
-					-- print "ERROR: Unkown character in path string or file path too long"
-				)
-
-				timeout = timeout + 1 -- timeout tick up
-			)
-
-			if inPathFlag == False then -- Adds files that are not in the directory to the output list
-			(
-				--append outList #(pathConfig.stripPathToLeaf pList[i], pList[i])
-
-				if pList[i] != "D:\\tmp.exr" then
-				(
-					append outList (pathConfig.stripPathToLeaf pList[i] + " Not In Project")
-				)
+				if sceneAsset != "D:\\tmp.exr"
+				then ( append outList sceneAsset )
 			)
 		)
-
-		-- print outList
 
 		if outList.count > 0 then
 		(
-			return #("fail", 5, #(outList.count as string + " Files not in Project"))
+			return #("fail", 5, #(outList.count as string + " Files not in Project"), chkMessage)
 		)
-		if outList.count == 0 then
-		(
-			return #("pass")
-		)
-	)
 
+		return #("pass", 0,"0", chkMessage )
+	)
 )
 
 -- SMTDIdiotCheckObj = SMTDIdiotCheck()

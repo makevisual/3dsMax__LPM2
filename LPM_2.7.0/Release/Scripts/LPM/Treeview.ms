@@ -200,8 +200,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	dropDownList renderTypeDDL "" items:#("Passes", "Passes Hardware Preview", "Shots", "Shots Hardware Preview") pos:[0,200] width:88 height:19 tooltip:"Render Mode"
 
-	button localRenderButton "Local" pos:[100,200] height:22 width:60 tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
-	button networkRenderButton "Network" pos:[145,200] height:22 width:60 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+	button localRenderButton "Local" pos:[40,200] height:22 width:70 tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+	button networkRenderButton "Network" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+	checkbutton skipIdiotChecks "Skip IC" pos:[165,200] height:22 width:40 tooltip:"When enabled, Idiot checks will be skipped with a time penalty"
 	button setRenderDirButton "Set" pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
 	button openRenderDirButton "..." pos:[202,200] height:21 width:17 tooltip:"Opens the render directory"
 
@@ -1388,8 +1389,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		
 
 		renderTypeDDL.pos= [0,yPos+25]
-		localRenderButton.pos=[xSize-120,yPos+25]
-		networkRenderButton.pos=[xSize-60,yPos+25]
+		localRenderButton.pos=[xSize-180,yPos+25]
+		networkRenderButton.pos=[xSize-110,yPos+25]
+		skipIdiotChecks.pos=[xSize-40,yPos+25]
 		
 		playButton.pos=[90,yPos+25]
 		
