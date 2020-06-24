@@ -64,13 +64,15 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="781" y="342" key="SettingsEditor" timestamp="1585000851444">
+    <state x="781" y="342" key="SettingsEditor" timestamp="1592942067509">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="781" y="342" key="SettingsEditor/2560.-29.2560.1400/0.0.2560.1400/671.-2189.3778.2160@0.0.2560.1400" timestamp="1585000851444" />
-    <state x="976" y="524" key="com.intellij.ide.util.TipDialog" timestamp="1585000750748">
+    <state x="781" y="342" key="SettingsEditor/2560.0.2560.1400/756.-2160.3778.2160/0.0.2560.1400@0.0.2560.1400" timestamp="1592942067509" />
+    <state x="976" y="524" key="com.intellij.ide.util.TipDialog" timestamp="1592941960697">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="976" y="524" key="com.intellij.ide.util.TipDialog/2560.-29.2560.1400/0.0.2560.1400/671.-2189.3778.2160@0.0.2560.1400" timestamp="1585000750748" />
+    <state x="976" y="524" key="com.intellij.ide.util.TipDialog/2560.0.2560.1400/756.-2160.3778.2160/0.0.2560.1400@0.0.2560.1400" timestamp="1592941960697" />
   </component>
 </project>
