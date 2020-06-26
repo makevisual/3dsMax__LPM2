@@ -32,7 +32,7 @@ global LPM_LightSetPropsBuff
 global LPMPassSelectRoll
 
 global LPM_SMTDSettings -- Dabelow
-
+global LPM_NukeAPI -- Dabelow
 
 global iconPath = LPM_Dir + "icons/"
 global BackColor

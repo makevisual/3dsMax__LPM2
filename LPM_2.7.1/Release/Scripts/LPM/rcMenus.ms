@@ -2644,8 +2644,10 @@ rcMenu rc_MainMenu
 	menuItem settingsMenu "Settings..."
 	subMenu "Utilities"
 	(
+		menuItem nukeSceneGenerate "Build scene from Nuke Script"
+		seperator s1
 		menuitem elementGenerate "Generate Default Elements"
-		menuItem elementDepthSet "Set Depth Element Distance"
+		--menuItem elementDepthSet "Set Depth Element Distance"
 		menuItem elementAOSet "Set AO Element Size"
 -- 		seperator s1
 	)
@@ -2669,11 +2671,11 @@ rcMenu rc_MainMenu
 		filein "makeRenderElements.ms" -- Dabelow
 	)
 
-	on elementDepthSet picked do 
-	(
-		utilityTools.rollout_setDepthprops_Function()
+-- 	on elementDepthSet picked do 
+-- 	(
+-- 		utilityTools.rollout_setDepthprops_Function()
 -- 		messagebox "DEPTH"
-	)
+-- 	)
 
 	on elementAOSet picked do 
 	(
