@@ -169,6 +169,15 @@ struct LPM_NukeAPI_str
 	(
 		-- Function max_setFrameRange body
 		animationRange = ( interval LPM_NukeAPI.nukeData.first_frame LPM_NukeAPI.nukeData.last_frame )
+
+		LPM_Root.children[1].children[1].children[1].commonProps[3].value = true
+		LPM_Root.children[1].children[1].children[1].commonProps[4].value = 3
+		LPM_Root.children[1].children[1].children[1].commonProps[6].value = LPM_NukeAPI.nukeData.first_frame
+		LPM_Root.children[1].children[1].children[1].commonProps[7].value = LPM_NukeAPI.nukeData.last_frame
+
+
+
+
 	),
 
 	function max_setResolution = (
@@ -176,38 +185,48 @@ struct LPM_NukeAPI_str
 			LPM_NukeAPI.nukeData.resolution
 			renderWidth = LPM_NukeAPI.nukeData.resolution[1]
 			renderHeight = LPM_NukeAPI.nukeData.resolution[2] 
+
+			LPM_Root.children[1].children[1].children[1].commonProps[9].value = true
+			LPM_Root.children[1].children[1].children[1].commonProps[10].value = LPM_NukeAPI.nukeData.resolution[1]
+			LPM_Root.children[1].children[1].children[1].commonProps[11].value = LPM_NukeAPI.nukeData.resolution[2]
 	),
 
 	function max_setViewportBackground = (
 		-- Function max_setViewportBackground body
 			LPM_NukeAPI.createIFL()
-			--backgroundImageFileName = LPM_NukeAPI.nukeData.reference_file todo:turn back on
+			backgroundImageFileName = LPM_NukeAPI.nukeData.reference_file-- todo:turn back on
 			setBkgFrameRange [0, LPM_NukeAPI.nukeData.reference_duration, 1]
 			setBkgImageAspect #output
 			setBkgImageAnimate true
+			setBkgStartTime 1000
 
 			curName = getfilenamefile LPM_NukeAPI.nukeData.reference_file
 			startFrame = ( ( substring curname ( curname.count - 3 ) 4 ) as integer )
-			startFrame
+			--startFrame
 
 			getBkgStartTime 
 	),
 
 	function max_setLPMOutput = (
 		-- Function max_setLPMOutput body
-			LPM_NukeAPI.nukeData.output_dir
+			LPM_Root.rootDir = LPM_NukeAPI.nukeData.output_dir
 	),
 
 	function max_setLPMShotName = (
 		-- Function max_setLPMShotName body
-			LPM_NukeAPI.nukeData.shot_dir 	
-			LPM_NukeAPI.nukeData.shot_name 
+			--LPM_NukeAPI.nukeData.shot_dir
+
+			if LPM_Root.children[1].children[1].name == "LPM_Shot_v001" then
+			(
+				LPM_Root.children[1].children[1].name = ("LPM_" + LPM_NukeAPI.nukeData.shot_name + "_v001")
+			)
 	),
 
 	function max_setSaveFile = (
 		-- Function max_setSaveFile body
-			LPM_NukeAPI.nukeData.project_name
-			LPM_NukeAPI.nukeData.project_dir	
+
+			saveMaxFile ( LPM_NukeAPI.nukeData.shot_dir + "Scenes\\Layout\\" + LPM_NukeAPI.nukeData.shot_name + "_v001.max" )
+
 	),
 
 	function max_configureAndSave = (
@@ -219,9 +238,9 @@ struct LPM_NukeAPI_str
  	 	max_setFrameRange() 			--good 
  	 	max_setResolution() 			--good 
  	 	max_setViewportBackground() 	--half good, todo: turn viewport on by default
- 	 	max_setLPMOutput() 				
- 	 	max_setLPMShotName()
- 	 	max_setSaveFile()
+ 	 	max_setLPMOutput() 				--good			
+ 	 	max_setLPMShotName()			--Good
+ 	 	max_setSaveFile()				--Good: double check file naming convention
 
 	 	renderSceneDialog.update()
 	 	--renderSceneDialog.commit()
@@ -234,20 +253,32 @@ struct LPM_NukeAPI_str
 		max_configureAndSave()
 	),
 
+
+	function ImportNuke NukeScriptDir =
+	(
+		
+		LPM_NukeAPI.init()
+	--	---- Set the nuke script
+		LPM_NukeAPI.nukeFilePath 	= NukeScriptDir
+		LPM_NukeAPI.readNukeFile()
+		LPM_NukeAPI.max_configureAndSave()
+		--LPM_NukeAPI.checkData()
+	),
+
+
 	ender = undefined 
 
 )
 
+LPM_NukeAPI = LPM_NukeAPI_str()
 
-clearListener()
 -- Build the API
-LPM_NukeAPI 				= LPM_NukeAPI_str()
--- Set the nuke script
-LPM_NukeAPI.init()
-LPM_NukeAPI.nukeFilePath 	= @"Y:\Projects\Meccano - Fall 2020\SPOT__Meccano_30s\SHOT_Intro-010\Comps\Composite\Meccano_30s__SHOT_Intro-010__Composite_v001.nk"
-LPM_NukeAPI.readNukeFile()
-LPM_NukeAPI.max_configureAndSave()
-LPM_NukeAPI.checkData()
+
+
+
+
+
+
 
 
 

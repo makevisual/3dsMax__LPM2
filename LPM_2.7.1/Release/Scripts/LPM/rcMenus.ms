@@ -2671,6 +2671,25 @@ rcMenu rc_MainMenu
 		filein "makeRenderElements.ms" -- Dabelow
 	)
 
+	on nukeSceneGenerate picked do
+	(
+
+		nukeScriptDir = getOpenFileName \
+		types:"Nuke Scripts(*.nk)"
+		print nukeScriptDir
+		if nukeScriptDir != undefined then
+		(
+			try
+			(
+				LPM_NukeAPI.ImportNuke nukeScriptDir
+			)
+			catch
+			(
+				print "Error with file selection"
+			)
+		)
+	)
+
 -- 	on elementDepthSet picked do 
 -- 	(
 -- 		utilityTools.rollout_setDepthprops_Function()
