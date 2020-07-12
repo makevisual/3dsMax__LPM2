@@ -113,6 +113,7 @@ struct LPM_NukeAPI_str
 			reference_file 			= undefined,
 			reference_duration		= undefined,
 			reference_range	 		= undefined,
+			reference_start	 		= undefined,
 			output_dir 				= undefined,
 
 			end 					= "end"
@@ -142,6 +143,7 @@ struct LPM_NukeAPI_str
 		startFrame 	= ( ( substring curname ( curname.count - 3 ) 4 ) as integer )
 		endFrame 	= startFrame
 		LPM_NukeAPI.nukeData.reference_range = [ startFrame, startFrame]
+		LPM_NukeAPI.nukeData.reference_start = startFrame
 
 		-- make a new ifl file
 		iflFile = createfile iflFileName
@@ -198,7 +200,7 @@ struct LPM_NukeAPI_str
 			setBkgFrameRange [0, LPM_NukeAPI.nukeData.reference_duration, 1]
 			setBkgImageAspect #output
 			setBkgImageAnimate true
-			setBkgStartTime 1000
+			setBkgStartTime LPM_NukeAPI.nukeData.reference_start -- changed to read the new prop that is the start frame of the IFL
 
 			curName = getfilenamefile LPM_NukeAPI.nukeData.reference_file
 			startFrame = ( ( substring curname ( curname.count - 3 ) 4 ) as integer )
