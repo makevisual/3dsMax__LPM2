@@ -551,12 +551,16 @@ struct LPM_DeadlineAPI
 			(
 				timePenalty = 5
 
+				LPM_deadlineInfo.ic_failCount = 0
+
 				for i in 1 to timePenalty do 
 				(
 					curMessage = ( "Waiting... " + ( ( timePenalty - i + 1 ) as string ) )
 					log_append curMessage 1
 					sleep 1 
 				)
+
+				log_append ( "All Check Skipped" ) 4
 
 				LPM_deadlineInfo.submit_enable = true
 			)
