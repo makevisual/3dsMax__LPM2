@@ -543,6 +543,7 @@ struct LPM_DeadlineAPI
 				-- Print results to the log
 				log_append ( "All checks took " + ( ( (timeStamp() - ts ) / 1000.000 ) as string ) + " seconds" ) 4
 				for result in resultsArray do ( log_append result 5	)
+
 			)
 
 			-- Adds a time penalty to skipping the idiot checks
@@ -550,12 +551,18 @@ struct LPM_DeadlineAPI
 			(
 				timePenalty = 5
 
+				LPM_deadlineInfo.ic_failCount = 0
+
 				for i in 1 to timePenalty do 
 				(
 					curMessage = ( "Waiting... " + ( ( timePenalty - i + 1 ) as string ) )
 					log_append curMessage 1
 					sleep 1 
 				)
+
+				log_append ( "All Check Skipped" ) 4
+
+				LPM_deadlineInfo.submit_enable = true
 			)
 
 			-- Connects to the repository and loads various auxilary files and retrieves data from the deadline database
