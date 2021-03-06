@@ -1,107 +1,17 @@
 
+-- Designed for V-Ray 5.1 
 -- Defines and creates default and templated render element passes.
 -- Aaron Dablow: theonlyaaron@gmail.com 
 
 
 -- AO 
+-- BackToBeauty
+-- Denoise
+-- LightMix 
+-- Shadow 
 
 struct elementsDefStr
 (
-	function element_B_Alpha = 
-	(
-		newElement = VRayAlpha()
-
-		newElement.enabled  		= false
-		newElement.filterOn 		= true 
-		newElement.elementName 		= "VRayAlpha"
-
-		return newElement
-	),
-
-	function element_B_Diffuse = 
-	(
-		newElement = VRayDiffuseFilter()
-
-		newElement.enabled 			= false
-		newElement.filterOn 		= true
-		newElement.elementName 		= "VRayDiffuse"
-		newElement.vrayVFB 			= true
-		newElement.color_mapping 	= true
-		newElement.multiplier 		= 1.0
-
-		return newElement
-	),
-	
-	function element_B_Lighting = 
-	(
-		newElement = VRayLighting()
-
-		newElement.enabled 			= false
-		newElement.filterOn 		= true
-		newElement.elementName 		= "VRayLighting"
-		newElement.vrayVFB 			= true
-		newElement.color_mapping 	= true
-		newElement.multiplier 		= 1.0
-
-		return newElement
-	),
-	
-	function element_B_Shadows = 
-	(
-		newElement = VRayShadows()
-
-		newElement.enabled 			= false
-		newElement.filterOn 		= true
-		newElement.elementName 		= "VRayShadows"
-		newElement.vrayVFB 			= true
-		newElement.color_mapping 	= true
-		newElement.multiplier 		= 1.0
-
-		return newElement
-	),
-	
-
-	function element_B_GlobalIllumination =
-	(
-		newElement = VRayGlobalIllumination()
-
-		newElement.enabled 			= false
-		newElement.filterOn 		= true
-		newElement.elementName 		= "VRayGlobalIllumination" 
-		newElement.vrayVFB 			= true 
-		newElement.color_mapping 	= true 
-		newElement.multiplier 		= 1.0 
-
-		return newElement 
-	),
-
-	function element_B_Reflection =
-	(
-		newElement = VRayReflection()
-
-		newElement.enabled 			= false
-		newElement.filterOn 		= true 
-		newElement.elementName 		= "VRayReflection" 
-		newElement.vrayVFB 			= true 
-		newElement.color_mapping 	= true 
-		newElement.multiplier 		= 1.0 
-
-		return newElement 
-	),
-
-	function element_B_Refraction =
-	(
-		newElement = VRayRefraction()
-
-		newElement.enabled 			= false
-		newElement.filterOn 		= true 
-		newElement.elementName 		= "VRayRefraction" 
-		newElement.vrayVFB 			= true 
-		newElement.color_mapping 	= true 
-		newElement.multiplier 		= 1.0 
-
-		return newElement 
-	),
 
 	function element_B_SelfIllumination =
 	(
