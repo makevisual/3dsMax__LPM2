@@ -26,7 +26,7 @@ www.lukashi.com
 	
 */
 
-clearListener();
+--clearListener();
 callbacks.removeScripts id:#closeLPM
 
 LPM_Callback="LPM_Fun.destroyAllDialogs()"
@@ -387,6 +387,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "vrayOff"
 		getIconFromBitmap "Deadline"
 		getIconFromBitmap "DeadlineOff"
+
+		getIconFromBitmap "vray5RenderElements" --Dabelow vray5
+		getIconFromBitmap "vray5RenderElementsOff" --dabelow vray5 
 		
 		tv.imageList = ilTv 
 	)

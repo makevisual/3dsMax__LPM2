@@ -3,93 +3,54 @@
 -- Defines and creates default and templated render element passes.
 -- Aaron Dablow: theonlyaaron@gmail.com 
 
-
--- AO 
--- BackToBeauty
--- Denoise
--- LightMix 
--- Shadow 
-
 struct elementsDefStr
 (
 
-	function element_B_SelfIllumination =
+	function element_VRayDenoiser = 
 	(
-		newElement = VRaySelfIllumination()
+		newElement = VRayDenoiser()
 
 		newElement.enabled 			= false 
-		newElement.filterOn 		= true 
-		newElement.elementName 		= "VRaySelfIllumination" 
-		newElement.vrayVFB 			= true 
-		newElement.color_mapping 	= true 
-		newElement.multiplier 		= 1.0 
+		newElement.elementName 		= "VRayDenoiser" 
+		newElement.vrayVFB 			= false 
 
 		return newElement 
 	),
 
-	function element_B_Specular =
+	function element_VRayBackToBeauty = 
 	(
-		newElement = VRaySpecular()
+		newElement = VRayBackToBeauty()
 
 		newElement.enabled 			= false 
-		newElement.filterOn 		= true 
-		newElement.elementName 		= "VRaySpecular" 
-		newElement.vrayVFB 			= true 
-		newElement.color_mapping 	= true 
-		newElement.multiplier 		= 1.0 
+		newElement.elementName 		= "VRayBackToBeauty" 
+		newElement.vrayVFB 			= false 
 
 		return newElement 
 	),
 
-	function element_B_VRaySSS2 =
+	function element_VrayLightmix = 
 	(
-		newElement = VRaySSS2()
+		newElement = VrayLightmix()
 
 		newElement.enabled 			= false 
-		newElement.filterOn 		= true 
-		newElement.elementName 		= "VRaySSS2" 
-		newElement.vrayVFB 			= true 
-		newElement.color_mapping 	= true 
-		newElement.multiplier 		= 1.0 
+		newElement.elementName 		= "VrayLightmix" 
+		newElement.vrayVFB 			= false 
 
 		return newElement 
 	),
 
-	function element_E_AO =
+	function element_VRayAO = 
 	(
-		AO_Tex = VRayDirt()
+		newElement = VRayAO()
 
-		AO_Tex.radius 							= 36.0   
-		AO_Tex.occluded_color 					= (color 0 0 0) 
-		AO_Tex.unoccluded_color 				= (color 255 255 255)
-		AO_Tex.distribution 					= 1.0 
-		AO_Tex.falloff 							= 0.3 
-		AO_Tex.subdivs 							= 8  
-		AO_Tex.bias 							= [0,0,0] 
-		AO_Tex.affect_alpha 					= false   
-		AO_Tex.ignore_for_gi 					= true   
-		AO_Tex.consider_same_object_only 		= false  
-		AO_Tex.invert_normal 					= false  
-		AO_Tex.work_with_transparency 			= false  
-		AO_Tex.environment_occlusion 			= false  
-		AO_Tex.mode 							= 0  
-		AO_Tex.reflection_glossiness 			= 1.0 
-		AO_Tex.affect_reflection_elements 		= true 
+		newElement.enabled 			= false 
+		newElement.elementName 		= "VRayAO" 
+		newElement.vrayVFB 			= false 
 
-		newElement 								= VRayExtraTex()
-		newElement.enabled 						= false
-		newElement.filterOn 					= true
-		newElement.elementName 					= "VRayAO"
-		newElement.vrayVFB 						= true
-		newElement.auto_update_name 			= false
-		newElement.texture 						= AO_Tex
-		newElement.consider_for_antialiasing 	= false
-		newElement.affect_matte_objects 		= false
-
-		return newElement
+		return newElement 
 	),
 
-	function element_E_DepthRGB = 
+	function element_DepthRGB = 
 	(
 		Falloff_texR = falloff()
 		Falloff_texG = falloff()
@@ -145,35 +106,24 @@ struct elementsDefStr
 		newElement.enabled 						= false
 		newElement.filterOn 					= true
 		newElement.elementName 					= "VRayDepthRGB"
-		newElement.vrayVFB 						= true
 		newElement.auto_update_name 			= false
 		newElement.texture 						= RGB_Composite
 		newElement.consider_for_antialiasing 	= false
 		newElement.affect_matte_objects 		= false
 
-		return newElement 
-	),
-
-	function element_E_VRayCryptomatte = 
-	(
-		newElement = VRayCryptomatte()
-
-
-		newElement.enabled 			= false 
-		newElement.elementName 		= "VRayCryptomatte" 
-		newElement.id_type 			= 2
-		newElement.vrayVFB 			= true 
+		newElement.vrayVFB 						= false
 
 		return newElement 
 	),
 
-	function element_E_VRaySampleRate = 
+
+	function element_VRaySampleRate = 
 	(
 		newElement = VRaySampleRate()
 
 		newElement.enabled 			= false 
 		newElement.elementName 		= "VRaySampleRate" 
-		newElement.vrayVFB 			= true 
+		newElement.vrayVFB 			= false 
 
 		return newElement 
 	)

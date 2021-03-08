@@ -231,7 +231,7 @@ attribID:#(0x24de5872, 0x3b5a78e9)
 )
 
 
--- TODO: Dabelow
+-- Dabelow
 deadlinePropsCA = attributes deadlineProps
 attribID:#(0x73e22a56, 0x439f0d00)
 (
@@ -252,6 +252,21 @@ attribID:#(0x73e22a56, 0x439f0d00)
 		submitGroup type:#string default:""
 		submitLimitsOn type:#boolean default:false
 		submitLimits type:#stringTab tabSizeVariable:true
+	)
+)
+
+--TODO: Dabelow vray5
+vray5RenderElementsPropsCA = attributes vray5RenderElementsProps
+attribID:#(0x6743c747, 0x742f062b)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+ 		-- initialized type:#boolean
+
+		elementOverride type:#boolean		
+		activeElement type:#stringTab tabSizeVariable:true
 	)
 )
 

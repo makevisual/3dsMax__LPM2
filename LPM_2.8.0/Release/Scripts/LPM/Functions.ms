@@ -112,6 +112,8 @@ fn destroyAllDialogs=
 		try(destroyDialog AutoMaskRoll)catch()	
 		try(destroyDialog deadlinePropsRoll)catch()	-- Dabelow
 		try(destroyDialog SMTDLPMInterface)catch()	-- Dabelow
+		--try(destroyDialog vray5RenderElementsPropsCA = attributes vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
+		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
 		try(destroyDialog LPM_treeview_rollout)catch()
 		
 		callbacks.removeScripts id:#closeLPM
@@ -210,6 +212,7 @@ fn setIcon theNode=
 			"VRayGI":LPM_Fun.setImageIndex theNode theNode.tag.value.active 40 41
 			"AutoMask":LPM_Fun.setImageIndex theNode theNode.tag.value.active 42 43
 			"Deadline":LPM_Fun.setImageIndex theNode theNode.tag.value.active 46 47 -- Dabelow
+			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 -- Dabelow vray5
 		)
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
 ),
@@ -252,6 +255,7 @@ fn passByNode theNode =
 			"VRayGI":theNode.parent.tag.value
 			"AutoMask":theNode.parent.tag.value
 			"Deadline":theNode.parent.tag.value -- Dabelow
+			"vray5RenderElements":theNode.parent.tag.value -- Dabelow vray5
 			default:undefined
 		)
 	)
@@ -580,6 +584,8 @@ fn createNode pName type=
 		"VRayGI":custAttributes.add theNode VRayGICA
 		"AutoMask":custAttributes.add theNode AutoMaskCA
 		"Deadline":custAttributes.add theNode deadlinePropsCA -- Dabelow
+		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA -- Dabelow vray5
+		
 	)
 	
 	pName="LPM_"+pName
@@ -793,6 +799,33 @@ fn createDeadlineProps theName=
 
 	cp.submitLimitsOn = false
 		cp.submitLimits = #()
+
+	cp
+),
+
+-- vray5RenderElements
+-- dabelow vray5
+fn loadVray5RenderElementsSettings cp isPreviewMode= 
+(
+	if isPreviewMode then ( return false )
+
+	LPM_SMTDSettings.active 	 		= cp.active 
+	LPM_SMTDSettings.elementOverride 	= cp.elementOverride 			
+	LPM_SMTDSettings.activeElement 		= cp.activeElement 	
+),
+
+-- Dabelow vray5
+fn createVray5RenderElementsProps theName=
+(
+	cp=LPM_Fun.createNode theName "vray5RenderElements"
+
+	cp.active = true
+	cp.elementOverride = true	
+	cp.activeElement = #()
+
+
+	print "createVray5RenderElementsProps"
+	print cp
 
 	cp
 ),
@@ -1243,6 +1276,13 @@ fn generateDeadlineName cp=
 		theName += "[Limit] "
 	)
 
+	theName 
+),
+
+-- Dabelow vray5 
+fn generateVray5RenderElementsName cp=
+(
+	theName = ( cp.type + " Override" )
 	theName 
 ),
 
