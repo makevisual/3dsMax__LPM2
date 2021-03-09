@@ -1,36 +1,40 @@
-rollout vray5RenderElementsPropsRoll "VRay Render Elements Override 1.0" width:370 height:415
+rollout vray5RenderElementsPropsRoll "VRay5 Render Elements Override 1.0" width:325 height:390
 (
 	local theNode = undefined
-	
-	checkbox chk_RenderElementsOn "" pos:[12,12]
-		groupbox grp_RenderElements "Render Elements" width:325 height:395 slign:#left offset:[21,-25] enabled:true--false
-			dotNetControl elementList "system.windows.forms.listView" width:293 height:365 offset:[35, ( ( grp_RenderElements.height * -1 ) + 14 ) ] --pos:[4,248]
 
+	groupbox grp_RenderElements "Select Render Elements" width:313 height:378 slign:#left offset:[-5,0] enabled:true--false
+	dotNetControl elementList "system.windows.forms.listView" width:293 height:350 offset:[5, ( ( grp_RenderElements.height * -1 ) + 14 ) ] --pos:[4,248]
+
+	-- returns an array of checked items from the elementlist
+	function getCheckedItemsInLV =
+	(
+		listOfCheckedItems = #()
+
+		-- For each item in the list, get if it is enabled and if true, then append the .text field to the list
+		for i in 1 to elementlist.Items.count do 
+		(
+			if elementlist.Items.item[i-1].checked then append listOfCheckedItems elementlist.Items.item[i-1].subitems.item[1].text
+		)
+
+		return listOfCheckedItems
+	)
+
+	-- when an item is checked in the list view the ca is updated with the checked items 
 	on elementList ItemChecked arg do
 	(
-		print "click"
--- 		if SceneCheck_UpdateUI == true 					-- Only perform the button update when the UI is enabled
--- 		then
--- 		(
--- 			curTag = arg.item.tag 						-- Get the identifying tag of that list view item
+		checkedItems = getCheckedItemsInLV()
 
--- 			for report in SceneCheck_FailReports do 	-- Find its pair in the fail reports
--- 			(
--- 				if report.reportID == curTag 			-- And set the fail report item to correspond with the UI value
--- 				then 
--- 				(
--- 						report.enabled = arg.item.Checked
--- 				)
--- 			)
-
--- 				SceneCheckUI_Struct.doButtonUpdate()
--- 			)
--- 		else()
+		--TODO: try / catch needed because checked events happen when ui is building, need better handling
+		try
+		(
+			ca = custAttributes.get theNode 1
+			ca.activeElement = checkedItems
+			--print ca.activeElement
+		)catch()
 	)
 
 	function LVsetproperties arg_LV =
 	(
-
 		arg_LV.view 			= (dotNetClass "system.windows.forms.view").details
 		arg_LV.GridLines 		= false
 		arg_LV.FullRowSelect 	= true
@@ -38,10 +42,7 @@ rollout vray5RenderElementsPropsRoll "VRay Render Elements Override 1.0" width:3
 		arg_LV.HideSelection 	= false
 		arg_LV.AutoArrange 		= false
 		arg_LV.HeaderStyle 		= (dotNetClass "System.Windows.Forms.ColumnHeaderStyle").none
-		arg_LV.MultiSelect 		= false													-- Set to single selection mode
-		print "----------- 1 "
-		--show arg_LV.TopItem
-		print "----------- 2 "
+		arg_LV.MultiSelect 		= true													-- Set to single selection mode
 		arg_LV.BackColor 		= (dotNetClass "System.Drawing.Color").FromArgb 200 200 200
  		arg_LV.ForeColor 		= (dotNetClass "System.Drawing.Color").FromArgb 30 30 30
 		arg_LV.CheckBoxes 		= true
@@ -54,6 +55,7 @@ rollout vray5RenderElementsPropsRoll "VRay Render Elements Override 1.0" width:3
 		arg_LV.columns.add columnsAr[2] 200
 	)
 
+	-- fill the list view with data 
 	function LVpopulate arg_LV arg_RenderElements = 
 	(
 		-- clear and reset the List View
@@ -78,7 +80,8 @@ rollout vray5RenderElementsPropsRoll "VRay Render Elements Override 1.0" width:3
 		arg_LV.items.addRange rows
 	)
 
-	function collectElements =
+	-- get the render elements in the scene 
+	function collectElements arg_checkedItems =
 	(
 		struct elementObjStr
 		(
@@ -87,81 +90,55 @@ rollout vray5RenderElementsPropsRoll "VRay Render Elements Override 1.0" width:3
 			enabled = false
 		)
 
-		re 					= maxOps.GetCurRenderElementMgr()  					-- Get the render element manager
+		re 					= maxOps.GetCurRenderElementMgr()  	-- Get the render element manager
 		existingElements 	= #()
 
 		for i in 0 to ( re.NumRenderElements() - 1 ) do 		-- Get the current render elements
 		(
+			curEnabled = false 
+
 			curElement = ( re.GetRenderElement i )
 			elementObj = elementObjStr()
 			elementObj.animhandle 		= gethandlebyanim curElement
 			elementObj.name 			= curElement.elementName
-			elementObj.enabled 			= curElement.vrayVFB
+			
+			for checkedItem in arg_checkedItems do 
+			(
+				if elementObj.name == checkedItem then curEnabled = true 
+			)
+		
+			elementObj.enabled = curEnabled
 
 			append existingElements elementObj
 		)
 
-		print existingElements
-
 		return existingElements
 	)
 
+	-- event for rollout open 
 	on vray5RenderElementsPropsRoll open do
 	(
-		elementList.enabled = false
+		elementList.enabled = true 
 		LVsetproperties 	elementList
 		LVsetColumns 		elementList #("","Elements" )
-		--collectElements()
 
-		LVpopulate 	 		elementList ( collectElements() ) -- #(#("A",true),#("B",true),#("C",false),#("D",false))
+		-- Get the scene node for the element operator
+		cp 		=LPM_treeview_rollout.tv.selectedNode.tag.value
+		theNode = cp
 
- 		--listView_Fill elementList #("A","B","C")
+		ca = custAttributes.get theNode 1
+		checkedItems = ca.activeElement
 
-		--LPM_Fun.InitListView elementList "vray5RenderElements" 223
-		--LPM_Fun.FillListView elementList elementArray theNode.activeElement
---		LPM_Fun.FillListView elementList #("A","B","C") theNode.activeElement
---  		LPM_treeview_rollout.tv.enabled=false
---  		local cp=LPM_treeview_rollout.tv.selectedNode.tag.value
---  		theNode=LPM_treeview_rollout.tv.selectedNode
+		filteredElements = #()
+		filteredElements = collectElements checkedItems 
 
--- 		deadline_ConnectRepo()
--- 		deadline_GetLimits cp
--- 		deadline_GetGroups cp
-
--- 		chk_priorityOn.checked 					=cp.priorityOn 				
--- 			chk_priorityOffsetOn.checked 		=cp.priorityOffsetOn		
--- 			spn_priorityOffset.value 			=cp.priorityOffset 		
--- 			chk_priorityAbspoluteOn.checked 	=cp.priorityAbsoluteOn	
--- 			spn_priorityAbsolute.value 			=cp.priorityAbsolute 	
-
--- 		chk_TasksOn.checked 					= cp.taskSizeOn 	
--- 			spn_taskSize.value 					= cp.taskSize 
-
--- 		chk_GroupOn.checked 					= cp.submitGroupOn 			
--- 		chk_LimitsOn.checked 					= cp.submitLimitsOn
-		
--- 		toggleState()
-
--- 			-- Fixing for override
--- 			chk_priorityOffsetOn.checked 		=cp.priorityOffsetOn		
--- 			spn_priorityOffset.value 			=cp.priorityOffset 		
--- 			chk_priorityAbspoluteOn.checked 	=cp.priorityAbsoluteOn	
--- 			spn_priorityAbsolute.value 			=cp.priorityAbsolute 	
+		-- populate the listview with the filtered elements
+		LVpopulate elementList filteredElements
  	)
 	
 	on vray5RenderElementsPropsRoll close do
 	(
-		-- setFocus vray5RenderElementsPropsRoll
-		-- cp=theNode.tag.value
-		
--- 		cp.priorityOn 				= chk_priorityOn.checked
--- 			cp.priorityOffsetOn		= chk_priorityOffsetOn.checked
--- 			cp.priorityOffset 		= spn_priorityOffset.value
--- 			cp.priorityAbsoluteOn	= chk_priorityAbspoluteOn.checked
--- 			cp.priorityAbsolute 	= spn_priorityAbsolute.value
-					
-		-- theNode.text = LPM_Fun.generateDeadlineName cp
-		-- LPM_treeview_rollout.tv.enabled=true
+		-- ca properties are set in the ItemChecked event, so every check operation updates the data
 	)
 )
 
@@ -184,8 +161,8 @@ rcMenu rc_vray5RenderElementsPropsMenu
 	)
 	on editProps picked do
 	(		
-		createDialog vray5RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  vrayPropsRoll.width)
+		createDialog vray5RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  vray5RenderElementsPropsRoll.width)
 	)
 	
 )
---createDialog vray5RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  vrayPropsRoll.width)
+--createDialog vray5RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  vray5RenderElementsPropsRoll.width)

@@ -112,7 +112,7 @@ fn destroyAllDialogs=
 		try(destroyDialog AutoMaskRoll)catch()	
 		try(destroyDialog deadlinePropsRoll)catch()	-- Dabelow
 		try(destroyDialog SMTDLPMInterface)catch()	-- Dabelow
-		--try(destroyDialog vray5RenderElementsPropsCA = attributes vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
+		try(destroyDialog vray5PropsRoll)catch()				-- Dabelow vray5
 		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
 		try(destroyDialog LPM_treeview_rollout)catch()
 		
@@ -212,6 +212,8 @@ fn setIcon theNode=
 			"VRayGI":LPM_Fun.setImageIndex theNode theNode.tag.value.active 40 41
 			"AutoMask":LPM_Fun.setImageIndex theNode theNode.tag.value.active 42 43
 			"Deadline":LPM_Fun.setImageIndex theNode theNode.tag.value.active 46 47 -- Dabelow
+
+			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 -- Dabelow vray5
 			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 -- Dabelow vray5
 		)
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
@@ -255,6 +257,7 @@ fn passByNode theNode =
 			"VRayGI":theNode.parent.tag.value
 			"AutoMask":theNode.parent.tag.value
 			"Deadline":theNode.parent.tag.value -- Dabelow
+			"vray5":theNode.parent.tag.value -- Dabelow vray5
 			"vray5RenderElements":theNode.parent.tag.value -- Dabelow vray5
 			default:undefined
 		)
@@ -584,11 +587,15 @@ fn createNode pName type=
 		"VRayGI":custAttributes.add theNode VRayGICA
 		"AutoMask":custAttributes.add theNode AutoMaskCA
 		"Deadline":custAttributes.add theNode deadlinePropsCA -- Dabelow
+		"vray5":custAttributes.add theNode vray5PropsCA 							-- Dabelow vray5
 		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA -- Dabelow vray5
 		
 	)
 	
 	pName="LPM_"+pName
+	
+	print thenNode
+	
 	theNode.type=type
 	
 	if(type=="pass") or (type=="shot") or (type=="passGroup") then
@@ -824,9 +831,58 @@ fn createVray5RenderElementsProps theName=
 	cp.activeElement = #()
 
 
-	print "createVray5RenderElementsProps"
+	print "-- createVray5RenderElementsProps --"
 	print cp
 
+	cp
+),
+
+-- vray5 Override
+
+-- Dabelow vray5
+fn createVray5Props theName=
+(
+	cp=LPM_Fun.createNode theName "vray5"
+	
+	cp.qualityType = 1
+	
+	cp.global_switches_check = false
+		cp.displacement = true
+		cp.reflrefr = true
+	
+	cp.anti_aliasing_check = false
+		cp.AAmin = 1
+		cp.AAmax = 4
+	
+	cp.GI_illum_check = false
+		cp.giOn = false
+	
+	cp.GI_check = false
+		cp.giSkylightOn = false
+		cp.giSkylightMap = undefined
+		cp.giSkylightCol = (color 205 230 255)
+		cp.giSkylightMult = 1
+		cp.giSkylightMapCheck = true
+	
+		cp.giRefOn = false
+		cp.giRefMult = 1
+		cp.giRefMap = undefined
+		cp.giRefCol = (color 0 0 0)
+		cp.giRefMapCheck = true
+		
+	cp.moblur_check = false
+		cp.moblurOn = false
+		cp.moblurSubdivs = 6
+
+	cp.prog_check = false
+		cp.progMaxSubdiv = 100
+		cp.progTime = 1
+		
+	cp.dmc_check = false
+		cp.dmcThresh = .01
+		cp.dmcMult = 1
+	
+	cp.initialized=true	
 	cp
 ),
 
@@ -1282,8 +1338,56 @@ fn generateDeadlineName cp=
 -- Dabelow vray5 
 fn generateVray5RenderElementsName cp=
 (
-	theName = ( cp.type + " Override" )
+	--theName = ( cp.type + " Override" )
+	theName = ( "VRay5 Render Elements Override" )
 	theName 
+),
+
+-- Dabelow vray5 
+fn generateVray5PropName cp=
+(
+	theName = ""
+	
+	
+	if (cp.qualityType == 1) then
+	(
+		theName = "[Final/Prev] "
+	)else if (cp.qualityType == 2) then
+	(
+		theName = "[Final] "
+	)else if (cp.qualityType == 3) then
+	(
+		theName = "[Prev] "
+	)
+	
+	theName += "Vray5 Override "
+	
+	if (cp.global_switches_check) then
+	(
+		theName += "[Globals] "
+	)
+	if (cp.anti_aliasing_check) then
+	(
+		theName += "[AA] "
+	)
+	if (cp.GI_check) then
+	(
+		theName += "[GI] "
+	)
+	if (cp.moblur_check) then
+	(
+		theName += "[Moblur] "
+	)
+	if (cp.prog_check) then
+	(
+		theName += "[Prog] "
+	)
+	if (cp.dmc_check) then
+	(
+		theName += "[DMC] "
+	)		
+	
+	theName	
 ),
 
 fn generateVrayPropName cp=

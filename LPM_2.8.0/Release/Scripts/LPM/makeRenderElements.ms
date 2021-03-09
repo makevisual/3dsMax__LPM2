@@ -126,6 +126,20 @@ struct elementsDefStr
 		newElement.vrayVFB 			= false 
 
 		return newElement 
+	),
+
+	function element_VRayOptionRE = 
+	(
+		newElement = VRayOptionRE()
+
+		newElement.enabled 						= true 
+		newElement.elementName 					= "VRayOptionRE" 
+		newElement.vrayVFB 						= false 
+		newElement.exr_compression 				= 9
+		newElement.use_dwa_compression_level	= true
+		newElement.dwa_compression_level 		= 45.0
+
+		return newElement 
 	)
 )
 

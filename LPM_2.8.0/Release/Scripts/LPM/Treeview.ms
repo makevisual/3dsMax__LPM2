@@ -388,9 +388,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "Deadline"
 		getIconFromBitmap "DeadlineOff"
 
-		getIconFromBitmap "vray5RenderElements" --Dabelow vray5
-		getIconFromBitmap "vray5RenderElementsOff" --dabelow vray5 
-		
+		getIconFromBitmap "vray5RenderElements" 	--Dabelow vray5
+		getIconFromBitmap "vray5RenderElementsOff" 	--Dabelow vray5 
+		getIconFromBitmap "vray5" 					--Dabelow vray5
+		getIconFromBitmap "vray5Off" 				--Dabelow vray5 
+
 		tv.imageList = ilTv 
 	)
 
@@ -468,8 +470,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"VRayGI": nodeName = (LPM_Fun.generateVRayGIName theNode)
 			"passRoot": nodeName = (	if(proMode==false) then "Passes (Maximum of 3)" else "Passes" )
 			"shotRoot": nodeName = (	if(proMode==false) then "Shots (Maximum of 2)" else "Shots" )
-			-- Dabelow
-			"Deadline": nodeName = (LPM_Fun.generateDeadlineName theNode)
+			
+			"Deadline": nodeName = (LPM_Fun.generateDeadlineName theNode) -- Dabelow
+			"vray5RenderElements": nodeName = (LPM_Fun.generateVray5RenderElementsName theNode) -- Dabelow Vray5
+			"vray5": nodeName = (LPM_Fun.generateVray5PropName theNode) -- Dabelow Vray5
 			
 			default: nodeName = (LPM_Fun.getName theNode.name)
 		)
@@ -774,6 +778,26 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			newDeadline.ForeColor = FontColor
 			newDeadline.BackColor = BackColor
 			makeItalic newDeadline
+		)
+
+ 		-- Dabelow vray5
+		for vray5RenderElements in pmPass.children where vray5RenderElements.type=="vray5RenderElements" do
+		(
+			newVray5RenderElements=createTVnode newPass vray5RenderElements nodeType:"vray5RenderElements"
+			
+			newVray5RenderElements.ForeColor = FontColor
+			newVray5RenderElements.BackColor = BackColor
+			makeItalic newVray5RenderElements
+		)
+
+ 		-- Dabelow vray5
+		for vray5 in pmPass.children where vray5.type=="vray5" do
+		(
+			newVray5=createTVnode newPass vray5 nodeType:"vray5"
+			
+			newVray5.ForeColor = FontColor
+			newVray5.BackColor = BackColor
+			makeItalic newVray5
 		)
 		
 		if(pmPass.expanded) then	
@@ -1478,6 +1502,18 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	(
 		createDialog LPMDeadline pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)		
+
+	--Dabelow Vray5 TODO:Not sure if this goes anywhere?
+	fn EditVray5RenderElements =
+	(
+		createDialog LPMVray5RenderElements pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+	)	
+
+	--Dabelow Vray5 TODO:Not sure if this goes anywhere?
+	fn EditVray5 =
+	(
+		createDialog LPMVray5 pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+	)	
 
 	fn AddXrefSceneOverride =
 	(
@@ -2358,6 +2394,22 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							delete theNode
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
+
+						-- Dabelow VRay5
+						"vray5RenderElements":
+						(
+							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
+							delete theNode
+							LPM_treeview_rollout.tv.selectedNode.remove()
+						)
+
+						-- Dabelow VRay5
+						"vray5":
+						(
+							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
+							delete theNode
+							LPM_treeview_rollout.tv.selectedNode.remove()
+						)
 						
 						"shot":
 						(
@@ -2676,6 +2728,20 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						LPM_Fun.setIcon hitNode
 					)
 
+					-- Dabelow Vray5
+					"vray5RenderElements":
+					(
+						hitNode.tag.value.active= not hitNode.tag.value.active 
+						LPM_Fun.setIcon hitNode
+					)
+
+					-- Dabelow Vray5
+					"vray5":
+					(
+						hitNode.tag.value.active= not hitNode.tag.value.active 
+						LPM_Fun.setIcon hitNode
+					)
+
 					"xrefScene":
 					(
 						hitNode.tag.value.active= not hitNode.tag.value.active 
@@ -2923,7 +2989,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"ModifierOver":popUpMenu rc_ModifierOverMenu
 					"VRayGI":popUpMenu rc_LPMVrayGIMenu
 					"AutoMask":popUpMenu rc_AutoMaskMenu
-					"Deadline":popUpMenu rc_deadlinePropsMenu -- dabelow
+
+					"Deadline":popUpMenu rc_deadlinePropsMenu -- Dabelow
+					"vray5":popUpMenu rc_vray5PropsMenu -- Dabelow Vray5
+					"vray5RenderElements":popUpMenu rc_vray5RenderElementsPropsMenu -- Dabelow Vray5
 				)
 			)
 			tv.selectedNode=hitNode
@@ -3014,7 +3083,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"ModifierOver":(AddModifierOverride())
 					"VRayGI":(EditVrayGI())
 					"AutoMask":(EditAutoMask()) 
+
 					"Deadline":(EditDeadline()) -- Dabelow
+					"Deadline":(EditVray5RenderElements()) -- Dabelow Vray5
+					"Deadline":(EditVray5()) -- Dabelow Vray5
 				)
 			)
 		)
@@ -3028,8 +3100,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	 (
 		 dragnode=arg.item
 		 
+		 -- Dabelow Vray5
 		 it=arg.item.tag.value.type
-		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline")then
+		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray5")then
 			tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 		try
 		(
@@ -3195,7 +3268,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theNode=dragNode.tag.value
 					theType=dragNode.tag.value.type
 					
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") then
+					-- Dabelow vray5
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray5") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it					

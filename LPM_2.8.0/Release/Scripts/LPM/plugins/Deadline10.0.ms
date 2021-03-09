@@ -81,7 +81,7 @@ struct LPM_DeadlineAPI
 				label lab_DeadlineUser 						"  User: "  					align:#left width:77 											offset:[0, 0 ]													visible:false
 	 			label lab_DeadlineUserField 				" Loading User... " 			style_sunkenedge:true  width:225 align:#left height:15 			offset:[64,-21 ]												visible:false	
 
- 			GroupBox grp_jobOptions "Job Options" offset:[7,10] width:304 height:225																																		visible:false
+ 			GroupBox grp_jobOptions "Job Options" offset:[-7,10] width:304 height:205																																		visible:false
   				label lbl_priority 							"  Priority:" 					align:#left width:100 height:13 								offset:[0, ( ( grp_jobOptions.height * -1 ) + 15 ) ] 			visible:false
 	   			progressBar sld_priority 					"" 								align:#left width:182 height:18 range:[0,100,50] type:#integer 	offset:[63,-21 ]												visible:false
    				spinner spn_priority 						"" 								width:47 height:16 type:#integer fieldwidth:35					offset:[1,-22]													visible:false
@@ -94,8 +94,10 @@ struct LPM_DeadlineAPI
 	  			spinner spn_overrideFrameRange1 			"" 								range:[-10000,10000,0] type:#integer width:65 enabled:false 	offset:[-40,-18]												visible:false
   				spinner spn_overrideFrameRange2 			"to " 							range:[-10000,10000,0] type:#integer width:65 enabled:false	 	offset:[48,-21] 												visible:false
  				dropdownList ddl_SubmitExternalFilesMode 	"" 								width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Do NOT copy Textures to Repository", " Copy LOCAL Textures to Repository", " Copy ALL Textures to Repository")
+
+ 				-- Frame buffer mode UI disabled for vray5
 				dropdownList ddl_frameBufferMode 			""						 		width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Use CURRENT frame buffer ", " Use VRAY Frame Buffer ", " Use 3DSMAX Frame Buffer ")
- 				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true 			offset:[-1,-2]		visible:false
+ 				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true 			offset:[-1,-20]		visible:false
 				checkbox chk_IgnoreFiles 					" Ignore Missing External Files"	width:166 height:15 	offset:[-1,0]		visible:false
 				checkbox chk_RestartMax 					" Restart 3dsMax between Frames " 	height:15 				offset:[-1,0]		visible:false checked:true
  				checkbox chk_closeOnComplete 				" Close on complete" 				checked:true			offset:[160,-59]	visible:false
@@ -227,7 +229,7 @@ struct LPM_DeadlineAPI
 					LPM_DeadlineSubmitRo.spn_overrideFrameRange1.visible = state
 					LPM_DeadlineSubmitRo.spn_overrideFrameRange2.visible = state
 					LPM_DeadlineSubmitRo.ddl_SubmitExternalFilesMode.visible = state
-					LPM_DeadlineSubmitRo.ddl_frameBufferMode.visible = state
+					LPM_DeadlineSubmitRo.ddl_frameBufferMode.visible =false -- = state --TODO:Better way to handle this for vray5 pipeline?
 					LPM_DeadlineSubmitRo.chk_renderElementsExr.visible = state
 					LPM_DeadlineSubmitRo.chk_IgnoreFiles.visible = state
 					LPM_DeadlineSubmitRo.chk_RestartMax.visible = state
@@ -921,7 +923,7 @@ struct LPM_DeadlineAPI
  					else ( idiotCheck_run() )
  					
 	 				-- Move Log to bottom of Dialog 
-	 				submitLog.pos=[ 3 , 735 ]
+	 				submitLog.pos=[ 3 , 715 ]
 	 				submitLog.height=138
 	 				btn_connectCancel.visible = false
 
@@ -932,7 +934,7 @@ struct LPM_DeadlineAPI
 					ui_update_submit()
 
 					-- Resize Interface
-					LPM_DeadlineSubmitRo.height = 877	
+					LPM_DeadlineSubmitRo.height = 857	
  				)
  				else
  				(

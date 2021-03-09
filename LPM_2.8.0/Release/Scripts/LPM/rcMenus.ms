@@ -37,6 +37,7 @@ filein "rcMenu_vrayOverride.ms"
 filein "rcMenu_deadlineOverride.ms" 					-- Dabelow
 filein "rcMenu_Utilities.ms" 							-- Dabelow
 filein "rcMenu_vray5RenderElementsOverride.ms" 			-- Dabelow vray5
+filein "rcMenu_vray5Override.ms" 						-- Dabelow vray5
 
 
 -------------------------------------------------------------------------------------------------------   Rollouts   -------------------------------------------------------------------------------------------------------
@@ -3232,26 +3233,21 @@ rcMenu rc_PassMenu
 	(
 		menuItem objectSetAdd "Object Set"
 		menuItem lightSetAdd "Light Set"
+		seperator set8
 		menuItem commonPropsAdd "Common Properties Override" 
-		menuItem renderPropsAdd "Renderer Override" 
-		menuItem vray5RenderElementsAdd "Vray5 RenderElement" -- Dabelow vray5
-		menuItem vrayPropsAdd "Vray Override" 
-		--menuItem VrayGIAdd "V-Ray GI" 
 		menuItem effectsPropsAdd "Element, Environment and Effects Override"
+		menuItem renderPropsAdd "Renderer Override" 
 		menuItem deadlineAdd "Deadline Override" -- Dabelow
-		menuItem ModifierOverAdd "Modifier Override"
+		--menuItem vrayPropsAdd "Vray Override" 
+		--menuItem VrayGIAdd "V-Ray GI" 
+		--menuItem ModifierOverAdd "Modifier Override"
 		--menuItem AutoMaskAdd "AutoMask" 
 		menuItem xrefObjAdd "Xref Object Override"
 		menuItem xrefSceneAdd "Xref Scene Override"
 		menuItem scriptAdd "Script"
 		seperator set5
-		--subMenu "Mental Ray"
-		--(
-		--	menuItem photoStudioAdd "Photo Studio" enabled:((maxVersion())[1] >= 10000)
-			
-		--)
-		--seperator set8
-		menuItem newOperator "Custom Operator..."
+		menuItem vray5PropsAdd "Vray5 Override" -- Dabelow vray5
+		menuItem vray5RenderElementsPropsAdd "Vray5 RenderElement Override" -- Dabelow vray5
 	)
 	seperator set10
 	menuItem    duplicatePass "Duplicate Pass"
@@ -3450,11 +3446,22 @@ rcMenu rc_PassMenu
 	)
 
 		-- Dabelow vray5
-	on vray5RenderElementsAdd picked do
+	on vray5RenderElementsPropsAdd picked do
 	(
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
 		thePass=thePassNode.tag.value
 		theSet=LPM_Fun.createVray5RenderElementsProps "vray5RenderElements"
+		theSet.parent=thePass
+		LPM_treeview_rollout.addPassTV thePassNode		
+
+	)
+	
+	-- Dabelow vray5
+	on vray5PropsAdd picked do
+	(
+		thePassNode=LPM_treeview_rollout.tv.selectedNode
+		thePass=thePassNode.tag.value
+		theSet=LPM_Fun.createVray5Props "vray5"
 		theSet.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode		
 

@@ -270,6 +270,58 @@ attribID:#(0x6743c747, 0x742f062b)
 	)
 )
 
+--TODO: Dabelow vray5
+vray5PropsCA = attributes vray5Props
+attribID:#(0x2aa18b31, 0x23cf92fb)
+(
+	parameters main
+	(
+		type type:#string
+		props type:#intTab tabSizeVariable:true
+		initialized type:#boolean
+		active type:#boolean default:true
+		
+		qualityType type:#integer
+		
+		global_switches_check type:#boolean
+			displacement type:#boolean
+			reflrefr type:#boolean
+			
+		anti_aliasing_check type:#boolean
+			aaMin type:#integer
+			aaMax type:#integer
+			
+		GI_illum_check type:#boolean
+			giOn type:#boolean
+			
+		GI_check type:#boolean
+			giSkylightOn type:#boolean
+			giSkylightMap type:#texturemap
+			giSkylightCol type:#color
+			giSkylightMult type:#float
+			giSkylightMapCheck type:#boolean
+			
+			giRefOn type:#boolean
+			giRefCol type:#color
+			giRefMap type:#texturemap
+			giRefMult type:#float
+			giRefMapCheck type:#boolean
+			
+		moblur_check type:#boolean
+			moblurOn type:#boolean
+			moblurSubdivs type:#integer
+
+		prog_check type:#boolean
+			progMaxSubdiv type:#float
+			progTime type:#float
+			
+		dmc_check type:#boolean
+			dmcThresh type:#float
+			dmcMult type:#float
+		
+	)
+)
+
 
 AutoMaskCA = attributes AutoMask
 attribID:#(0x52ce8e55, 0x3829ed6b)
