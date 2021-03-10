@@ -1,5 +1,5 @@
 
- LPM_Dir = trimright (getThisScriptFilename()) "Include.ms"
+global LPM_Dir = trimright (getThisScriptFilename()) "Include.ms"
 -- getFilenamePath( getThisScriptFilename() )
 
 filein (LPM_Dir+"Globals.ms")
