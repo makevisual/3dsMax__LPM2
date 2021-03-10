@@ -1,4 +1,5 @@
 -- The purpose of this code is to call renderer specific overrides that could be destructive to other workflows.
+-- Needs LPM_RenderDispatchAction defined as #preRender or #postRender when the dispatch is called, for the subsequent scripts to work
 
 curRenderer = ( renderers.current as string )
 

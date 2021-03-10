@@ -33,6 +33,7 @@ global LPMPassSelectRoll
 
 global LPM_SMTDSettings -- Dabelow
 global LPM_NukeAPI -- Dabelow
+global LPM_RenderDispatchAction -- Dabelow Vray5
 
 global iconPath = LPM_Dir + "icons/"
 global BackColor

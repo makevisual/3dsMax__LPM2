@@ -2136,6 +2136,7 @@ struct LPM_RenderAPI
 
 					theEle=re.GetRenderElement (i-1)
 
+					--TODO: look into this as the source of the bugs vray5
 					useVray=hasProperty theEle #vrayVFB
 
 					try
@@ -2581,6 +2582,7 @@ struct LPM_RenderAPI
 				------------------------------------------------------------------------------------------------ final prepare --------------------------------------------------------------------------------
 
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
+				LPM_RenderDispatchAction = #preRender
 				filein (LPM_Dir+"renderer_dispatch.ms")
 
 				-- Old Vray Functionality below, left in for saftey
@@ -3819,6 +3821,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 		--Pre render action
 		isPreviewMode=((renderType==#preview)or(renderType==#previewHalf))
+
+		-- TODO: Turn this back on, super important, just turned off for testing -- Dabelow
 		LPM_Render.fnPreRenderAction thePass theShot isPreviewMode:isPreviewMode
 
 		--Set settings based on render type
@@ -3848,12 +3852,14 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		--And go!!
 		with defaultAction #logmsg
 		(
-			max quick render
+			--max quick render
+			render()
 		)
 
 		SetQuietMode false
 
-		LPM_Render.fnPostRenderAction thePass theShot
+		-- TODO: Turn this back on, super important, just turned off for testing -- Dabelow
+		-- LPM_Render.fnPostRenderAction thePass theShot
 
 		if ( classOf getLocalTime == MAXScriptFunction ) then
 		(

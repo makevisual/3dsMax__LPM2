@@ -1,22 +1,36 @@
 -- Sets the rendderer specific outputs for Vray5 and disables the max save file
 -- Included the depreciated function for any possible future use
 
+function curPrerenderAction =
+(
+    print "== Vray5 PreRenderAction =="
+    thePath=getFilenamePath rendOutputFilename
+    theFile=getFilenameFile rendOutputFilename
+    theType=getFilenameType rendOutputFilename
+    
+    makeDir thePath
+    
+    renderers.current.output_on             = true                 -- force vray frame buffer on
+    --renderers.current.output_rawFileName    = rendOutputFilename   -- steal the name from the 3dsmax render output filename global ( set in render.ms )
+    renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- steal the name from the 3dsmax render output filename global ( set in render.ms )
+    renderers.current.output_saveRawFile    = true                 -- enable saving the file
+    renderers.current.output_splitgbuffer   = true                 -- enable render elements to be stored in the output ??????
+    --renderers.current.output_genpreview     = true
+    rendSaveFile = false
 
-thePath=getFilenamePath rendOutputFilename
-theFile=getFilenameFile rendOutputFilename
-theType=getFilenameType rendOutputFilename
+)
 
-makeDir thePath
+function curPostRenderAction =
+(
+    print "== Vray5 PostRenderAction =="
+    -- Put the stuff back
+)
 
-renderers.current.output_on             = true                 -- force vray frame buffer on
---renderers.current.output_rawFileName    = rendOutputFilename   -- steal the name from the 3dsmax render output filename global ( set in render.ms )
-renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- steal the name from the 3dsmax render output filename global ( set in render.ms )
-renderers.current.output_saveRawFile    = true                 -- enable saving the file
-renderers.current.output_splitgbuffer   = true                 -- enable render elements to be stored in the output ??????
-renderers.current.output_genpreview     = true
-rendSaveFile = false
+if LPM_RenderDispatchAction == #preRender then curPrerenderAction()
+if LPM_RenderDispatchAction == #postRender then curPostRenderAction()
 
 
+-- this is just here for reference, can be deleted once code works
 fn setVray filePath thePass=
 (
         if(classof renderers.current==vray) then
