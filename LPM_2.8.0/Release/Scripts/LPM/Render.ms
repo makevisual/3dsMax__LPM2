@@ -40,106 +40,7 @@ struct LPM_RenderAPI
 	------------------------------------------------------------------------
 	--Utility Functions
 	------------------------------------------------------------------------
-	fn setVray filePath thePass=
-	(
-		if(classof renderers.current==vray) then
-		(
-			if thePass.VRayRaw then
-			(
-				renderers.current.output_on = true
-				renderers.current.output_saveRawFile = true
-				renderers.current.output_rawExrUseHalf = not (thePass.VRayRawFull)
-				try
-				(
-					renderers.current.output_rawExrDeep = thePass.VRayRawDeep
-				)
-				catch
-				(
-				)
-			)
 
-
-
-			if(renderers.current.output_on) then
-			(
-				thePath=getFilenamePath filePath
-				theFile=getFilenameFile filePath
-				theType=getFilenameType filePath
-
-
-
-
-				if(renderers.current.output_splitgbuffer) then
-				(
-					makeDir thePath
-					--ADD CONDITIONALS CHECK FOR VRMIMG USE AND SPLIT USE< GENERATE WARNING IF VFB BUT NEITHER
-					x=bitmap 10 10 filename:(thePath+thefile+"TMP"+theType)
-					save x
-					renderers.current.output_splitfilename=filePath
-					renderers.current.output_splitbitmap=x
-					deletefile (thePath+thefile+"TMP"+theType)
-				)
-
-				if(renderers.current.output_saveRawFile) then
-				(
-					if thePass.VRayRaw then
-					(
-						renderers.current.output_rawFileName=thePath+theFile--+".vrImg"
-						renderers.current.output_rawFileName += case thePass.VRayRawFileType of
-						(
-							1:
-							(
-								".vrimg"
-							)
-							2:
-							(
-								".exr"
-							)
-							3:
-							(
-								".vrst"
-							)
-							4:
-							(
-								".vrsm"
-							)
-						)
-
-						if (thePass.VRayRawFileType == 1) and (thePass.PostConvert) then
-						(
-							LPM_Root.PostConvertVrimg2exr = LPM_Fun.getIni "Settings" "PostConvertVrimg2exr" string "C:\\Program Files\\Chaos Group\\V-Ray\\3dsmax 2014 for x64\\tools\\vrimg2exr.exe"
-
-							LPM_Root.PostConvert = thePass.PostConvert
-							LPM_Root.PostConvertCompression = thePass.PostConvertCompression
-							LPM_Root.PostConvertHalfFoat = thePass.PostConvertHalfFoat
-							LPM_Root.PostConvertDatawindow = thePass.PostConvertDatawindow
-
-						)
-					)
-					else
-					(
-						renderers.current.output_rawFileName=thePath+theFile + ".vrimg"
-					)
-
-
-
-				)
-
-				if(not renderers.current.output_saveRawFile) and (not renderers.current.output_splitgbuffer) then
-				(
-					try
-					(
-						LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
-						LPM_renderProgress_Ro.warning.color=color 135 6 6
-					)
-					catch
-					(
-					)
-					print "Warning: Vray is set to use VFB, but neither Raw Image or Split Render Channels are active, render data may be lost."
-				)
-			)
-		)
-	),
 	fn setWarning=
 	(
 		try(
@@ -1272,8 +1173,6 @@ struct LPM_RenderAPI
 				preRenderSettings=undefined
 				preRenderSettingsNew=undefined
 				preRenderSettings=LPM_Fun.saveRenderPreset() --ALWAYS save preset beforehand, to account for vrayRenderProps and such -tyson
-				--TODO: look at what tyson did? -aaron
-
 
 				--Load current renderer settings
 				-------------------------------------------------------------------------------------------------
@@ -1323,13 +1222,6 @@ struct LPM_RenderAPI
 					print thePass
 					LPM_Fun.loadDeadlineSettings theDeadlineProps[1] isPreviewMode
 				)
-
-				--Load Vray5 Props -- Dabelow vray5
-				-------------------------------------------------------------------------------------------------
-
-				--Load Vray5 Render elements Props -- Dabelow vray5
-				-------------------------------------------------------------------------------------------------
-
 
 				--Load photoStudio Props
 				-------------------------------------------------------------------------------------------------
@@ -1889,32 +1781,6 @@ struct LPM_RenderAPI
 				RenderElementsUpdatePaths()
 				re = maxOps.GetCurRenderElementMgr()
 
-				try
-				(
-					if not (isPreviewMode) then
-					(
-						theRenderer=(classof renderers.current) as string
-						vr = renderers.current
-
-						if (findString theRenderer "V_Ray" !=undefined) then
-						(
-							vrfrbufBackup = vr.output_on
-
-							if (LPM_Fun.getIni "Settings" "VFBoffSetting" booleanClass true) then
-							(
-								vr.output_on = false
-							)
-						)
-
-					)
-				)
-				catch
-				(
-
-				)
-
-
-
 				---------------------------------------------------------------------------------------------------     DistributedRender   -----------------------------------------------------------------
 
 				try
@@ -2288,11 +2154,11 @@ struct LPM_RenderAPI
 									theEle.enabled=true
 								)
 								catch ()
-								try
-								(
-									theEle.vrayVFB=true
-								)
-								catch ()
+								-- try						-- dabelow vray5
+								-- (						-- dabelow vray5
+								-- 	theEle.vrayVFB=true		-- dabelow vray5
+								-- )						-- dabelow vray5
+								-- catch ()					-- dabelow vray5
 
 							)
 							else
@@ -2302,11 +2168,11 @@ struct LPM_RenderAPI
 									theEle.enabled=false
 								)
 								catch ()
-								try
-								(
-									theEle.vrayVFB=false
-								)
-								catch ()
+								--try 						-- dabelow vray5
+								--( 						-- dabelow vray5
+								--	theEle.vrayVFB=false 	-- dabelow vray5
+								--) 						-- dabelow vray5
+								--catch () 					-- dabelow vray5
 
 							)
 						)
@@ -2582,7 +2448,8 @@ struct LPM_RenderAPI
 				------------------------------------------------------------------------------------------------ final prepare --------------------------------------------------------------------------------
 
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
-				LPM_RenderDispatchAction = #preRender
+				LPM_RenderDispatchThePass 	= thePass
+				LPM_RenderDispatchAction 	= #preRender
 				filein (LPM_Dir+"renderer_dispatch.ms")
 
 				-- Old Vray Functionality below, left in for saftey
@@ -2712,8 +2579,8 @@ struct LPM_RenderAPI
 					theNode.boxmode = off
 				)
 
--- 				redrawviews()
--- 				print "WTF"
+ 				-- redrawviews()
+ 				-- print "WTF"
 				te_properties = timestamp()
 
 				--restore light sets
@@ -3409,14 +3276,13 @@ struct LPM_RenderAPI
 						theRenderer=(classof vr) as string
 
 
-						if ((findString theRenderer "V_Ray") != undefined) then
-						(
-							if vr.output_on then
-							(
-								vr.showLastVFB()
-							)
-
-						)
+						-- if ((findString theRenderer "V_Ray") != undefined) then 	-- Dabelow VRay5
+						-- ( 														-- Dabelow VRay5
+						-- 	if vr.output_on then 									-- Dabelow VRay5
+						-- 	( 														-- Dabelow VRay5
+						-- 		vr.showLastVFB() 									-- Dabelow VRay5
+						-- 	) 														-- Dabelow VRay5
+						-- ) 														-- Dabelow VRay5
 					)
 					catch
 					(
@@ -3565,8 +3431,15 @@ struct LPM_RenderAPI
 				LPM_Root.PostConvertDatawindow = false
 
 			)
+		
 		)
+		-- TODO: test this 
+		-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
+		LPM_RenderDispatchAction = #postRender
+		filein (LPM_Dir+"renderer_dispatch.ms")
+		
 
+		-- print "===== DOES THIS HAPPEN? =========="
 
 		propString = "object properties: " + ((te_properties-ts_properties)/1000.0) as string + "s"
 		presetString = "renderer properties: " + ((te_rpreset-ts_rpreset)/1000.0) as string + "s"
@@ -3831,7 +3704,10 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		if(isPreviewMode) then
 		(
 			rendOutputFilename=LPM_Fun.getPreviewFile thePass
-			LPM_Render.setVray rendOutputFilename thePass
+
+			-- Dabelow VRAY5 disabled because not needed anymore
+			--LPM_Render.setVray rendOutputFilename thePass
+
 			makeDir ((getDir #preview)+"\\"+maxFileName+"_"+"\\") all:true
 			deleteFile rendOutputFilename
 			rendTimeType=1
@@ -3859,7 +3735,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		SetQuietMode false
 
 		-- TODO: Turn this back on, super important, just turned off for testing -- Dabelow
-		-- LPM_Render.fnPostRenderAction thePass theShot
+		LPM_Render.fnPostRenderAction thePass theShot
 
 		if ( classOf getLocalTime == MAXScriptFunction ) then
 		(

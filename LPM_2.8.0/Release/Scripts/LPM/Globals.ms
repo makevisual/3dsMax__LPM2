@@ -31,9 +31,11 @@ global LPM_ObjSetPropsBuff
 global LPM_LightSetPropsBuff
 global LPMPassSelectRoll
 
-global LPM_SMTDSettings -- Dabelow
-global LPM_NukeAPI -- Dabelow
-global LPM_RenderDispatchAction -- Dabelow Vray5
+global LPM_SMTDSettings 				-- Dabelow
+global LPM_NukeAPI 						-- Dabelow
+global LPM_RenderDispatchThePass 		-- Dabelow Vray5
+global LPM_RenderDispatchAction 		-- Dabelow Vray5
+global LPM_RenderDispatchRestoreData 	-- Dabelow Vray5
 
 global iconPath = LPM_Dir + "icons/"
 global BackColor
