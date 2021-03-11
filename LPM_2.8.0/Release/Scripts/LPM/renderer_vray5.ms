@@ -55,7 +55,12 @@ function vray5_Globals_Override_PreRender =
     Vray5_RestoreData = LPM_RenderDispatchRestoreData
 
     Vray5_RestoreData.output_on           = renderers.current.output_on
-    Vray5_RestoreData.output_rawFileName  = renderers.current.output_rawFileName
+
+    -- stores the vray vfb output path, if one is not set, then and empty string is stored instead
+    if renderers.current.output_rawFileName == undefined
+    then ( Vray5_RestoreData.output_rawFileName  = "" )
+    else ( Vray5_RestoreData.output_rawFileName  = renderers.current.output_rawFileName )
+    
     Vray5_RestoreData.output_saveRawFile  = renderers.current.output_saveRawFile
     Vray5_RestoreData.output_splitgbuffer = renderers.current.output_splitgbuffer
     Vray5_RestoreData.output_genpreview   = renderers.current.output_genpreview
