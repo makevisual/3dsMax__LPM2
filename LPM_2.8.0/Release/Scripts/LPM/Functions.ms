@@ -114,6 +114,7 @@ fn destroyAllDialogs=
 		try(destroyDialog SMTDLPMInterface)catch()	-- Dabelow
 		try(destroyDialog vray5PropsRoll)catch()				-- Dabelow vray5
 		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
+		try(destroyDialog cameraOverscanPropsRoll)catch()		-- Dabelow cameraOverscan
 		try(destroyDialog LPM_treeview_rollout)catch()
 		
 		callbacks.removeScripts id:#closeLPM
@@ -213,8 +214,9 @@ fn setIcon theNode=
 			"AutoMask":LPM_Fun.setImageIndex theNode theNode.tag.value.active 42 43
 			"Deadline":LPM_Fun.setImageIndex theNode theNode.tag.value.active 46 47 -- Dabelow
 
-			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 -- Dabelow vray5
-			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 -- Dabelow vray5
+			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 				-- Dabelow vray5
+			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 	-- Dabelow vray5
+			"cameraOverscan":LPM_Fun.setImageIndex theNode theNode.tag.value.active 52 53  		-- Dabelow cameraOverscan 
 		)
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
 ),
@@ -256,9 +258,10 @@ fn passByNode theNode =
 			"ModifierOver":theNode.parent.tag.value
 			"VRayGI":theNode.parent.tag.value
 			"AutoMask":theNode.parent.tag.value
-			"Deadline":theNode.parent.tag.value -- Dabelow
-			"vray5":theNode.parent.tag.value -- Dabelow vray5
-			"vray5RenderElements":theNode.parent.tag.value -- Dabelow vray5
+			"Deadline":theNode.parent.tag.value 				-- Dabelow
+			"vray5":theNode.parent.tag.value 					-- Dabelow vray5
+			"vray5RenderElements":theNode.parent.tag.value 		-- Dabelow vray5
+			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
 			default:undefined
 		)
 	)
@@ -586,9 +589,10 @@ fn createNode pName type=
 		"ModifierOver":custAttributes.add theNode ModifierOverCA
 		"VRayGI":custAttributes.add theNode VRayGICA
 		"AutoMask":custAttributes.add theNode AutoMaskCA
-		"Deadline":custAttributes.add theNode deadlinePropsCA -- Dabelow
-		"vray5":custAttributes.add theNode vray5PropsCA 							-- Dabelow vray5
-		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA -- Dabelow vray5
+		"Deadline":custAttributes.add theNode deadlinePropsCA 							-- Dabelow
+		"vray5":custAttributes.add theNode vray5PropsCA 								-- Dabelow vray5
+		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA 	-- Dabelow vray5
+		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
 		
 	)
 	
@@ -930,6 +934,33 @@ fn createVrayProps theName=
 	
 	cp.initialized=true	
 	cp
+),
+
+--TODO:
+-- Dabelow cameraOverscan
+fn loadCameraOverscanSettings cp isPreviewMode= 
+(
+	-- if isPreviewMode then ( return false )
+	-- 
+	-- LPM_SMTDSettings.active 	 		= cp.active 
+	-- LPM_SMTDSettings.elementOverride 	= cp.elementOverride 			
+	-- LPM_SMTDSettings.activeElement 		= cp.activeElement 	
+),
+
+--TODO:
+-- Dabelow cameraOverscan
+fn createCameraOverscanProps theName=
+(
+	-- cp=LPM_Fun.createNode theName "vray5RenderElements"
+	-- 
+	-- cp.active = true
+	-- cp.elementOverride = true	
+	-- cp.activeElement = #()
+	--
+	-- print "-- createVray5RenderElementsProps --"
+	-- print cp
+	-- 
+	-- cp
 ),
 
 fn autoSetRenderOutput = 
@@ -1388,6 +1419,22 @@ fn generateVray5PropName cp=
 	)		
 	
 	theName	
+),
+
+-- Dabelow cameraOverscan
+fn generateVray5RenderElementsName cp=
+(
+	--theName = ( cp.type + " Override" )
+	theName = ( "Camera Overscan Override" )
+
+	theName += (" [" + ( cp.fovOverride as string ) + "]" )
+
+	if ( cp.resOverride ) then 
+	(
+		theName += (" [" + ( cp.resXOverride as string ) + ( cp.resYOverride as string ) +"]" )  
+	)
+
+	theName 
 ),
 
 fn generateVrayPropName cp=
@@ -2111,7 +2158,7 @@ fn collectPasses activeOnly:true theShot:undefined=
 	renderCollect
 ),
 
-fn setWhoToRenderByRenderType=
+fn setWhoToRenderByRenderType =
 (
 	if ((CheckProjRenderPath())[1]) then
 	(
@@ -2138,7 +2185,7 @@ fn setWhoToRenderByRenderType=
 	)
 ),
 
-fn getWhoToRender=
+fn getWhoToRender =
 (
 	return LPM_Fun.whoToRender
 ),

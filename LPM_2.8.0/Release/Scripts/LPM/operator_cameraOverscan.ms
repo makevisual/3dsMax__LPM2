@@ -1,186 +1,80 @@
--- Sets the rendderer specific outputs for Vray5 and disables the max save file
--- Included the depreciated function for any possible future use
--- 3/10/2021 Aaron Dabelow theonlyaaron@gmail.com
-
-curCam = selection[1]
-newCam = copy curCam
-paramWire.connect curCam.baseObject[#fov] newCam.baseObject[#fov] "fov * 1.1"
+-- 3/16/2021 Aaron Dabelow theonlyaaron@gmail.com
 
 struct cameraOverscan_RestoreDataStr
 (
     newCamAnimhanlde     = undefined,
+    fovOverride          = undefined,
+    resXOriginal         = undefined,
+    resYOriginal         = undefined,
+    resOverride          = undefined,
+    resXOverride         = undefined,
+    resYOverride         = undefined,
     null                 = undefined
  )
 
-function vray5_Globals_Override_PreRender =
+function cameraOverscan_Override_PreRender =
 (
     -- Fetch the global variable and assign the current state to it
-    Vray5_RestoreData = LPM_RenderDispatchRestoreData
+    curCam = selection[1] -- TODO get the real correct camera 
+    newCam = copy curCam
 
-    Vray5_RestoreData.output_on           = renderers.current.output_on
+    -- Store the animhandle of the new camera, to be deleted later
+    LPM_OperatorData.cameraOverscan.newCamAnimhanlde  = getHandleByAnim newCam
+    curFov = LPM_OperatorData.cameraOverscan.fovOverride
 
-    -- stores the vray vfb output path, if one is not set, then and empty string is stored instead
-    if renderers.current.output_rawFileName == undefined
-    then ( Vray5_RestoreData.output_rawFileName  = "" )
-    else ( Vray5_RestoreData.output_rawFileName  = renderers.current.output_rawFileName )
-    
-    Vray5_RestoreData.output_saveRawFile  = renderers.current.output_saveRawFile
-    Vray5_RestoreData.output_splitgbuffer = renderers.current.output_splitgbuffer
-    Vray5_RestoreData.output_genpreview   = renderers.current.output_genpreview
-    Vray5_RestoreData.output_useram       = renderers.current.output_useram
-    Vray5_RestoreData.rendShowVFB         = rendShowVFB
-    Vray5_RestoreData.rendSaveFile        = rendSaveFile
-
-    -- Fetch, parse and make the output directory
-    thePath=getFilenamePath rendOutputFilename
-    theFile=getFilenameFile rendOutputFilename
-    theType=getFilenameType rendOutputFilename
-
-    makeDir thePath
-
-    -- Set the properties to their desired values
-    renderers.current.output_on             = true                           -- force vray frame buffer on
-    renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
-    renderers.current.output_saveRawFile    = true                           -- enable saving the file
-    renderers.current.output_splitgbuffer   = true                           -- enable render elements to be stored in the output ??????
-    renderers.current.output_genpreview     = true                           -- Not sure if this needs to be on or not
-    rendShowVFB                             = false                          -- Turn off max default frame buffer
-    rendSaveFile                            = false                          -- Turn off max default file save option
-
-    -- Set this property for no viewport image, but better memory concervation
-    renderers.current.output_useram = false
-)
-
-function vray5_Globals_Override_PostRender =
-(
-    -- Get the restore data from global variable
-    Vray5_RestoreData = LPM_RenderDispatchRestoreData
-
-    -- Restore the previous data
-    renderers.current.output_rawFileName    = Vray5_RestoreData.output_rawFileName
-    renderers.current.output_saveRawFile    = Vray5_RestoreData.output_saveRawFile
-    renderers.current.output_splitgbuffer   = Vray5_RestoreData.output_splitgbuffer
-    renderers.current.output_genpreview     = Vray5_RestoreData.output_genpreview
-    renderers.current.output_useram         = Vray5_RestoreData.output_useram
-    rendShowVFB                             = Vray5_RestoreData.rendShowVFB
-    rendSaveFile                            = Vray5_RestoreData.rendSaveFile
-)
-
-function vray5_RE_Override_PreRender =
-(
-    print "= Vray5 vray5_RE_Override_PreRender ="
-
-    -- object for holding render element states
-    struct elementObjStr
+    -- Wire the FOV 
+    case curClass of
     (
-        animhandle = undefined,
-        name = "",
-        enabled = false
-    )
-
-    -- Get the render element manager
-    re                  = maxOps.GetCurRenderElementMgr()
-    existingElements    = #()
-
-    -- Get the current render elements
-    for i in 0 to ( re.NumRenderElements() - 1 ) do
-    (
-        -- Try Catch added for non v-ray supported render elements, or vrayAlpha render element
-        try(
-            curEnabled = false
-
-            curElement = ( re.GetRenderElement i )
-            elementObj = elementObjStr()
-
-            elementObj.animhandle       = gethandlebyanim curElement
-            elementObj.name             = curElement.elementName
-            elementObj.enabled          = curElement.vrayVFB
-
-            append existingElements elementObj
-        )catch()
-    )
-
-    -- Store the collected data for later restoration
-    LPM_RenderDispatchRestoreData.vrayVFBElementStates = existingElements
-
-    -- get the active pass from the global variable
-    thePass = LPM_RenderDispatchThePass
-
-    -- Collect the operators that are "vray5RenderElements", get their "activeElementList" and enable them
-    theVray5RenderElements =for it in thePass.children where ((it.type=="vray5RenderElements") and (it.active)) collect it
-    for theVray5RenderElement in theVray5RenderElements do
-    (
-        -- get the custom attribute from the current operator ( active elements as string array )
-        ca = custAttributes.get theVray5RenderElement 1
-        activeElements = ca.activeElement
-
-        -- loop through all of the render elements
-        for i in 0 to ( re.NumRenderElements() - 1 ) do
-        (
-            try -- Try Catch for elements that do not have a .vrayVFB property, like vryaAlpha, that cannot render int the frame buffer
+        Freecamera:
             (
-                -- turn the render element off
-                curElement = ( re.GetRenderElement i )
-                curElement.vrayVFB = false
-
-                -- turn on the ones that matche the activeElement name
-                for activeElement in activeElements do
-                (
-                    if curElement.elementName == activeElement then (curElement.vrayVFB = true)
-                )
+            print "Free"
+            paramWire.connect curCam.baseObject[#fov] newCam.baseObject[#fov] ( "fov * " + ( curFov as string ) )
             )
-            catch()
-        )
+        Targetcamera:
+            (
+            print "Target"
+            paramWire.connect curCam.baseObject[#fov] newCam.baseObject[#fov] ( "fov * " + ( curFov as string ) )
+            )
+        Physical:
+            (
+            print "PHYS"
+            paramWire.connect curCam.baseObject[#fov] newCam.baseObject[#fov] ( "fov * " + ( curFov as string ) )0
+            )
     )
+
+    -- TODO:
+    -- Set as the camera to actually render from 
+    -- Set as the resolution to actually render 
+    
 )
 
-function vray5_RE_Override_PostRender =
+function cameraOverscan_Override_PostRender =
 (
-    print "= Vray5 vray5_RE_Override_PostRender ="
+    -- Delete the new camera that was created 
+    curDelete = getAnimByHandle LPM_OperatorData.cameraOverscan.newCamAnimhanlde 
+    delete curDelete
 
-    -- Get the elements stored earlier and restore them
-    curElements = LPM_RenderDispatchRestoreData.vrayVFBElementStates
-
-    for curElement in curElements do
-    (
-        curNode = getAnimByHandle curElement.animhandle
-        curNode.vrayVFB = curElement.enabled
-    )
-)
-
-function vray5_Override_PreRender =
-(
-
-)
-
-function vray5_Override_PostRender =
-(
-
+    -- TODO:
+    -- reset resolution
 )
 
 function curPrerenderAction =
 (
-    print "== Vray5 PreRenderAction =="
+    print "== cameraOverscan PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
-    LPM_RenderDispatchRestoreData = Vray5_RestoreDataStr()
+    LPM_OperatorData.cameraOverscan = cameraOverscan_RestoreDataStr()
 
     -- call each of the prerender functions
-    vray5_Globals_Override_PreRender()
-
-    vray5_RE_Override_PreRender()
-    vray5_Override_PreRender()
+    cameraOverscan_Override_PreRender()
 )
 
 function curPostRenderAction =
 (
-    print "== Vray5 PostRenderAction =="
+    print "== cameraOverscan PostRenderAction =="
 
     -- call each of the postrender functions
-    vray5_Globals_Override_PostRender()
-
-    vray5_RE_Override_PostRender()
-    vray5_Override_PostRender()
+    cameraOverscan_Override_PostRender()
 )
 
 if LPM_RenderDispatchAction == #preRender then curPrerenderAction()

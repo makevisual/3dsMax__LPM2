@@ -255,6 +255,23 @@ attribID:#(0x73e22a56, 0x439f0d00)
 	)
 )
 
+--TODO: Dabelow cameraOverscan
+cameraOverscanPropsCA = attributes cameraOverscanProps
+attribID:#(0x54e3ca47, 0x1381f195)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+ 		-- initialized type:#boolean
+
+		fovOverride type:#float default:1.1
+	    resOverride type:#boolean default:false
+    	resXOverride type:#integer default:1920
+    	resYOverride type:#integer default:1080
+	)
+)
+
 --TODO: Dabelow vray5
 vray5RenderElementsPropsCA = attributes vray5RenderElementsProps
 attribID:#(0x6743c747, 0x742f062b)

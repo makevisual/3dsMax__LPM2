@@ -97,7 +97,7 @@ struct LPM_DeadlineAPI
 
  				-- Frame buffer mode UI disabled for vray5
 				dropdownList ddl_frameBufferMode 			""						 		width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Use CURRENT frame buffer ", " Use VRAY Frame Buffer ", " Use 3DSMAX Frame Buffer ")
- 				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true 			offset:[-1,-20]		visible:false
+ 				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true 			offset:[-1,-20]		visible:false 	enabled:false
 				checkbox chk_IgnoreFiles 					" Ignore Missing External Files"	width:166 height:15 	offset:[-1,0]		visible:false
 				checkbox chk_RestartMax 					" Restart 3dsMax between Frames " 	height:15 				offset:[-1,0]		visible:false checked:true
  				checkbox chk_closeOnComplete 				" Close on complete" 				checked:true			offset:[160,-59]	visible:false
@@ -156,7 +156,7 @@ struct LPM_DeadlineAPI
 				-- CUSTOM SETTINGS
 				LPM_deadlineInfo.sticky_holdOnSubmit 			= LPM_Fun.GetIni "Deadline Settings" "HoldOnSubmit" booleanClass false
 				LPM_deadlineInfo.sticky_frameBufferMode			= LPM_Fun.GetIni "Deadline Settings" "FrameBufferMode" integer 1
-				LPM_deadlineInfo.sticky_renderElementsExr	 	= LPM_Fun.GetIni "Deadline Settings" "RenderElementsToEXR" booleanClass false
+				LPM_deadlineInfo.sticky_renderElementsExr	 	= LPM_Fun.GetIni "Deadline Settings" "RenderElementsToEXR" booleanClass true
 				LPM_deadlineInfo.sticky_submitAsSuspended 		= LPM_Fun.GetIni "Deadline Settings" "SubmitAsSuspended" booleanClass false
 				-- UI UPDATES
 				spn_chunkSize.value 							= SMTDSettings.ChunkSize
@@ -1051,58 +1051,59 @@ struct LPM_DeadlineAPI
 				SMTDLPMInterface.ui_saveStickySettings()
 
 				-- Disables any viewport locks in the render dialog
-				rendUseActiveView = true
+			--	rendUseActiveView = true
 
 				-- FrameBuffer Set
-				frameBuffer_Renderer_Check = renderers.current as string
+			--	frameBuffer_Renderer_Check = renderers.current as string
+			--	
+			--	frameBuffer_Renderer_Check= trimRight frameBuffer_Renderer_Check "1234567890_:"
+			--	frameBuffer_Renderer_Check = trimLeft frameBuffer_Renderer_Check "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKLZXCVBNM<>?-_1234567890"
+			--	
+			--	if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
+			--	(
+			--		try
+			--		(
+			--			LPM_deadlineInfo.sticky_frameBufferMode_HOLD = renderers.current.output_on
+			--			
+			--			if LPM_deadlineInfo.sticky_frameBufferMode == 2 then
+			--			(
+			--				renderers.current.output_on = true
+			--			)
+			--			else if LPM_deadlineInfo.sticky_frameBufferMode == 3 then
+			--			(
+			--				renderers.current.output_on = false
+			--			)
+			--		)
+			--		catch
+			--		(
+			--			print "LPM hit a snag while trying to set the frame buffer. This usually has something to do with the renderer. LPM will atempt to continue."
+			--		)
+			--	)
+			--	else
+			--	(
+			--		print ("LPM FrameBuffer Selection disabled because selected renderer is not Vray")
+			--	)
 
-				frameBuffer_Renderer_Check= trimRight frameBuffer_Renderer_Check "1234567890_:"
-				frameBuffer_Renderer_Check = trimLeft frameBuffer_Renderer_Check "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKLZXCVBNM<>?-_1234567890"
+			--	-- Encode Elements Set
+			--	
+			--	LPM_deadlineInfo.sticky_renderElementsExr_HOLD = fopenexr.isAutoAddRenderElements()
+			--	
+			--	fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr
+			--	
 
-				if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
-				(
-					try
-					(
-						LPM_deadlineInfo.sticky_frameBufferMode_HOLD = renderers.current.output_on
+			--	try
+			--	(
+			--		if LPM_deadlineInfo.sticky_renderElementsExr == True then
+			--		(
+			--			renderers.current.output_on = false
+			--		)
+			--	)
+			--	catch
+			--	(
+			--		print "LPM hit a snag trying to set the frame buffer. This can happen if you're not using Vray. LPM will attempt to coninue"
+			--		
+			--	)
 
-						if LPM_deadlineInfo.sticky_frameBufferMode == 2 then
-						(
-							renderers.current.output_on = true
-						)
-						else if LPM_deadlineInfo.sticky_frameBufferMode == 3 then
-						(
-							renderers.current.output_on = false
-						)
-					)
-					catch
-					(
-						print "LPM hit a snag while trying to set the frame buffer. This usually has something to do with the renderer. LPM will atempt to continue."
-					)
-				)
-				else
-				(
-					print ("LPM FrameBuffer Selection disabled because selected renderer is not Vray")
-				)
-
-				-- Encode Elements Set
-
-				LPM_deadlineInfo.sticky_renderElementsExr_HOLD = fopenexr.isAutoAddRenderElements()
-
-				fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr
-
-
-				try
-				(
-					if LPM_deadlineInfo.sticky_renderElementsExr == True then
-					(
-						renderers.current.output_on = false
-					)
-				)
-				catch
-				(
-					print "LPM hit a snag trying to set the frame buffer. This can happen if you're not using Vray. LPM will attempt to coninue"
-
-				)
 				-- Perform a hold if desired
 				if LPM_deadlineInfo.submit_recoveryHold then
 				(
@@ -1143,8 +1144,9 @@ struct LPM_DeadlineAPI
 					thePass=renderCollect[i][1]
 					theShot=renderCollect[i][2]
 
-					local reMgr = maxOps.getCurRenderElementMgr()
-					stickyElementsActive = reMgr.GetElementsActive()
+					--local reMgr = maxOps.getCurRenderElementMgr()
+					--stickyElementsActive = reMgr.GetElementsActive()
+
 					stickySMTDSettings = copy SMTDSettings
 
 					SMTDLPMInterface.prg_submitProgress2.value=20
@@ -1256,7 +1258,7 @@ struct LPM_DeadlineAPI
 					SMTDLPMInterface.prg_submitProgress2.value=80
 
 					SMTDSettings = stickySMTDSettings 					-- Put SMTDsettings back to normal
-					reMgr.SetElementsActive stickyElementsActive 		-- Put render elements settings back to normal
+					-- reMgr.SetElementsActive stickyElementsActive 		-- Put render elements settings back to normal
 					
 					log_append "Restoring Scene to pre submission state..." 4
 
@@ -1314,11 +1316,11 @@ struct LPM_DeadlineAPI
 
 
 				-- Reverse Changes
-				if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
-				(
-				renderers.current.output_on = LPM_deadlineInfo.sticky_frameBufferMode_HOLD
-				)
-				fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr_HOLD
+				-- if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
+				-- (
+				-- renderers.current.output_on = LPM_deadlineInfo.sticky_frameBufferMode_HOLD
+				-- )
+				-- fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr_HOLD
 
 
 				-- Re-enable the scene
@@ -1572,7 +1574,7 @@ struct LPM_DeadlineAPI
 			on chk_renderElementsExr changed state do 
 			(
 
-				LPM_deadlineInfo.sticky_renderElementsExr  = state
+			--	LPM_deadlineInfo.sticky_renderElementsExr  = state
 			)
 
 			-- Event handler for ignoring missing Maps

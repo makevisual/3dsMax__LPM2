@@ -1971,11 +1971,11 @@ struct LPM_RenderAPI
 						TmpHideRFW = LPM_Fun.getIni "Settings" "HideRFW" booleanClass false
 						TmpSkipExistingImages = LPM_Fun.getIni "Settings" "SkipExistingImages" booleanClass false
 
-						if TmpHideRFW then
-						(
-							HideRFWBack = rendShowVFB
-							rendShowVFB = false
-						)
+					--	if TmpHideRFW then
+					--	(
+					--		HideRFWBack = rendShowVFB
+					--		rendShowVFB = false
+					--	)
 
 						if TmpSkipExistingImages then
 						(
@@ -3127,10 +3127,10 @@ struct LPM_RenderAPI
 
 				try
 				(
-					if HideRFWBack != 0 then
-					(
-						rendShowVFB = HideRFWBack
-					)
+				--	if HideRFWBack != 0 then
+				--	(
+				--		rendShowVFB = HideRFWBack
+				--	)
 
 					if SkipExistingImagesBack != 0 then
 					(
@@ -3313,28 +3313,27 @@ struct LPM_RenderAPI
 
 					if(AdjpreRenderSettingsNew!=undefined) then
 					(
-						try
-						(
-							vr = renderers.current
+						-- try
+						-- (
+						-- 	vr = renderers.current
 							--cls=r.classid
 							--if (cls[1]==1941615238 and cls[2]==2012806412) then r.showLastVFB()
 
 
-							theRenderer=(classof vr) as string
+							-- theRenderer=(classof vr) as string
 
 
-							if ((findString theRenderer "V_Ray") != undefined) then
-							(
-								if vr.output_on  then
-								(
-									vr.showLastVFB()
-								)
-
-							)
-						)
-						catch
-						(
-						)
+							-- if ((findString theRenderer "V_Ray") != undefined) then
+							-- (
+							-- 	if vr.output_on  then
+							-- 	(
+							-- 		vr.showLastVFB()
+							-- 	)
+							-- )
+						-- )
+						-- catch
+						-- (
+						-- )
 
 
 						LPM_Fun.loadRenderPresetNew AdjpreRenderSettingsNew
@@ -3352,19 +3351,19 @@ struct LPM_RenderAPI
 				te_rpreset = timestamp()
 
 
-				try
-				(
-					if vrfrbufBackup != 0 then
-					(
-						vr=renderers.current
-						vr.output_on = vrfrbufBackup
-					)
-
-				)
-				catch
-				(
-
-				)
+			--	try
+			--	(
+			--		if vrfrbufBackup != 0 then
+			--		(
+			--			vr=renderers.current
+			--			vr.output_on = vrfrbufBackup
+			--		)
+			--		
+			--	)
+			--	catch
+			--	(
+			--		
+			--	)
 
 				--restore common settings
 				-------------------------------------------------------------------------------------------------

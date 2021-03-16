@@ -84,8 +84,9 @@ function vray5_Globals_Override_PreRender =
     rendShowVFB                             = false                          -- Turn off max default frame buffer
     rendSaveFile                            = false                          -- Turn off max default file save option
 
+
     -- Set this property for no viewport image, but better memory concervation
-    --renderers.current.output_useram = false
+    renderers.current.output_useram = false
 )
 
 function vray5_Globals_Override_PostRender =
