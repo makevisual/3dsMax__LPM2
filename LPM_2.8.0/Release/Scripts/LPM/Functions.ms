@@ -951,16 +951,18 @@ fn loadCameraOverscanSettings cp isPreviewMode=
 -- Dabelow cameraOverscan
 fn createCameraOverscanProps theName=
 (
-	-- cp=LPM_Fun.createNode theName "vray5RenderElements"
-	-- 
-	-- cp.active = true
-	-- cp.elementOverride = true	
-	-- cp.activeElement = #()
-	--
-	-- print "-- createVray5RenderElementsProps --"
-	-- print cp
-	-- 
-	-- cp
+	cp=LPM_Fun.createNode theName "cameraOverscan"
+	cp.active = true
+
+	cp.fovOverride = 1.1
+	cp.resOverride = false
+    cp.resXOverride = 1920
+    cp.resYOverride = 1080
+
+	--print "-- createVray5RenderElementsProps --"
+	--print cp
+
+	cp
 ),
 
 fn autoSetRenderOutput = 

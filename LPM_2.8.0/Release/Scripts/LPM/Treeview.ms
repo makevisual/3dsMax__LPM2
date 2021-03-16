@@ -393,6 +393,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "vray5" 					--Dabelow vray5
 		getIconFromBitmap "vray5Off" 				--Dabelow vray5 
 
+		getIconFromBitmap "CameraOverscan" 			--Dabelow cameraOverscan
+		getIconFromBitmap "CameraOverscanOff" 		--Dabelow cameraOverscan
+
 		tv.imageList = ilTv 
 	)
 
@@ -474,6 +477,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"Deadline": nodeName = (LPM_Fun.generateDeadlineName theNode) -- Dabelow
 			"vray5RenderElements": nodeName = (LPM_Fun.generateVray5RenderElementsName theNode) -- Dabelow Vray5
 			"vray5": nodeName = (LPM_Fun.generateVray5PropName theNode) -- Dabelow Vray5
+			"cameraOverscan": nodeName = (LPM_Fun.generateCameraOverscanPropName theNode) -- Dabelow cameraOverscan
 			
 			default: nodeName = (LPM_Fun.getName theNode.name)
 		)
@@ -798,6 +802,16 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			newVray5.ForeColor = FontColor
 			newVray5.BackColor = BackColor
 			makeItalic newVray5
+		)
+
+		 		-- Dabelow vray5
+		for cameraOverscan in pmPass.children where cameraOverscan.type=="cameraOverscan" do
+		(
+			newCameraOverscan = createTVnode newPass cameraOverscan nodeType:"cameraOverscan"
+			
+			newCameraOverscan.ForeColor = FontColor
+			newCameraOverscan.BackColor = BackColor
+			makeItalic newCameraOverscan
 		)
 		
 		if(pmPass.expanded) then	
@@ -1513,6 +1527,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	fn EditVray5 =
 	(
 		createDialog LPMVray5 pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+	)	
+
+	--Dabelow Vray5 TODO:Not sure if this goes anywhere?
+	fn EditCameraOverscan =
+	(
+		createDialog LPMCameraOverscan pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)	
 
 	fn AddXrefSceneOverride =
@@ -2405,6 +2425,14 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 						-- Dabelow VRay5
 						"vray5":
+						(
+							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
+							delete theNode
+							LPM_treeview_rollout.tv.selectedNode.remove()
+						)
+
+						-- Dabelow CameraOverscan
+						"cameraOverscan":
 						(
 							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 							delete theNode
