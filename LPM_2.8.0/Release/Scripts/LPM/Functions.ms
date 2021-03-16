@@ -1422,7 +1422,7 @@ fn generateVray5PropName cp=
 ),
 
 -- Dabelow cameraOverscan
-fn generateVray5RenderElementsName cp=
+fn generateCameraOversanName cp=
 (
 	--theName = ( cp.type + " Override" )
 	theName = ( "Camera Overscan Override" )
