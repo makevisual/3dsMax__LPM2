@@ -17,7 +17,7 @@ LPM_PluginFiles=getfiles(LPM_Dir+"plugins/*")
 for f in LPM_PluginFiles do filein f
 filein (LPM_Dir+"operatorsAPI.ms")
 filein (LPM_Dir+"MAKE_nukeem.ms")
-
+filein (LPM_Dir+"OperatorData.ms") 		-- Dabelow
 
 print LPM_VersionNumber
 --Set Fileoutput Path Token String to default
