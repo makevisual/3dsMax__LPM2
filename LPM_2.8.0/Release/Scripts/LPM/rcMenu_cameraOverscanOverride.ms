@@ -31,6 +31,7 @@ rollout cameraOverscanPropsRoll "Camera Overscan Override 1.0" width:325 height:
 	(
 		-- ca properties are set in the ItemChecked event, so every check operation updates the data
 	)
+	
 )
 
 rcMenu rc_CameraOverscanPropsPropsMenu
