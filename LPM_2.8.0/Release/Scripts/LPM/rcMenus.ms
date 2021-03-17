@@ -38,7 +38,7 @@ filein "rcMenu_deadlineOverride.ms" 					-- Dabelow
 filein "rcMenu_Utilities.ms" 							-- Dabelow
 filein "rcMenu_vray5RenderElementsOverride.ms" 			-- Dabelow vray5
 filein "rcMenu_vray5Override.ms" 						-- Dabelow vray5
-
+filein "rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
 
 -------------------------------------------------------------------------------------------------------   Rollouts   -------------------------------------------------------------------------------------------------------
 
@@ -3238,6 +3238,7 @@ rcMenu rc_PassMenu
 		menuItem effectsPropsAdd "Element, Environment and Effects Override"
 		menuItem renderPropsAdd "Renderer Override" 
 		menuItem deadlineAdd "Deadline Override" -- Dabelow
+		menuItem cameraOverscanAdd "Camera Overscan Override" -- Dabelow cameraOverscan
 		--menuItem vrayPropsAdd "Vray Override" 
 		--menuItem VrayGIAdd "V-Ray GI" 
 		--menuItem ModifierOverAdd "Modifier Override"
@@ -3462,6 +3463,17 @@ rcMenu rc_PassMenu
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
 		thePass=thePassNode.tag.value
 		theSet=LPM_Fun.createVray5Props "vray5"
+		theSet.parent=thePass
+		LPM_treeview_rollout.addPassTV thePassNode		
+
+	)
+
+	-- Dabelow cameraOverscan
+	on cameraOverscanAdd picked do
+	(
+		thePassNode=LPM_treeview_rollout.tv.selectedNode
+		thePass=thePassNode.tag.value
+		theSet=LPM_Fun.createCameraOverscanProps "cameraOverscan"
 		theSet.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode		
 
