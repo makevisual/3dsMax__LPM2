@@ -97,7 +97,7 @@ struct LPM_DeadlineAPI
 
  				-- Frame buffer mode UI disabled for vray5
 				dropdownList ddl_frameBufferMode 			""						 		width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Use CURRENT frame buffer ", " Use VRAY Frame Buffer ", " Use 3DSMAX Frame Buffer ")
- 				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true 			offset:[-1,-20]		visible:false 	enabled:false
+ 				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true			offset:[-1,-20]		visible:false 	enabled:false
 				checkbox chk_IgnoreFiles 					" Ignore Missing External Files"	width:166 height:15 	offset:[-1,0]		visible:false
 				checkbox chk_RestartMax 					" Restart 3dsMax between Frames " 	height:15 				offset:[-1,0]		visible:false checked:true
  				checkbox chk_closeOnComplete 				" Close on complete" 				checked:true			offset:[160,-59]	visible:false
@@ -171,7 +171,7 @@ struct LPM_DeadlineAPI
 				btn_holdOnSub.checked							= LPM_deadlineInfo.sticky_holdOnSubmit 
 				LPM_deadlineInfo.submit_recoveryHold			= LPM_deadlineInfo.sticky_holdOnSubmit 
 				ddl_frameBufferMode.selection 					= LPM_deadlineInfo.sticky_frameBufferMode		
-				chk_renderElementsExr.checked 					= LPM_deadlineInfo.sticky_renderElementsExr
+				chk_renderElementsExr.checked 					= true
 				btn_submitSuspended.checked 					= LPM_deadlineInfo.sticky_submitAsSuspended
 			)
 

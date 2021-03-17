@@ -2450,7 +2450,9 @@ struct LPM_RenderAPI
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
 				LPM_RenderDispatchThePass 	= thePass
 				LPM_RenderDispatchAction 	= #preRender
-				filein (LPM_Dir+"renderer_dispatch.ms")
+				if isPreviewMode == true then
+					LPM_RenderDispatchAction = #PreviewRender
+					filein (LPM_Dir+"renderer_dispatch.ms")
 
 				-- Old Vray Functionality below, left in for saftey
 				-- setVray rendOutputFilename thePass
@@ -3434,8 +3436,10 @@ struct LPM_RenderAPI
 		)
 		-- TODO: test this 
 		-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
-		LPM_RenderDispatchAction = #postRender
-		filein (LPM_Dir+"renderer_dispatch.ms")
+		if LPM_RenderDispatchPreview == true then
+			print "Dispatch PostRender Skipped: Preview Mode"
+			LPM_RenderDispatchAction = #postRender
+			filein (LPM_Dir+"renderer_dispatch.ms")
 		
 
 		-- print "===== DOES THIS HAPPEN? =========="
