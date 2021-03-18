@@ -80,4 +80,4 @@ rcMenu rc_CameraOverscanPropsPropsMenu
 	)
 	
 )
-createDialog cameraOverscanPropsRoll pos:(LPM_Fun.getRoPos  cameraOverscanPropsRoll.width)
+--createDialog cameraOverscanPropsRoll pos:(LPM_Fun.getRoPos  cameraOverscanPropsRoll.width)

@@ -230,6 +230,7 @@ function curPreviewPrerenderAction =
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray5_RestoreDataStr()
+    vray5_RE_Override_PreRender()
 
     -- call each of the prerender functions
     vray5_Globals_Override_Preview_PreRender()
@@ -247,11 +248,10 @@ function curPostRenderAction =
     if Vray5_RestoreData.RestorePointInitialized == true then
     (
         vray5_Globals_Override_PostRender()
-
-        vray5_RE_Override_PostRender()
         vray5_Override_PostRender()
     )
 
+     vray5_RE_Override_PostRender()
     -- call each of the postrender functions
 
 )
