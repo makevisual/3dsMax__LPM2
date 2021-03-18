@@ -3436,10 +3436,9 @@ struct LPM_RenderAPI
 		)
 		-- TODO: test this 
 		-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
-		if LPM_RenderDispatchPreview == true then
-			print "Dispatch PostRender Skipped: Preview Mode"
-			LPM_RenderDispatchAction = #postRender
-			filein (LPM_Dir+"renderer_dispatch.ms")
+
+		LPM_RenderDispatchAction = #postRender
+		filein (LPM_Dir+"renderer_dispatch.ms")
 		
 
 		-- print "===== DOES THIS HAPPEN? =========="
