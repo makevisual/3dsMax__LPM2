@@ -603,7 +603,14 @@ fn createNode pName type=
 	theNode.type=type
 	
 	if(type=="pass") or (type=="shot") or (type=="passGroup") then
+		(
 		theNode.Name=uniqueName pName
+
+		if (type=="shot") then 
+			(
+				theNode.Name += "_v001"
+			)
+		)
 	else
 		theNode.name=pName
 
@@ -655,6 +662,10 @@ fn createShot LPM_Root=
 		theProps.autoUpdateName=true
 		theProps.name=LPM_Fun.generateCommonPropName theProps
 		
+		theProps=LPM_Fun.createCameraOverscanProps "Camera Overscan"
+		theProps.parent=shot
+		theProps.name=LPM_Fun.generateCameraOverscanName theProps		
+
 		shot
 	
 ),
@@ -674,6 +685,7 @@ fn createPassGroup theName=
 	passGroup.active=true
 	passGroup
 ),
+
 
 fn createCommonProps theName=
 (
@@ -954,7 +966,7 @@ fn createCameraOverscanProps theName=
 	cp=LPM_Fun.createNode theName "cameraOverscan"
 	cp.active = true
 
-	cp.fovOverride = 1.1
+	cp.fovOverride = 1.0
 	cp.resOverride = false
     cp.resXOverride = 1920
     cp.resYOverride = 1080
@@ -1335,11 +1347,13 @@ fn generatePassName thePass=
 (
 	tmpName = LPM_Fun.getName thePass.name
 	
-	if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-	(
-		tmpName = "["+(LPM_Fun.getName (thePass.AdjustmentFor.name)) + "]" + tmpName
-	)
-	
+	try( -- forgive me for the try catch -- Dabelow cameraOverscan
+		if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
+		(
+			tmpName = "["+(LPM_Fun.getName (thePass.AdjustmentFor.name)) + "]" + tmpName
+		)
+	)catch()
+
 	tmpName
 ),
 
@@ -1424,10 +1438,12 @@ fn generateVray5PropName cp=
 ),
 
 -- Dabelow cameraOverscan
-fn generateCameraOversanName cp=
+fn generateCameraOverscanName cp=
 (
 	--theName = ( cp.type + " Override" )
 	theName = ( "Camera Overscan Override" )
+
+	return theName 
 
 	theName += (" [" + ( cp.fovOverride as string ) + "]" )
 

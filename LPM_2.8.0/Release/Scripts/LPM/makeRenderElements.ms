@@ -6,50 +6,6 @@
 struct elementsDefStr
 (
 
-	function element_VRayDenoiser = 
-	(
-		newElement = VRayDenoiser()
-
-		newElement.enabled 			= false 
-		newElement.elementName 		= "VRayDenoiser" 
-		newElement.vrayVFB 			= false 
-
-		return newElement 
-	),
-
-	function element_VRayBackToBeauty = 
-	(
-		newElement = VRayBackToBeauty()
-
-		newElement.enabled 			= false 
-		newElement.elementName 		= "VRayBackToBeauty" 
-		newElement.vrayVFB 			= false 
-
-		return newElement 
-	),
-
-	function element_VrayLightmix = 
-	(
-		newElement = VrayLightmix()
-
-		newElement.enabled 			= false 
-		newElement.elementName 		= "VrayLightmix" 
-		newElement.vrayVFB 			= false 
-
-		return newElement 
-	),
-
-	function element_VRayAO = 
-	(
-		newElement = VRayAO()
-
-		newElement.enabled 			= false 
-		newElement.elementName 		= "VRayAO" 
-		newElement.vrayVFB 			= false 
-
-		return newElement 
-	),
-
 	function element_DepthRGB = 
 	(
 		Falloff_texR = falloff()
@@ -116,6 +72,49 @@ struct elementsDefStr
 		return newElement 
 	),
 
+	function element_VrayLightmix = 
+	(
+		newElement = VrayLightmix()
+
+		newElement.enabled 			= false 
+		newElement.elementName 		= "VrayLightmix" 
+		newElement.vrayVFB 			= false 
+
+		return newElement 
+	),
+
+	function element_VRayBackToBeauty = 
+	(
+		newElement = VRayBackToBeauty()
+
+		newElement.enabled 			= false 
+		newElement.elementName 		= "VRayBackToBeauty" 
+		newElement.vrayVFB 			= false 
+
+		return newElement 
+	),
+
+	function element_VRayDenoiser = 
+	(
+		newElement = VRayDenoiser()
+
+		newElement.enabled 			= false 
+		newElement.elementName 		= "VRayDenoiser" 
+		newElement.vrayVFB 			= false 
+
+		return newElement 
+	),
+
+	function element_VRayAO = 
+	(
+		newElement = VRayAO()
+
+		newElement.enabled 			= false 
+		newElement.elementName 		= "VRayAO" 
+		newElement.vrayVFB 			= false 
+
+		return newElement 
+	),
 
 	function element_VRaySampleRate = 
 	(
@@ -124,6 +123,18 @@ struct elementsDefStr
 		newElement.enabled 			= false 
 		newElement.elementName 		= "VRaySampleRate" 
 		newElement.vrayVFB 			= false 
+
+		return newElement 
+	),
+
+	function element_VRayCryptomatte = 
+	(
+		newElement = VRayCryptomatte()
+
+		newElement.enabled 			= false 
+		newElement.elementName 		= "VRayCryptomatte" 
+		newElement.vrayVFB 			= false 
+		newElement.id_type 			= 2
 
 		return newElement 
 	),

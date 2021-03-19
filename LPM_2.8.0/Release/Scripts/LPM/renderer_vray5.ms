@@ -4,9 +4,6 @@
 
 struct Vray5_RestoreDataStr
 (
-    --Initialization Flag for Preview Bypass
-    RestorePointInitialized = undefined,
-
     -- Renderer specific globals
     output_on               = undefined,
     output_rawFileName      = undefined,
@@ -76,6 +73,7 @@ function vray5_Globals_Override_PreRender =
     theFile=getFilenameFile rendOutputFilename
     theType=getFilenameType rendOutputFilename
 
+    -- Makes the directory
     makeDir thePath
 
     -- Set the properties to their desired values
@@ -89,10 +87,7 @@ function vray5_Globals_Override_PreRender =
 
 
     -- Set this property for no viewport image, but better memory concervation
-    renderers.current.output_useram = false
-
-    --Comunicates to the post render action that this funcion has fully initialized and no render settings have been altered
-    Vray5_RestoreData.RestorePointInitialized = true
+    renderers.current.output_useram = false --- THIS MAKES IT SO YOU CANT INTERACT. but you see a small little preview
 )
 
 function vray5_Globals_Override_PostRender =
@@ -114,13 +109,11 @@ function vray5_Globals_Override_Preview_PreRender =
 (
     --Builds an empty struct and and marks the RestorePoint flag as false
     Vray5_RestoreData = LPM_RenderDispatchRestoreData
-
-    Vray5_RestoreData.RestorePointInitialized = false
 )
 
 function vray5_RE_Override_PreRender =
 (
-    print "= Vray5 vray5_RE_Override_PreRender ="
+    -- print "= Vray5 vray5_RE_Override_PreRender ="
 
     -- object for holding render element states
     struct elementObjStr
@@ -188,7 +181,7 @@ function vray5_RE_Override_PreRender =
 
 function vray5_RE_Override_PostRender =
 (
-    print "= Vray5 vray5_RE_Override_PostRender ="
+    -- print "= Vray5 vray5_RE_Override_PostRender ="
 
     -- Get the elements stored earlier and restore them
     curElements = LPM_RenderDispatchRestoreData.vrayVFBElementStates
@@ -212,7 +205,7 @@ function vray5_Override_PostRender =
 
 function curPrerenderAction =
 (
-    print "== Vray5 PreRenderAction =="
+    --print "== Vray5 PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray5_RestoreDataStr()
@@ -226,7 +219,7 @@ function curPrerenderAction =
 
 function curPreviewPrerenderAction =
 (
-    print "== Vray5 Preview PreRenderAction =="
+    --print "== Vray5 Preview PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray5_RestoreDataStr()
@@ -241,11 +234,10 @@ function curPostRenderAction =
     --Calls Data from the global to check the restorepoint flag
     Vray5_RestoreData = LPM_RenderDispatchRestoreData
 
-    print "== Vray5 PostRenderAction =="
+    -- print "== Vray5 PostRenderAction =="
 
     --Only runs the Post render action if Settings were altered in the prerender based on the restorepoint flag
-
-    if Vray5_RestoreData.RestorePointInitialized == true then
+    if LPM_RenderDispatchAction == #PreviewRender then
     (
         vray5_Globals_Override_PostRender()
         vray5_Override_PostRender()

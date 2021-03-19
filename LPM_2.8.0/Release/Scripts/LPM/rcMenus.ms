@@ -3072,8 +3072,9 @@ rcMenu rc_shotMenu
 	
 
 	menuItem    AddCommon "Add Common Properties"
-	
 
+	menuItem    AddCameraOverscan "Add Camera Overscan Override" -- TODO: 
+	
 	seperator s4
 	menuItem renderShot "Submit Local"
 	menuItem renderShotNetwork "Submit Network"
@@ -3091,6 +3092,17 @@ rcMenu rc_shotMenu
 		if((LPM_Fun.firstChildByType thePass "commonProps")==undefined) then
 		(
 			theProps=LPM_Fun.createCommonProps "commonProps"
+			theProps.parent=thePass
+			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
+		)
+	)
+
+	on AddCameraOverscan picked do
+	(
+		thePass=LPM_treeview_rollout.tv.selectedNode.tag.value
+		if((LPM_Fun.firstChildByType thePass "cameraOverscan")==undefined) then
+		(
+			theProps=LPM_Fun.createCameraOverscanProps "cameraOverscan"
 			theProps.parent=thePass
 			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
 		)
@@ -3238,7 +3250,7 @@ rcMenu rc_PassMenu
 		menuItem effectsPropsAdd "Element, Environment and Effects Override"
 		menuItem renderPropsAdd "Renderer Override" 
 		menuItem deadlineAdd "Deadline Override" -- Dabelow
-		menuItem cameraOverscanAdd "Camera Overscan Override" -- Dabelow cameraOverscan
+		--menuItem cameraOverscanAdd "Camera Overscan Override" -- Dabelow cameraOverscan
 		--menuItem vrayPropsAdd "Vray Override" 
 		--menuItem VrayGIAdd "V-Ray GI" 
 		--menuItem ModifierOverAdd "Modifier Override"
@@ -3468,16 +3480,15 @@ rcMenu rc_PassMenu
 
 	)
 
-	-- Dabelow cameraOverscan
-	on cameraOverscanAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		theSet=LPM_Fun.createCameraOverscanProps "cameraOverscan"
-		theSet.parent=thePass
-		LPM_treeview_rollout.addPassTV thePassNode		
-
-	)
+--	-- Dabelow cameraOverscan
+--	on cameraOverscanAdd picked do
+--	(
+--		thePassNode=LPM_treeview_rollout.tv.selectedNode
+--		thePass=thePassNode.tag.value
+--		theSet=LPM_Fun.createCameraOverscanProps "cameraOverscan"
+--		theSet.parent=thePass
+--		LPM_treeview_rollout.addPassTV thePassNode		
+--	)
 
 	on vrayPropsAdd picked do
 	(

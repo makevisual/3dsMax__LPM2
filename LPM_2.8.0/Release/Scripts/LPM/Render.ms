@@ -2445,18 +2445,42 @@ struct LPM_RenderAPI
 					)
 				)
 
-				------------------------------------------------------------------------------------------------ final prepare --------------------------------------------------------------------------------
 
-				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
+				------------- DISPATCH START -------------
+
 				LPM_RenderDispatchThePass 	= thePass
 				LPM_RenderDispatchAction 	= #preRender
-				if isPreviewMode == true then
-					LPM_RenderDispatchAction = #PreviewRender
-					filein (LPM_Dir+"renderer_dispatch.ms")
+				if isPreviewMode == true then ( LPM_RenderDispatchAction = #PreviewRender )
 
-				-- Old Vray Functionality below, left in for saftey
-				-- setVray rendOutputFilename thePass
 
+				-- cameraOverscan Hook --
+				-- TODO: finish the camera hooks
+				if(theShot!=undefined) then
+				(
+					psCP=LPM_fun.firstChildByType  theShot "cameraOverscan"
+					if(psCP!=undefined) and (psCP.active)  then
+					(
+						global LPMData = #(thePass,theShot)
+
+						ca = custAttributes.get psCP 1
+						LPM_OperatorCustomAttributes = ca
+
+						filein (LPM_Dir+"operator_cameraOverscan.ms")		
+					)
+				)
+
+				-- render dispatch --
+
+				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
+				filein (LPM_Dir+"renderer_dispatch.ms")
+
+
+				------------- DISPATCH END -------------
+
+
+
+				------------------------------------------------------------------------------------------------ final prepare --------------------------------------------------------------------------------
+				
 				rendUseNet=false
 
 				LPM_Render.execScriptNodes thePass #preRender
@@ -3435,9 +3459,18 @@ struct LPM_RenderAPI
 		
 		)
 		-- TODO: test this 
-		-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
+		-- Sends job to renderer dispatch to restore renderer specific last minuet adjustments
 
 		LPM_RenderDispatchAction = #postRender
+
+		-- cameraOverscan Hook --
+		-- TODO: finish the camera hooks
+		if(theShot!=undefined) then
+		(
+			filein (LPM_Dir+"operator_cameraOverscan.ms")		
+		)
+
+
 		filein (LPM_Dir+"renderer_dispatch.ms")
 		
 

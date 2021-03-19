@@ -17,6 +17,7 @@ function cameraOverscan_Override_PreRender =
     -- Fetch the global variable and assign the current state to it
     curCam = selection[1] -- TODO get the real correct camera 
     newCam = copy curCam
+    newCam.name = ( curCam.name + "_temp-overscan" )
 
     -- Store the animhandle of the new camera, to be deleted later
     LPM_OperatorData.cameraOverscan.newCamAnimhanlde  = getHandleByAnim newCam
@@ -53,7 +54,7 @@ function cameraOverscan_Override_PostRender =
 (
     -- Delete the new camera that was created 
     curDelete = getAnimByHandle LPM_OperatorData.cameraOverscan.newCamAnimhanlde 
-    delete curDelete
+    --delete curDelete
 
     -- TODO:
     -- reset resolution

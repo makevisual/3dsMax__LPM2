@@ -418,7 +418,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 		else
 			passDDL.text="No Pass Active"
-		
+
 		if maxfilepath != "" then
 		(
 			ProjRenderPath = getProjRenderPath()
@@ -436,7 +436,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			OutputPathDDL.text=LPM_Root.rootDir
 		)
-		
+
 		openRenderDirButton.tooltip = "Open render dir: " + OutputPathDDL.text
 		
 	)
@@ -474,10 +474,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"passRoot": nodeName = (	if(proMode==false) then "Passes (Maximum of 3)" else "Passes" )
 			"shotRoot": nodeName = (	if(proMode==false) then "Shots (Maximum of 2)" else "Shots" )
 			
-			"Deadline": nodeName = (LPM_Fun.generateDeadlineName theNode) -- Dabelow
-			"vray5RenderElements": nodeName = (LPM_Fun.generateVray5RenderElementsName theNode) -- Dabelow Vray5
-			"vray5": nodeName = (LPM_Fun.generateVray5PropName theNode) -- Dabelow Vray5
-			"cameraOverscan": nodeName = (LPM_Fun.generateCameraOverscanPropName theNode) -- Dabelow cameraOverscan
+			"Deadline": nodeName = (LPM_Fun.generateDeadlineName theNode) 							-- Dabelow
+			"vray5RenderElements": nodeName = (LPM_Fun.generateVray5RenderElementsName theNode) 	-- Dabelow Vray5
+			"vray5": nodeName = (LPM_Fun.generateVray5PropName theNode) 							-- Dabelow Vray5
+			"cameraOverscan": nodeName = (LPM_Fun.generateCameraOverscanName theNode) 				-- Dabelow cameraOverscan
 			
 			default: nodeName = (LPM_Fun.getName theNode.name)
 		)
@@ -804,15 +804,15 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			makeItalic newVray5
 		)
 
-		 		-- Dabelow vray5
-		for cameraOverscan in pmPass.children where cameraOverscan.type=="cameraOverscan" do
-		(
-			newCameraOverscan = createTVnode newPass cameraOverscan nodeType:"cameraOverscan"
-			
-			newCameraOverscan.ForeColor = FontColor
-			newCameraOverscan.BackColor = BackColor
-			makeItalic newCameraOverscan
-		)
+		-- Dabelow cameraOverscan 
+		--for cameraOverscan in pmPass.children where cameraOverscan.type=="cameraOverscan" do
+		--(
+		--	newCameraOverscan = createTVnode newPass cameraOverscan nodeType:"cameraOverscan"
+		--	
+		--	newCameraOverscan.ForeColor = FontColor
+		--	newCameraOverscan.BackColor = BackColor
+		--	makeItalic newCameraOverscan
+		--)
 		
 		if(pmPass.expanded) then	
 		(	
@@ -839,6 +839,17 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		if(commonProps!=undefined) then
 		(	
 			newCP = createTVnode newShot commonProps nodeType:"commonProps"
+			
+			newCP.ForeColor = FontColor
+			newCP.BackColor = BackColor
+			makeItalic newCP
+		)
+
+		-- dabelow cameraOverscan 
+		cameraOverscan=LPM_Fun.firstChildByType pmShot "cameraOverscan"
+		if(cameraOverscan!=undefined) then
+		(	
+			newCP = createTVnode newShot cameraOverscan nodeType:"cameraOverscan"
 			
 			newCP.ForeColor = FontColor
 			newCP.BackColor = BackColor
@@ -1520,19 +1531,20 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	--Dabelow Vray5 TODO:Not sure if this goes anywhere?
 	fn EditVray5RenderElements =
 	(
-		createDialog LPMVray5RenderElements pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+		createDialog vray5RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)	
 
 	--Dabelow Vray5 TODO:Not sure if this goes anywhere?
 	fn EditVray5 =
 	(
-		createDialog LPMVray5 pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+		createDialog vray5PropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)	
 
 	--Dabelow Vray5 TODO:Not sure if this goes anywhere?
 	fn EditCameraOverscan =
 	(
-		createDialog LPMCameraOverscan pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+		--createDialog LPMCameraOverscan pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+		createDialog cameraOverscanPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)	
 
 	fn AddXrefSceneOverride =
@@ -2618,6 +2630,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			LPM_activePass=newActive
 			
 		)
+
 		updatePassDDL()
 		
 		if hitNode==undefined then
@@ -2634,6 +2647,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			UpdateButtons hitNode
 		)
 		
+
 		if hitNode != undefined then
 		(	
 			if(button=="Left" or button=="Middle") then
@@ -2695,6 +2709,14 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						hitNode.tag.value.active= not hitNode.tag.value.active 
 						LPM_Fun.setIcon hitNode
 					)
+
+					-- Dabelow cameraOverscan 
+					"cameraOverscan":
+					(
+						hitNode.tag.value.active= not hitNode.tag.value.active 
+						LPM_Fun.setIcon hitNode
+					)
+
 					"photoStudio":
 					(	
 						hitNode.tag.value.active= not hitNode.tag.value.active 
@@ -3018,9 +3040,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"VRayGI":popUpMenu rc_LPMVrayGIMenu
 					"AutoMask":popUpMenu rc_AutoMaskMenu
 
-					"Deadline":popUpMenu rc_deadlinePropsMenu -- Dabelow
-					"vray5":popUpMenu rc_vray5PropsMenu -- Dabelow Vray5
-					"vray5RenderElements":popUpMenu rc_vray5RenderElementsPropsMenu -- Dabelow Vray5
+					"Deadline":popUpMenu rc_deadlinePropsMenu 							-- Dabelow
+					"vray5":popUpMenu rc_vray5PropsMenu 								-- Dabelow Vray5
+					"vray5RenderElements":popUpMenu rc_vray5RenderElementsPropsMenu 	-- Dabelow Vray5
+					"cameraOverscan":popUpMenu rc_cameraOverscanPropsMenu 				-- Dabelow Vray5
 				)
 			)
 			tv.selectedNode=hitNode
@@ -3112,9 +3135,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"VRayGI":(EditVrayGI())
 					"AutoMask":(EditAutoMask()) 
 
-					"Deadline":(EditDeadline()) -- Dabelow
-					"Deadline":(EditVray5RenderElements()) -- Dabelow Vray5
-					"Deadline":(EditVray5()) -- Dabelow Vray5
+					"Deadline":(EditDeadline()) 							-- Dabelow
+					"vray5RenderElements":(EditVray5RenderElements()) 		-- Dabelow Vray5
+					"vray5":(EditVray5()) 									-- Dabelow Vray5
+					"cameraOverscan":(EditCameraOverscan())					-- Dabelow cameraOverscan
 				)
 			)
 		)
@@ -3128,9 +3152,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	 (
 		 dragnode=arg.item
 		 
-		 -- Dabelow Vray5
+		 -- Dabelow Vray5 / cameraOverscan
 		 it=arg.item.tag.value.type
-		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray5")then
+		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray5") or (it=="cameraOverscan")then
 			tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 		try
 		(
@@ -3296,8 +3320,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theNode=dragNode.tag.value
 					theType=dragNode.tag.value.type
 					
-					-- Dabelow vray5
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray5") then
+					-- Dabelow vray5 / cameraOverscan
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray5") or (theType=="cameraOverscan") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it					
