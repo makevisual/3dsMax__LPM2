@@ -2,6 +2,7 @@
 
 struct cameraOverscan_RestoreDataStr
 (
+    renderCameraOriginal = undefined, -- for backing up LPM_Root.renderCamera
     newCamAnimhanlde     = undefined,
     fovOverride          = undefined,
     resXOriginal         = undefined,
@@ -15,15 +16,18 @@ struct cameraOverscan_RestoreDataStr
 function cameraOverscan_Override_PreRender =
 (
     -- Fetch the global variable and assign the current state to it
-    curCam = selection[1] -- TODO get the real correct camera 
+    curCam = LPM_Root.renderCamera -- get the current camera from LPM
     newCam = copy curCam
     newCam.name = ( curCam.name + "_temp-overscan" )
 
     -- Store the animhandle of the new camera, to be deleted later
     LPM_OperatorData.cameraOverscan.newCamAnimhanlde  = getHandleByAnim newCam
+    -- Store the original camera, to restore it to the render camera later
+    LPM_OperatorData.cameraOverscan.renderCameraOriginal = curCam
+    -- get the FOV from the override
     curFov = LPM_OperatorData.cameraOverscan.fovOverride
 
-    -- Wire the FOV 
+    -- Wire the FOV
     case curClass of
     (
         Freecamera:
@@ -42,22 +46,42 @@ function cameraOverscan_Override_PreRender =
             paramWire.connect curCam.baseObject[#fov] newCam.baseObject[#fov] ( "fov * " + ( curFov as string ) )0
             )
     )
-    
 
-    -- TODO:
-    -- Set as the camera to actually render from 
-    -- Set as the resolution to actually render 
-    
+    -- Set as the camera to actually render from
+    LPM_Root.renderCamera = newCam
+
+    -- TODO:?
+    -- Store the original resoultion
+    LPM_OperatorData.cameraOverscan.resXOriginal = renderHeight
+    LPM_OperatorData.cameraOverscan.resYOriginal = renderWidth
+    print "---original res----"
+    print renderHeight
+    print renderWidth
+
+    -- Set the desired resolution
+    renderHeight = LPM_OperatorData.cameraOverscan.resXOverride
+    renderWidth  = LPM_OperatorData.cameraOverscan.resYOverride
+    print "---overscan res----"
+    print renderHeight
+    print renderWidth
+
 )
 
 function cameraOverscan_Override_PostRender =
 (
-    -- Delete the new camera that was created 
-    curDelete = getAnimByHandle LPM_OperatorData.cameraOverscan.newCamAnimhanlde 
-    --delete curDelete
+    -- reset the originalRenderCamera
+    LPM_Root.renderCamera = LPM_OperatorData.cameraOverscan.renderCameraOriginal
+
+    -- Delete the new camera that was created
+    try(
+		curDelete = getAnimByHandle LPM_OperatorData.cameraOverscan.newCamAnimhanlde
+        delete curDelete
+	)catch()
 
     -- TODO:
     -- reset resolution
+    renderHeight = LPM_OperatorData.cameraOverscan.resXOriginal
+    renderWidth  = LPM_OperatorData.cameraOverscan.resYOriginal
 )
 
 function curPrerenderAction =
@@ -68,7 +92,7 @@ function curPrerenderAction =
     LPM_OperatorData.cameraOverscan = cameraOverscan_RestoreDataStr()
 
     -- call each of the prerender functions
-    cameraOverscan_Override_PreRender()
+    cameraOverscan_Override_PreRender() -- TODO: turn this back on once testing is complete
 )
 
 function curPostRenderAction =
@@ -81,3 +105,4 @@ function curPostRenderAction =
 
 if LPM_RenderDispatchAction == #preRender then curPrerenderAction()
 if LPM_RenderDispatchAction == #postRender then curPostRenderAction()
+if LPM_RenderDispatchAction == #PreviewRender then()

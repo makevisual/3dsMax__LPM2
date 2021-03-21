@@ -57,7 +57,7 @@ if doesFileExist DLini then ( LPM_deadlineInfo.dl_NetworkRoot = ( getinisetting 
 -- This used to be hard coded, now it runs off of the deadline ini file
 LPM_deadlineInfo.dl_fnScript = ( LPM_deadlineInfo.dl_NetworkRoot + @"\submission\3dsmax\Main\SubmitMaxToDeadline_Functions.ms" )
 
--- Idiot Check used to be in the repository, now it has been moved into the LPM directory proper 
+-- Idiot Check used to be in the repository, now it has been moved into the LPM directory proper
 LPM_deadlineInfo.dl_icScript = (LPM_Dir + "SubmitMaxToDeadline_IdiotCheck.ms" )
 LPM_deadlineInfo.draft_templatesDir = ( LPM_deadlineInfo.dl_NetworkRoot + @"\events\DraftEventPlugin\MAKE_Templates\" )
 
@@ -68,7 +68,7 @@ struct LPM_DeadlineAPI
 	fn submit=
 	(
 		rollout LPM_DeadlineSubmitRo "Deadline10.0 Submitter" width:315 height:210
-		(			
+		(
 
 			GroupBox grp_jobProperties "Job Properties" pos:[6,6] width:304 height:105																												visible:false
  				label lab_CustomName 						"  Name: "  					align:#left height:15 width:77 									offset:[0 , ( ( grp_jobProperties.height * -1 )  + 15 ) ] 		visible:false
@@ -78,7 +78,7 @@ struct LPM_DeadlineAPI
  				label lab_CustomBatch 						"  Batch: "  					align:#left height:15 width:77									offset:[0, 0 ] 													visible:false
 				edittext lab_CustomBatchField 				""  							align:#left width:230 											offset:[60,-21 ]												visible:false
 				label lab_DeadlineUser 						"  User: "  					align:#left width:77 											offset:[0, 0 ]													visible:false
-	 			label lab_DeadlineUserField 				" Loading User... " 			style_sunkenedge:true  width:225 align:#left height:15 			offset:[64,-21 ]												visible:false	
+	 			label lab_DeadlineUserField 				" Loading User... " 			style_sunkenedge:true  width:225 align:#left height:15 			offset:[64,-21 ]												visible:false
 
  			GroupBox grp_jobOptions "Job Options" offset:[-7,10] width:304 height:205																																		visible:false
   				label lbl_priority 							"  Priority:" 					align:#left width:100 height:13 								offset:[0, ( ( grp_jobOptions.height * -1 ) + 15 ) ] 			visible:false
@@ -109,12 +109,12 @@ struct LPM_DeadlineAPI
 				spinner spn_autoStartupTimeout 			"" 											range:[60,600,300] type:#integer width:50 							offset:[50,-20]												visible:false
  				label lbl_chunk 						"  Task Chunk Size ( Frames Per Task ):" 	width:211 height:13 align:#left 									offset:[0,3]												visible:false
  				spinner spn_chunkSize 					"" 											width:50 height:16 range:[1,1000,1] type:#integer 					offset:[50,-20]												visible:false
- 				dropdownList ddl_OutOfOrderMethod 		"" 											width:200 height:21 												offset:[2,0]												visible:false 		items:#("First To Last (Forward)", "Every Nth, Then Forward", "Every Nth - Block Fill", "Every Nth - Half Raster Refine", "Last To First (Reverse)", "From Both Ends", "From Center", "From Both Ends And From Center", "Random") 
+ 				dropdownList ddl_OutOfOrderMethod 		"" 											width:200 height:21 												offset:[2,0]												visible:false 		items:#("First To Last (Forward)", "Every Nth, Then Forward", "Every Nth - Block Fill", "Every Nth - Half Raster Refine", "Last To First (Reverse)", "From Both Ends", "From Center", "From Both Ends And From Center", "Random")
  				spinner spn_outOfOrderStep 				"Nth:" 										width:70 height:16 range:[2,1000,10] type:#integer fieldwidth:40 	offset:[3,-25] 	enabled:false								visible:false
 
  			GroupBox grp_integration "Integration"  align:#left width:304 height:48 							offset:[-7,15]																										visible:false
 				dropdownList ddl_autodraftSelection 	"" 								 width:289 height:21 											offset:[0 , ( ( grp_integration.height * -1 )  + 15 ) ]						visible:false  		items:#(" Error loading AUTODRAFT Templates " )
-															
+
  			GroupBox grp_utilities 	"Utilities" 	align:#left width:305 height:90 							offset:[-7,10]																					visible:false
  				button btn_idiotCheck 					"Perform Idiot Check" 			align:#left across:3 height:20 width:294 	offset:[0 , ( ( grp_utilities.height * -1 )  + 15 ) ] 						visible:false
 				button btn_removeMissingPlugins 		"Remove Missing Plugins" 		align:#left across:3 height:20 width:144 	offset:[-96 , -55 ] 														visible:false
@@ -132,8 +132,8 @@ struct LPM_DeadlineAPI
 				imgTag img_idiotcheck_L bitmap:bm_idiotCheckBlue offset:[0,-2]											visible:false
 				button btn_submit "<< Please Wait >>" width:270 height:30 offset:[10,-33] align:#left enabled:false 	visible:false
 				imgTag img_idiotcheck_R bitmap:bm_idiotCheckBlue offset:[280,-35]  align:#left 							visible:false
- 				progressBar prg_submitProgress2 ""  offset:[-1,4] width:292 height:8 color:[0,200,0]					visible:false 
-  				progressBar prg_submitProgress "" offset:[-1,-4] width:292 height:8 color:[0,0,200]						visible:false 
+ 				progressBar prg_submitProgress2 ""  offset:[-1,4] width:292 height:8 color:[0,200,0]					visible:false
+  				progressBar prg_submitProgress "" offset:[-1,-4] width:292 height:8 color:[0,0,200]						visible:false
 
 			dotNetControl submitLog "system.windows.forms.RichTextBox" height:170 width:308 pos:[ 3 , 3 ]
 			button btn_connectCancel "Cancel" pos:[2,176] width:310 height:30
@@ -159,22 +159,22 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.sticky_submitAsSuspended 		= LPM_Fun.GetIni "Deadline Settings" "SubmitAsSuspended" booleanClass false
 				-- UI UPDATES
 				spn_chunkSize.value 							= SMTDSettings.ChunkSize
-				local theVal 									= findItem #(#normal, #nth, #NthBlock, #NthRasterRefine, #reverse, #fromBothEnds, #FromCenter, #fromBothEndsAndCenter, #random) SMTDSettings.OutOfOrderMethod 
+				local theVal 									= findItem #(#normal, #nth, #NthBlock, #NthRasterRefine, #reverse, #fromBothEnds, #FromCenter, #fromBothEndsAndCenter, #random) SMTDSettings.OutOfOrderMethod
 				if theVal == 0 do theVal = 1
 				ddl_outOfOrderMethod.selection 					= theVal
-				btn_submitSuspended.state 						= SMTDSettings.SubmitAsSuspended 
+				btn_submitSuspended.state 						= SMTDSettings.SubmitAsSuspended
 				spn_outOfOrderStep.value 						= SMTDSettings.OutOfOrderStep
-				ddl_SubmitExternalFilesMode.selection 			= SMTDSettings.SubmitExternalFilesMode 
+				ddl_SubmitExternalFilesMode.selection 			= SMTDSettings.SubmitExternalFilesMode
 				chk_IgnoreFiles.state 							= SMTDSettings.IgnoreMissingExternalFiles
 				chk_IgnoreDLL.state 							= SMTDSettings.IgnoreMissingDLLs
-				btn_holdOnSub.checked							= LPM_deadlineInfo.sticky_holdOnSubmit 
-				LPM_deadlineInfo.submit_recoveryHold			= LPM_deadlineInfo.sticky_holdOnSubmit 
-				ddl_frameBufferMode.selection 					= LPM_deadlineInfo.sticky_frameBufferMode		
+				btn_holdOnSub.checked							= LPM_deadlineInfo.sticky_holdOnSubmit
+				LPM_deadlineInfo.submit_recoveryHold			= LPM_deadlineInfo.sticky_holdOnSubmit
+				ddl_frameBufferMode.selection 					= LPM_deadlineInfo.sticky_frameBufferMode
 				chk_renderElementsExr.checked 					= true
 				btn_submitSuspended.checked 					= LPM_deadlineInfo.sticky_submitAsSuspended
 			)
 
-			-- Save sticky settings to the .INI 
+			-- Save sticky settings to the .INI
 			fn ui_saveStickySettings =
 			(
 				-- SMTD Settings
@@ -198,7 +198,7 @@ struct LPM_DeadlineAPI
 			-- Gets the location of the currently active deadline
 			fn deadline_getDeadlinePath =
 			(
-				Environment = dotNetClass "System.Environment"	
+				Environment = dotNetClass "System.Environment"
 				deadline_path = Environment.GetEnvironmentVariable "deadline_path"
 				return deadline_path
 			)
@@ -258,15 +258,15 @@ struct LPM_DeadlineAPI
 					LPM_DeadlineSubmitRo.btn_submit.visible = state
 					LPM_DeadlineSubmitRo.img_idiotcheck_R.visible = state
 					LPM_DeadlineSubmitRo.prg_submitProgress2.visible = state
-					LPM_DeadlineSubmitRo.prg_submitProgress.visible = state					
+					LPM_DeadlineSubmitRo.prg_submitProgress.visible = state
  			)
 
  			-- adds a message to the log and apllies a timestamp and color to it
 			fn log_append arg_text arg_color =
 			(
-				curcolor = (dotNetClass "System.Drawing.Color").FromArgb 50 200 50  
+				curcolor = (dotNetClass "System.Drawing.Color").FromArgb 50 200 50
 
-				case arg_color of 
+				case arg_color of
 				(
 					1:(	curColor = (dotNetClass "System.Drawing.Color").FromArgb 200 50 50 ) 	-- Red
 					2:(	curColor = (dotNetClass "System.Drawing.Color").FromArgb 50 200 50 ) 	-- Green
@@ -285,7 +285,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Set the display and properties of the log
-			fn log_init = 
+			fn log_init =
 			(
 				submitLog.BackColor 		= (dotNetClass "System.Drawing.Color").FromArgb 68 68 68
  				submitLog.Multiline 		= true
@@ -297,7 +297,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Get Missing plugin classes
-			fn getMissingPluginClasses = 
+			fn getMissingPluginClasses =
 			(
 				str = stringStream ""
 				apropos "*missing*" to:str
@@ -350,25 +350,25 @@ struct LPM_DeadlineAPI
 							-- add any instances of the missing plugin to the (missingInstances) array
 							myClass = classOf currentClass
 							append missingInstances myClass
-						) 
+						)
 
 						-- add the collected missing instances and name to the missingInstancesByClass array
 						append missingInstancesByClass missingInstances
-					) 
-				) 
+					)
+				)
 
 				-- Return all the missing instances sorted neatly
 				return missingInstancesByClass
 			)
 
 			-- Replace missing plugin classe instances
-			fn replaceMissingPlugins_old = 
+			fn replaceMissingPlugins_old =
 			(
 				missingInstancesByClass = LPM_deadlineInfo.plugins_missingInstances
 
-				for missingInstances in missingInstancesByClass do 
+				for missingInstances in missingInstancesByClass do
 				(
-					for missingInstance_i in 1 to missingInstances.count do 
+					for missingInstance_i in 1 to missingInstances.count do
 					(
 						missingInstance = missingInstances[missingInstance_i]
 						if missingInstance_i != 1 then
@@ -376,21 +376,21 @@ struct LPM_DeadlineAPI
 							allClasses = missingInstance.classes
 							for k = 1 to allClasses.count do
 							(
-								
+
 								if allClasses[k].creatable then
 								(
 									newInst = createInstance allClasses[k]
-									q = replaceInstances missingInstance newInst  
+									q = replaceInstances missingInstance newInst
 									exit
 								)else()
-							) 
+							)
 						)else()
 					)
 				)
 			)
 
 			-- replaces missing plugins with nearest applicalb class
-			fn replaceMissingPlugins = 
+			fn replaceMissingPlugins =
 			(
 				str = stringStream ""
 				apropos "*missing*" to:str
@@ -432,15 +432,15 @@ struct LPM_DeadlineAPI
 							)
 						)
 					)
-				) 
+				)
 			)
 
 			-- Prompts user to delete missing plugins
-			fn replaceMissingPluginsPrompt = 
+			fn replaceMissingPluginsPrompt =
 			(
 
 				message = ( "Permanently remove [ " + ( LPM_deadlineInfo.plugins_missingInstances.count as string ) + " ] plugins? \n\nThis cannot be undone, and it is strongly \nreccomended to increment your scene file." )
-				result = yesNoCancelBox message 
+				result = yesNoCancelBox message
 				if result == #yes then
 				(
 					replaceMissingPlugins()
@@ -448,21 +448,21 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Prompts user to delete missing maps
-			
+
 			fn RemoveMissingMaps =
 			(
 
-				ATSOps.CheckNetworkPaths = true -- Turns on status checking for network filepaths 
+				ATSOps.CheckNetworkPaths = true -- Turns on status checking for network filepaths
 
 				atsops.Refresh() -- Updates Asset Tracker
 
 				ATSOps.GetFilesByFileSystemStatus #Missing &nullList -- Builds list of assets with "Missing" Status in Asset Tracker
 
 				if nullList.count > 0 do
-				(	
+				(
 
 					mList = #()
-	
+
 					for i = 1 to nullList.count do
 					(
 						append mList #(pathConfig.stripPathToLeaf nullList[i], nullList[i]) -- Builds sub array and appends to output array
@@ -472,12 +472,12 @@ struct LPM_DeadlineAPI
 
 				if nullList.count == 0 then
 				(
-					messageBox "No missing bitmaps were found" 		
+					messageBox "No missing bitmaps were found"
 				)
 				if nullList.count > 0 then
 				(
 					message = ( "Permanently remove [ " + ( nullList.count as string ) + " ] unlinked bitmaps? \n\nThis cannot be undone, and it is strongly \nreccomended to increment your scene file." )
-					result = yesNoCancelBox message 
+					result = yesNoCancelBox message
 					if result == #yes then
 					(
 						actionMan.executeAction -841213575 "23"
@@ -485,11 +485,11 @@ struct LPM_DeadlineAPI
 					else()
 				)
 			)
-			
+
 
 
 			-- Collect mmissing plugin instances
-			fn collectMissingPluginInstances = 
+			fn collectMissingPluginInstances =
 			(
 
 		 		LPM_deadlineInfo.plugins_missingClasses		= getMissingPluginClasses()
@@ -498,7 +498,7 @@ struct LPM_DeadlineAPI
 
 
 			-- run the idiot checks
-			fn idiotCheck_run = 
+			fn idiotCheck_run =
 			(
 				ts = timeStamp()
 
@@ -517,11 +517,11 @@ struct LPM_DeadlineAPI
 				(
 					curCheck = getProperty SMTDIdiotCheck check
 					curCheckResult = curCheck()
-					
+
 					if curCheckResult[1] == "fail"
 					then
 					(
-						for result in curCheckResult[3] do 
+						for result in curCheckResult[3] do
 						(
 							LPM_deadlineInfo.ic_failCount += 1
 
@@ -533,11 +533,11 @@ struct LPM_DeadlineAPI
 							)
 							else ()
 
-							
+
 							append resultsArray result
 						)
 					)
-					
+
 					log_append curCheckResult[4] 3
 				)
 
@@ -554,11 +554,11 @@ struct LPM_DeadlineAPI
 
 				LPM_deadlineInfo.ic_failCount = 0
 
-				for i in 1 to timePenalty do 
+				for i in 1 to timePenalty do
 				(
 					curMessage = ( "Waiting... " + ( ( timePenalty - i + 1 ) as string ) )
 					log_append curMessage 1
-					sleep 1 
+					sleep 1
 				)
 
 				log_append ( "All Check Skipped" ) 4
@@ -570,7 +570,7 @@ struct LPM_DeadlineAPI
 			fn deadline_connect =
 			(
 				if ( doesfileexist LPM_deadlineInfo.dl_NetworkRoot )
-				then 
+				then
 		 		(
 		 			log_append "Connected to Deadline repository" 2
 		 			log_append LPM_deadlineInfo.dl_NetworkRoot 4
@@ -600,7 +600,7 @@ struct LPM_DeadlineAPI
 					try
 					(
 						LPM_deadlineInfo.dl_groups  = for i in SMTDSettings.Groups collect i
-						log_append ( ( LPM_deadlineInfo.dl_groups.count as string ) + " Groups found" ) 4 
+						log_append ( ( LPM_deadlineInfo.dl_groups.count as string ) + " Groups found" ) 4
 					)
 					catch ( log_append (" No Groups found") 1 )
 
@@ -612,22 +612,22 @@ struct LPM_DeadlineAPI
 						SMTDFunctions.CollectLimitGroups()
 						LPM_deadlineInfo.dl_limits = SMTDSettings.LimitGroups
 
-						log_append ( ( LPM_deadlineInfo.dl_limits.count as string ) + " Limits found" ) 4 
+						log_append ( ( LPM_deadlineInfo.dl_limits.count as string ) + " Limits found" ) 4
 					)
 					catch ( log_append (" No Limits found") 1 )
 
 
 					-- Import Autodraft Presets
-					try 
+					try
 					(
 						LPM_deadlineInfo.draft_templates = getFiles ( LPM_deadlineInfo.draft_templatesDir+"*.py" )
 						LPM_deadlineInfo.draft_templateNames = for template in LPM_deadlineInfo.draft_templates collect (getfilenamefile (template))
-						log_append ( ( LPM_deadlineInfo.draft_templateNames.count as string ) + " AUTODRAFT presets found" ) 4 
+						log_append ( ( LPM_deadlineInfo.draft_templateNames.count as string ) + " AUTODRAFT presets found" ) 4
 					)
 					catch ( log_append (" No AUTODRAFT presets found ") 1 )
 
 					-- Load user
-					try 
+					try
 					(
 						LPM_deadlineInfo.dl_user = ""
 						LPM_deadlineInfo.dl_user = SMTDFunctions.GetDeadlineUser()
@@ -636,12 +636,12 @@ struct LPM_DeadlineAPI
 					catch
 					(
  						LPM_deadlineInfo.dl_user = "make"
- 						log_append (" Unable to find user, using ' " + LPM_deadlineInfo.dl_user + " ' instead") 1 
+ 						log_append (" Unable to find user, using ' " + LPM_deadlineInfo.dl_user + " ' instead") 1
 					)
 
 		 			return true
 		 		)
-		 		else 
+		 		else
 		 		(
 		 			log_append "Unable to connect to Deadline repository:" 1
 		 			return false
@@ -649,20 +649,20 @@ struct LPM_DeadlineAPI
 			)
 
 			-- enables or disables the framerange override spinners
-			fn ui_update_frameRangeEnable arg = 
+			fn ui_update_frameRangeEnable arg =
 			(
 				spn_overrideFrameRange1.enabled 	= arg
 				spn_overrideFrameRange2.enabled 	= arg
 			)
 
 			-- updates the framerange override spinners to never make invalid numbers
-			fn ui_update_frameRangeVal arg_mode = 
+			fn ui_update_frameRangeVal arg_mode =
 			(
-				if arg_mode == 1 then 
+				if arg_mode == 1 then
 				(
 					if ( spn_overrideFrameRange1.value >= spn_overrideFrameRange2.value ) then ( spn_overrideFrameRange2.value = spn_overrideFrameRange1.value )
 				)
-				if arg_mode == 2 then 
+				if arg_mode == 2 then
 				(
 					if ( spn_overrideFrameRange2.value <= spn_overrideFrameRange1.value ) then ( spn_overrideFrameRange1.value = spn_overrideFrameRange2.value )
 				)
@@ -678,9 +678,9 @@ struct LPM_DeadlineAPI
 			)
 
 			-- updates UI job name with max filename
-			fn ui_update_jobName = 
+			fn ui_update_jobName =
 			(
-				curName = maxfilename 
+				curName = maxfilename
 				newName  = ( substring curName 1 ( curname.count - 4 ) )
 
 				LPM_deadlineInfo.dl_jobName = newName
@@ -688,7 +688,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- updates UI job name with max filename
-			fn ui_update_jobComment = 
+			fn ui_update_jobComment =
 			(
 				commentStr = ""
 
@@ -699,9 +699,9 @@ struct LPM_DeadlineAPI
 						commentStr += "BUCKET"
 						commentStr += ( " - SR: " + ( re.imageSampler_shadingRate as string ) )
 						commentStr += ( " | MAX: " + ( re.twoLevel_fineSubdivs as string ) )
-						commentStr += ( " | THR: " + ( re.twoLevel_threshold as string ) )						
+						commentStr += ( " | THR: " + ( re.twoLevel_threshold as string ) )
 					)
-				if re.imageSampler_type == 3 
+				if re.imageSampler_type == 3
 				then
 					(
 						commentStr += "PROG"
@@ -715,17 +715,17 @@ struct LPM_DeadlineAPI
 			)
 
 			-- updates UI Batch name with the max filename
-			fn ui_update_jobBatchName = 
+			fn ui_update_jobBatchName =
 			(
-				curName = maxfilename 
+				curName = maxfilename
 				newName  = ( substring curName 1 ( curname.count - 4 ) )
-			
+
 				LPM_deadlineInfo.dl_batchName  = newName
 				lab_CustomBatchField.text = LPM_deadlineInfo.dl_batchName
 			)
 
 			-- updates UI user field
-			fn ui_update_user = 
+			fn ui_update_user =
 			(
 
 				lab_DeadlineUserField.text = ( " " + LPM_deadlineInfo.dl_user )
@@ -733,7 +733,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Updates the priority UI items to match the value passed
-			fn ui_update_priorityGang val = 
+			fn ui_update_priorityGang val =
 			(
 				if val <= 100 do
 				(
@@ -746,17 +746,17 @@ struct LPM_DeadlineAPI
 					SMTDSettings.Priority = val
 				)
 				val
-			)			
+			)
 
 			-- Updates the priority UI items
-			fn ui_update_priority = 
+			fn ui_update_priority =
 			(
 
 				ui_update_priorityGang SMTDSettings.Priority
 			)
 
 			-- updates UI groups dropdown
-			fn ui_update_groups = 
+			fn ui_update_groups =
 			(
 				LPM_deadlineInfo.dl_groups
 
@@ -768,7 +768,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- updates UI draft templates dropdown
-			fn ui_update_draft_templateNames = 
+			fn ui_update_draft_templateNames =
 			(
 				templatesPlusNone = join #("Choose AUTODRAFT preset ") LPM_deadlineInfo.draft_templateNames
 				ddl_autodraftSelection.items = templatesPlusNone
@@ -787,7 +787,7 @@ struct LPM_DeadlineAPI
  					btn_submit.enabled = true
 
  					if LPM_deadlineInfo.ic_failCount == 0
- 					then 
+ 					then
  					(
 						img_idiotcheck_L.bitmap = bm_idiotCheckGreen
 						img_idiotcheck_R.bitmap = bm_idiotCheckGreen
@@ -828,112 +828,112 @@ struct LPM_DeadlineAPI
  				-- Update job name
  				ui_update_jobName()
 
- 				-- Update job comment 
+ 				-- Update job comment
  				ui_update_jobComment()
 
- 				-- Update job batch name 
+ 				-- Update job batch name
 				ui_update_jobBatchName()
 
  				-- Update user
  				ui_update_user()
 
- 				-- Update priority 
+ 				-- Update priority
 				ui_update_priority()
 
- 				-- Update groups 
+ 				-- Update groups
 				ui_update_groups()
 
- 				-- Update AUTODRAFT presets 
+ 				-- Update AUTODRAFT presets
  				ui_update_draft_templateNames()
 
 			)
 
  			-- Creates a rollout that sets the active limits
- 			fn setLimitsRO = 
+ 			fn setLimitsRO =
 			(
 				rollout LPM_DeadlineSubmit_setLimitsRO "Set Limits" width:225 height:300
 				(
 					label lab_1 "Select Limits" align:#left
 					multilistbox mlt_theLimitGroups "" items:#("-- Loading --") height:10
 					button btn_chooseLimits "Choose Selected Limits" width:205 align:#left
-					
-					fn resize_setLimitsRO curHeight = 
+
+					fn resize_setLimitsRO curHeight =
 					(
 						mlt_theLimitGroups.height = curHeight-50
 						btn_chooseLimits.pos = [10,(curHeight-25)]
 					)
 
-					fn saveLimitGroups = 
+					fn saveLimitGroups =
 					(
 						result = #()
 						for selected in mlt_theLimitGroups.selection do
 						(
 							append result mlt_theLimitGroups.items[selected]
-						)			
+						)
 
 						LPM_deadlineInfo.dl_limitsChosen = result
 						SMTDSettings.LimitGroupsToUse = result
 					)
-					
+
 					on LPM_DeadlineSubmit_setLimitsRO resized theSize do
 					(
 						resize_setLimitsRO theSize[2]
 					)
-					
-					on LPM_DeadlineSubmit_setLimitsRO open do 
+
+					on LPM_DeadlineSubmit_setLimitsRO open do
 					(
 						resize_setLimitsRO 300
 						mlt_theLimitGroups.items = LPM_deadlineInfo.dl_limits
 					)
-					
+
 					on btn_chooseLimits pressed do
 					(
 						saveLimitGroups()
 			 			destroyDialog LPM_DeadlineSubmit_setLimitsRO
 					)
-					
+
 					on LPM_DeadlineSubmit_setLimitsRO close do
 					(
 						saveLimitGroups()
 					)
 				)
-				
+
 				createDialog LPM_DeadlineSubmit_setLimitsRO lockHeight:false lockWidth:true style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing,#style_minimizebox) modal:true
 			)
 
-			-- function called when the rollout opens, it connects to deadline, runs the checks and populates the UI 
- 			fn init = 
+			-- function called when the rollout opens, it connects to deadline, runs the checks and populates the UI
+ 			fn init =
  			(
  				LPM_DeadlineSubmitRo.height = 210
  				-- Initalize the Log UI
  				log_init()
 
- 				-- Connect with Repository and all functions to retireve data 
+ 				-- Connect with Repository and all functions to retireve data
   				if deadline_connect()
  				then
  				(
-	 				-- Update UI Items 
+	 				-- Update UI Items
 	 				ui_loadStickySettings()
-	 				ui_update()	 				
+	 				ui_update()
 
 	 				-- Perform Idiot checks, or skip if enabled
-	 				if LPM_treeview_rollout.skipIdiotChecks.checked 
+	 				if LPM_treeview_rollout.skipIdiotChecks.checked
 	 				then ( idiotCheck_skip() )
  					else ( idiotCheck_run() )
- 					
-	 				-- Move Log to bottom of Dialog 
+
+	 				-- Move Log to bottom of Dialog
 	 				submitLog.pos=[ 3 , 715 ]
 	 				submitLog.height=138
 	 				btn_connectCancel.visible = false
 
 	 				-- Enable UI item visibility
-	 				ui_visibilityToggle true 				
+	 				ui_visibilityToggle true
 
 	 				-- Update submitter status
 					ui_update_submit()
 
 					-- Resize Interface
-					LPM_DeadlineSubmitRo.height = 857	
+					LPM_DeadlineSubmitRo.height = 857
  				)
  				else
  				(
@@ -943,7 +943,7 @@ struct LPM_DeadlineAPI
  			)
 
  			-- applies any changes to the SMTDSettings
- 			fn submit_commitChanges = 
+ 			fn submit_commitChanges =
  			(
 				SMTDSettings.JobName 						= LPM_deadlineInfo.dl_jobName
 				SMTDSettings.UserName 						= LPM_deadlineInfo.dl_user
@@ -955,24 +955,24 @@ struct LPM_DeadlineAPI
 				SMTDSettings.TaskTimeoutEnabled 			= LPM_deadlineInfo.dl_taskTimeoutEnabled
 				--SMTDSettings.TaskTimeout		 			= LPM_deadlineInfo.dl_taskTimeoutSeconds
 				SMTDSettings.DraftTemplate 					= LPM_deadlineInfo.draft_templateChosen
-				LPM_deadlineInfo.submit_recoveryHold		= LPM_deadlineInfo.sticky_holdOnSubmit 
+				LPM_deadlineInfo.submit_recoveryHold		= LPM_deadlineInfo.sticky_holdOnSubmit
 
 				-- LPM_deadlineInfo.submit_viewToRenderLock = rendUseActiveView
 
 				-- Set override range hold
-				if LPM_deadlineInfo.framerange_overrideEnabled 
-				then 
+				if LPM_deadlineInfo.framerange_overrideEnabled
+				then
 				(
-					animStart  	= (animationRange.start as integer)/TicksPerFrame  
-					animEnd 	= (animationRange.end as integer)/TicksPerFrame  
+					animStart  	= (animationRange.start as integer)/TicksPerFrame
+					animEnd 	= (animationRange.end as integer)/TicksPerFrame
 					LPM_deadlineInfo.framerange_overrideRange_HOLD	= #( animStart, animEnd)
 				)
  			)
 
  			fn optimize_manually =
  			(
-				--lb_objects = getclassinstances leafblower 
-				--for lb_object in lb_objects do 
+				--lb_objects = getclassinstances leafblower
+				--for lb_object in lb_objects do
 				--(
 				--	lb_object.globals_enable = ( theDrop.selection - 1 )
 				--)
@@ -990,12 +990,12 @@ struct LPM_DeadlineAPI
 						label lab1 "Submission crashed, performing restore." align:#center offset:[0,8]
 	  					label lab2 "Please wait..." offset:[0,-5]
 					)
-					
+
 					rollout automaticRecoveryMessage2 "Auto-Recovery" width:300 height:70
 					(
 						label lab1 "LPM successfully recovered scene!" offset:[0,8]
 	  					button btn1 "Great!" offset:[0,5] width:80 height:25
-						
+
 						on btn1 pressed do destroydialog automaticRecoveryMessage2
 					)
 
@@ -1007,7 +1007,7 @@ struct LPM_DeadlineAPI
 					createdialog automaticRecoveryMessage2
 
 				)
-				else 
+				else
 				(
 					rollout automaticRecoveryFailMessage "Auto-Recovery" width:300 height:80
 					(
@@ -1016,7 +1016,7 @@ struct LPM_DeadlineAPI
 	  					label lab2 "Your scene may be corrupted," offset:[0,-5]
 						label lab3 "It is strongly reccomended you re-open last save." offset:[0,-5]
 					)
-					
+
 					createdialog automaticRecoveryFailMessage
 				)
 
@@ -1054,16 +1054,16 @@ struct LPM_DeadlineAPI
 
 				-- FrameBuffer Set
 			--	frameBuffer_Renderer_Check = renderers.current as string
-			--	
+			--
 			--	frameBuffer_Renderer_Check= trimRight frameBuffer_Renderer_Check "1234567890_:"
 			--	frameBuffer_Renderer_Check = trimLeft frameBuffer_Renderer_Check "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKLZXCVBNM<>?-_1234567890"
-			--	
+			--
 			--	if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
 			--	(
 			--		try
 			--		(
 			--			LPM_deadlineInfo.sticky_frameBufferMode_HOLD = renderers.current.output_on
-			--			
+			--
 			--			if LPM_deadlineInfo.sticky_frameBufferMode == 2 then
 			--			(
 			--				renderers.current.output_on = true
@@ -1084,11 +1084,11 @@ struct LPM_DeadlineAPI
 			--	)
 
 			--	-- Encode Elements Set
-			--	
+			--
 			--	LPM_deadlineInfo.sticky_renderElementsExr_HOLD = fopenexr.isAutoAddRenderElements()
-			--	
+			--
 			--	fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr
-			--	
+			--
 
 			--	try
 			--	(
@@ -1100,7 +1100,7 @@ struct LPM_DeadlineAPI
 			--	catch
 			--	(
 			--		print "LPM hit a snag trying to set the frame buffer. This can happen if you're not using Vray. LPM will attempt to coninue"
-			--		
+			--
 			--	)
 
 				-- Perform a hold if desired
@@ -1119,7 +1119,7 @@ struct LPM_DeadlineAPI
 			)
 
 
-			fn submit_action = 
+			fn submit_action =
 			(
 				print "Submit Action"
 
@@ -1156,34 +1156,34 @@ struct LPM_DeadlineAPI
 						-- Name the Job
 						TmpPass = renderCollect[i][1]
 
-
-						try
-						(
-							if theShot.children[1].commonProps.cameraTgl == True then
-							(
-								if theShot.children[1].commonProps._CameraExport == true then
-								(
-									nukeEm_GetSettings theShot
-									nukeEm_CameraExport (LPM_Fun.getName renderCollect[i][2].name)
-									SMTDLPMInterface.log_append ("Exporting Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 4
-									if theShot.children[1].commonProps._rendTimeType == 4 then
-									(
-										SMTDLPMInterface.log_append ("Cannot Render in \"Frames\". Using \"Range\" Instead ") 1
-
-									)
-								)
-							)
-						)
-						catch(SMTDLPMInterface.log_append ("Failed to Export Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 1)
+						-- Disabled the nuke camera export in here, and moved it into the nukeExport operator TODO:
+						-- try
+						-- (
+						-- 	if theShot.children[1].commonProps.cameraTgl == True then
+						-- 	(
+						-- 		if theShot.children[1].commonProps._CameraExport == true then
+						-- 		(
+						-- 			nukeEm_GetSettings theShot
+						-- 			nukeEm_CameraExport (LPM_Fun.getName renderCollect[i][2].name)
+						-- 			SMTDLPMInterface.log_append ("Exporting Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 4
+						-- 			if theShot.children[1].commonProps._rendTimrreType == 4 then
+						-- 			(
+						-- 				SMTDLPMInterface.log_append ("Cannot Render in \"Frames\". Using \"Range\" Instead ") 1
+						--
+						-- 			)
+						-- 		)
+						-- 	)
+						-- )
+						-- catch(SMTDLPMInterface.log_append ("Failed to Export Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 1)
 
 						TmpPassName = (LPM_Fun.getName TmpPass.name)
-						
+
 						if TmpPass.isAdjustment and (TmpPass.AdjustmentFor != undefined) then
 						(
 							TmpPassName = "["+(LPM_Fun.getName (TmpPass.AdjustmentFor.name)) + "]" + TmpPassName
 						)
-						
-						if (theShot==undefined) then 
+
+						if (theShot==undefined) then
 						(
 							SMTDSettings.JobName = ( (getfilenamefile (maxfilename)) + " | P: "+TmpPassName)
 						)
@@ -1195,13 +1195,13 @@ struct LPM_DeadlineAPI
 						-- Deadline LPM OVERRIDE settings
 
 
-						if LPM_SMTDSettings.active then 
+						if LPM_SMTDSettings.active then
 						(
 							-- Priority Override
-							if LPM_SMTDSettings.priorityOn then 
+							if LPM_SMTDSettings.priorityOn then
 							(
 								-- Priority Offset
-								if LPM_SMTDSettings.priorityOffsetOn then 
+								if LPM_SMTDSettings.priorityOffsetOn then
 								(
 									newPriority = ( SMTDSettings.Priority + LPM_SMTDSettings.priorityOffset )
 									if newPriority > 99 then newPriority = 99
@@ -1211,7 +1211,7 @@ struct LPM_DeadlineAPI
 								)
 
 								-- Priority Absolute
-								if LPM_SMTDSettings.priorityAbsoluteOn then 
+								if LPM_SMTDSettings.priorityAbsoluteOn then
 								(
 									newPriority = ( LPM_SMTDSettings.priorityAbsolute )
 									if newPriority > 99 then newPriority = 99
@@ -1221,17 +1221,17 @@ struct LPM_DeadlineAPI
 								)
 							)
 
-							if LPM_SMTDSettings.taskSizeOn then 
+							if LPM_SMTDSettings.taskSizeOn then
 							(
 								SMTDSettings.ChunkSize = LPM_SMTDSettings.taskSize
 							)
 
-							if LPM_SMTDSettings.submitGroupOn then 
+							if LPM_SMTDSettings.submitGroupOn then
 							(
 								SMTDSettings.group = LPM_SMTDSettings.submitGroup
 							)
-							
-							if LPM_SMTDSettings.submitLimitsOn then 
+
+							if LPM_SMTDSettings.submitLimitsOn then
 							(
 								SMTDSettings.LimitGroupsToUse = LPM_SMTDSettings.submitLimits
 							)
@@ -1247,7 +1247,7 @@ struct LPM_DeadlineAPI
 
 					-- Submit Deadline Job
 					local result = SMTDFunctions.SubmitJob()
-					
+
 					if result != #success do
 					(
 						flag = false
@@ -1258,7 +1258,7 @@ struct LPM_DeadlineAPI
 
 					SMTDSettings = stickySMTDSettings 					-- Put SMTDsettings back to normal
 					-- reMgr.SetElementsActive stickyElementsActive 		-- Put render elements settings back to normal
-					
+
 					log_append "Restoring Scene to pre submission state..." 4
 
 					LPM_Render.fnPostRenderAction renderCollect[i][1] renderCollect[i][2]
@@ -1268,12 +1268,12 @@ struct LPM_DeadlineAPI
 					log_append  ("time (s) " +((timeStamp() - ts2)/1000.000) as string ) 4
 				)
 
-				
+
 				try
 				(
 					SMTDLPMInterface.grp_submit.text = "Submit"
 
-					case flag of 
+					case flag of
 					(
 						true: ( log_append "Submission complete!" 2 )
 						false: ( log_append "Submission Stopped!" 3 )
@@ -1282,10 +1282,10 @@ struct LPM_DeadlineAPI
 					SMTDLPMInterface.prg_submitProgress.value = 95
 					-- log_append "Perfoming Scene post submit actions" 4
 					-- log_append ( "Total running time (s): " + ( (timeStamp() - ts ) / 1000.000 ) as string ) 4
-				
+
 					-- sleep 1.25
 
-					-- if chk_closeOnComplete.checked == true 
+					-- if chk_closeOnComplete.checked == true
 					-- then ( destroydialog LPM_DeadlineSubmitRo )
 					-- else ( prg_submitProgress.visible = false )
 
@@ -1303,7 +1303,7 @@ struct LPM_DeadlineAPI
 
  			)
 
- 			
+
  			-- Restore the scene to pre Submission state
 			fn submit_postAction =
 			(
@@ -1333,18 +1333,18 @@ struct LPM_DeadlineAPI
 				(
 					sleep 1.25
 
-					if SMTDLPMInterface.chk_closeOnComplete.checked == true 
+					if SMTDLPMInterface.chk_closeOnComplete.checked == true
 					then ( destroydialog SMTDLPMInterface )
 					else ( SMTDLPMInterface.prg_submitProgress.visible = false )
 				)
 				catch()
-				
+
 			)
 
 
 
 			-- Handles the submission of a job
-			fn submit = 
+			fn submit =
 			(
   				clearListener()
 				-- Disable viewport and UI as much as possible, save settings, and handle other initializing
@@ -1367,7 +1367,7 @@ struct LPM_DeadlineAPI
 
 
 			-- Event handler for removing missing plugins
-			on btn_removeMissingPlugins pressed do 
+			on btn_removeMissingPlugins pressed do
 			(
 
 				collectMissingPluginInstances()
@@ -1383,34 +1383,34 @@ struct LPM_DeadlineAPI
 
 
 			-- Event handler for running the idiot checks
-			on btn_idiotCheck pressed do 
+			on btn_idiotCheck pressed do
 			(
 				idiotCheck_run()
 				ui_update_submit()
 			)
 
 			-- Event handler for re-evaluating the tasks from LPM
-			on btn_submitReEval pressed do 
+			on btn_submitReEval pressed do
 			(
 
 				ui_update_submit()
 			)
 
 			-- Event handler for setting if max restarts between tasks
-			on chk_RestartMax changed state do 
+			on chk_RestartMax changed state do
 			(
 
 				SMTDSettings.RestartMax = state
 			)
 
 			-- Event handler for setting task size ( in frames )
-			on spn_chunkSize changed state do 
+			on spn_chunkSize changed state do
 			(
 
 				SMTDSettings.ChunkSize = state
 			)
 
-			-- Event handler for setting out of order method 
+			-- Event handler for setting out of order method
 			on ddl_outOfOrderMethod selected itm do
 			(
 				theMethod= case itm of
@@ -1425,7 +1425,7 @@ struct LPM_DeadlineAPI
 						8: #fromBothEndsAndCenter
 						9: #random
 				)
-				
+
 				spn_outOfOrderStep.enabled = itm >= 2 AND itm <= 4
 
 				SMTDSettings.OutOfOrderMethod 	= theMethod
@@ -1433,7 +1433,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Event handler for enabling or disabling task timeout
- 			on chk_autoStartupTimeout changed state do 
+ 			on chk_autoStartupTimeout changed state do
  			(
 
 				LPM_deadlineInfo.dl_taskTimeoutEnabled = state
@@ -1441,14 +1441,14 @@ struct LPM_DeadlineAPI
  			)
 
  			-- Event handler for setting the task startup timeout duration
-	 		on spn_autoStartupTimeout changed state do 
+	 		on spn_autoStartupTimeout changed state do
 	 		(
 
 	 			LPM_deadlineInfo.dl_taskTimeoutSeconds = ( state as string )
 	 		)
 
 			-- Event handler for setting if the job is interuptable or not
-			on chk_interruptable changed state do 
+			on chk_interruptable changed state do
 			(
 
 				LPM_deadlineInfo.dl_interruptible = state
@@ -1456,53 +1456,53 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Event handler for setting the interruptable percentage
-			on spn_interruptablePercent changed state do 
+			on spn_interruptablePercent changed state do
 			(
 
-				LPM_deadlineInfo.dl_interruptiblePercentage = state	
+				LPM_deadlineInfo.dl_interruptiblePercentage = state
 			)
 
 			-- Event handler for selecting the group you want to submit to
-			on ddl_group selected arg do 
+			on ddl_group selected arg do
 			(
 
 				LPM_deadlineInfo.dl_groupChosen = LPM_deadlineInfo.dl_groups[arg]
 			)
 
 			-- event handler for comment field update
-			on lab_CustomCommentField changed state do 
+			on lab_CustomCommentField changed state do
 			(
 
 				LPM_deadlineInfo.dl_jobComment = lab_CustomCommentField.text
 			)
 
 			-- event handler for framerange override "from" field
-			on spn_overrideFrameRange1 changed state do 
+			on spn_overrideFrameRange1 changed state do
 			(
-				
+
 				ui_update_frameRangeVal 1
 			)
 
 			-- event handler for framerange override "to" field
-			on spn_overrideFrameRange2 changed state do 
+			on spn_overrideFrameRange2 changed state do
 			(
 
 				ui_update_frameRangeVal 2
 			)
 
 			-- event handler for setting limits
-			on btn_setLimits pressed do 
+			on btn_setLimits pressed do
 			(
 				setLimitsRO()
 				btn_setLimits.text = ( ( SMTDSettings.LimitGroupsToUse.count as string ) + " Limits set")
-				for limit in SMTDSettings.LimitGroupsToUse do 
+				for limit in SMTDSettings.LimitGroupsToUse do
 				(
 					log_append ( " \"" + limit + " \"" + " limit was added" ) 4
 				)
 			)
 
 			-- event handler for clearing limits
-			on btn_setLimitsClear pressed do 
+			on btn_setLimitsClear pressed do
 			(
 				btn_setLimits.text = "Set limits"
 				SMTDSettings.LimitGroupsToUse = #()
@@ -1510,14 +1510,14 @@ struct LPM_DeadlineAPI
 			)
 
  			-- Event handler for chosing autordraft preset
- 			on ddl_autodraftSelection selected item do 
+ 			on ddl_autodraftSelection selected item do
  			(
  				try ( LPM_deadlineInfo.draft_templateChosen = LPM_deadlineInfo.draft_templates[(item-1)])
  				catch( LPM_deadlineInfo.draft_templateChosen = "" )
  			)
 
  			-- Event for custom name field changing
- 			on lab_CustomNameField changed state do 
+ 			on lab_CustomNameField changed state do
  			(
 
  				LPM_deadlineInfo.dl_jobName = state
@@ -1525,7 +1525,7 @@ struct LPM_DeadlineAPI
  				lab_CustomBatchField.text = state
  			)
 
- 			on lab_CustomBatchField changed state do 
+ 			on lab_CustomBatchField changed state do
  			(
 
  				LPM_deadlineInfo.dl_batchName = state
@@ -1544,7 +1544,7 @@ struct LPM_DeadlineAPI
 
 				SMTDSettings.Priority= (ui_update_priorityGang value)
 			)
-			
+
 			-- Event handler for changing the priority via the priority spinner
 			on spn_priority changed value do
 			(
@@ -1553,7 +1553,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Event handler for submission hold
-			on btn_holdOnSub changed state do 
+			on btn_holdOnSub changed state do
 			(
 
 				LPM_deadlineInfo.sticky_holdOnSubmit = state
@@ -1561,7 +1561,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Event handler for chosing your frame buffer mode
-			on ddl_frameBufferMode selected state do 
+			on ddl_frameBufferMode selected state do
 			(
 
 				LPM_deadlineInfo.sticky_frameBufferMode	= state
@@ -1570,28 +1570,28 @@ struct LPM_DeadlineAPI
 			)
 
 			-- event handler for submit as suspended
-			on chk_renderElementsExr changed state do 
+			on chk_renderElementsExr changed state do
 			(
 
 			--	LPM_deadlineInfo.sticky_renderElementsExr  = state
 			)
 
 			-- Event handler for ignoring missing Maps
-			on chk_IgnoreFiles changed state do 
+			on chk_IgnoreFiles changed state do
 			(
 
 				SMTDSettings.IgnoreMissingExternalFiles = state
-			)	
-			
+			)
+
 			-- Event handler for ignoring missing .DLL files
-			on chk_IgnoreDLL changed state do 
+			on chk_IgnoreDLL changed state do
 			(
 
 				SMTDSettings.IgnoreMissingDLLs = state
-			)	
+			)
 
 			-- event handler for submit as suspended
-			on btn_submitSuspended changed state do 
+			on btn_submitSuspended changed state do
 			(
 
 				LPM_deadlineInfo.sticky_submitAsSuspended 	= state
@@ -1606,7 +1606,7 @@ struct LPM_DeadlineAPI
 			)
 
 			-- event handler for framerange overrided toggle
-			on chk_overrideFrameRange changed state do 
+			on chk_overrideFrameRange changed state do
 			(
 
 				ui_update_frameRangeEnable state
@@ -1622,14 +1622,14 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Event handler for controling if submission is optimized or not
-			on btn_optimizeSubmit changed state do 
+			on btn_optimizeSubmit changed state do
 			(
 
 				LPM_deadlineInfo.optimize_enabled = state
 			)
 
 			-- event handler for submitting your job
- 			on btn_submit pressed do 
+ 			on btn_submit pressed do
  			(
 
  				submit()
@@ -1658,7 +1658,7 @@ struct LPM_DeadlineAPI
 		createDialog LPM_DeadlineSubmitRo lockHeight:true lockWidth:true style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing, #style_minimizebox) pos:(LPM_Fun.getRoPos LPM_DeadlineSubmitRo.width)
 		SMTDLPMInterface = LPM_DeadlineSubmitRo
 		return #SUCCESS
-	)	
+	)
 )
 
 append LPM_NetworkPlugins (LPM_DeadlineAPI())

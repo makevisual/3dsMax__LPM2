@@ -657,6 +657,7 @@ fn createLightSet theName=
 		lightSet
 ),
 
+-- creates shot edit shot defaults
 fn createShot LPM_Root=
 (
 		shotRoot=LPM_Fun.firstChildByType LPM_Root "shotRoot"
@@ -670,17 +671,17 @@ fn createShot LPM_Root=
 		theProps.autoUpdateName=true
 		theProps.name=LPM_Fun.generateCommonPropName theProps
 
-		theProps=LPM_Fun.createCameraOverscanProps "Camera Overscan"
-		theProps.parent=shot
-		theProps.name=LPM_Fun.generateCameraOverscanName theProps
+		-- theProps=LPM_Fun.createCameraOverscanProps "Camera Overscan"
+		-- theProps.parent=shot
+		-- theProps.name=LPM_Fun.generateCameraOverscanName theProps
 
-		theProps=LPM_Fun.createNukeExportProps "Nuke Export"
-		theProps.parent=shot
-		theProps.name=LPM_Fun.generateNukeExportName theProps
+		-- theProps=LPM_Fun.createNukeExportProps "Nuke Export"
+		-- theProps.parent=shot
+		-- theProps.name=LPM_Fun.generateNukeExportName theProps
 
-		theProps=LPM_Fun.createAeExportProps "AE Export"
-		theProps.parent=shot
-		theProps.name=LPM_Fun.generateAeExportName theProps
+		-- theProps=LPM_Fun.createAeExportProps "AE Export"
+		-- theProps.parent=shot
+		-- theProps.name=LPM_Fun.generateAeExportName theProps
 
 		shot
 

@@ -60,7 +60,7 @@ function vray5_Globals_Override_PreRender =
     if renderers.current.output_rawFileName == undefined
     then ( Vray5_RestoreData.output_rawFileName  = "" )
     else ( Vray5_RestoreData.output_rawFileName  = renderers.current.output_rawFileName )
-    
+
     Vray5_RestoreData.output_saveRawFile  = renderers.current.output_saveRawFile
     Vray5_RestoreData.output_splitgbuffer = renderers.current.output_splitgbuffer
     Vray5_RestoreData.output_genpreview   = renderers.current.output_genpreview
@@ -85,9 +85,12 @@ function vray5_Globals_Override_PreRender =
     rendShowVFB                             = false                          -- Turn off max default frame buffer
     rendSaveFile                            = false                          -- Turn off max default file save option
 
-
-    -- Set this property for no viewport image, but better memory concervation
-    renderers.current.output_useram = false --- THIS MAKES IT SO YOU CANT INTERACT. but you see a small little preview
+    -- If the renderer is set to progressive, it turns the memory frame buffer on, which is necessary for it to work
+    -- otherwise it turns the memory frame buffer off, which is the preferred method, for memory handling, and performance
+    -- however, note that the frame buffer will not be interactive in this mode, and will only clone a small window for the viewer
+    if renderers.current.imageSampler_type == 3
+    then( renderers.current.output_useram = true )
+    else( renderers.current.output_useram = false )
 )
 
 function vray5_Globals_Override_PostRender =

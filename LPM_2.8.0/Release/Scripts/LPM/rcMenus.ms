@@ -3072,9 +3072,11 @@ rcMenu rc_shotMenu
 (
 	menuItem SelectPasses "Include Passes..."
 
+	seperator s2
+	menuItem revealInExplorerShot "Reveal in Explorer"
 
+	seperator s1
 	menuItem    AddCommon "Add Common Properties"
-
 	menuItem    AddCameraOverscan "Add Camera Overscan Override" 	-- Dabelow cameraOverscan
 	menuItem    AddNukeExport "Add Nuke Export" 					-- Dabelow nukeExport
 	menuItem    AddAeExport "Add After Effect Export" 				-- Dabelow aeExport
@@ -3082,9 +3084,6 @@ rcMenu rc_shotMenu
 	seperator s4
 	menuItem renderShot "Submit Local"
 	menuItem renderShotNetwork "Submit Network"
-
-	seperator s2
-	menuItem viewRamplayer "View Ram Player"
 
 	seperator sepr4
 	menuItem deleteShot "Delete Shot"
@@ -3132,6 +3131,13 @@ rcMenu rc_shotMenu
 			theProps.parent=thePass
 			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
 		)
+	)
+
+	on revealInExplorerShot picked do
+	(
+		theShot = LPM_treeview_rollout.tv.selectedNode.tag.value
+		curPath = ( LPM_Root.rootDir + (LPM_Fun.getName theShot.name) + @"\" )
+		shellLaunch curPath ""
 	)
 
 	on viewRamPlayer picked do
@@ -3292,9 +3298,9 @@ rcMenu rc_PassMenu
 	menuItem duplicateInstPass "Duplicate Pass with instances"
 	menuItem paste "Paste"
 	menuItem pasteInstanced "Paste Instanced"
-	seperator set12
-	menuItem	viewPass "View Bitmap"
-	menuItem viewPassRam "View Ram Player"
+	-- seperator set12
+	-- menuItem	viewPass "View Bitmap"
+	-- menuItem viewPassRam "View Ram Player"
 	seperator set11
 	menuItem    deletePass "Delete Pass"
 
@@ -3508,13 +3514,8 @@ rcMenu rc_PassMenu
 	on vrayPropsAdd picked do
 	(
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		print thePassNode
-
 		thePass=thePassNode.tag.value
-		print thePass
-
 		theSet=LPM_Fun.createVrayProps "Vray Override"
-		print theSet
 
 		theSet.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode

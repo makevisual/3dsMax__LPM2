@@ -2465,7 +2465,10 @@ struct LPM_RenderAPI
 						ca = custAttributes.get psCP 1
 						LPM_OperatorCustomAttributes = ca
 
-						filein (LPM_Dir+"operator_cameraOverscan.ms")		
+						print "---- CA ----"
+						show ca
+
+						filein (LPM_Dir+"operator_cameraOverscan.ms")
 					)
 				)
 
@@ -2480,7 +2483,7 @@ struct LPM_RenderAPI
 
 
 				------------------------------------------------------------------------------------------------ final prepare --------------------------------------------------------------------------------
-				
+
 				rendUseNet=false
 
 				LPM_Render.execScriptNodes thePass #preRender
@@ -3384,11 +3387,11 @@ struct LPM_RenderAPI
 			--			vr=renderers.current
 			--			vr.output_on = vrfrbufBackup
 			--		)
-			--		
+			--
 			--	)
 			--	catch
 			--	(
-			--		
+			--
 			--	)
 
 				--restore common settings
@@ -3456,9 +3459,9 @@ struct LPM_RenderAPI
 				LPM_Root.PostConvertDatawindow = false
 
 			)
-		
+
 		)
-		-- TODO: test this 
+		-- TODO: test this
 		-- Sends job to renderer dispatch to restore renderer specific last minuet adjustments
 
 		LPM_RenderDispatchAction = #postRender
@@ -3467,12 +3470,12 @@ struct LPM_RenderAPI
 		-- TODO: finish the camera hooks
 		if(theShot!=undefined) then
 		(
-			filein (LPM_Dir+"operator_cameraOverscan.ms")		
+			filein (LPM_Dir+"operator_cameraOverscan.ms")
 		)
 
 
 		filein (LPM_Dir+"renderer_dispatch.ms")
-		
+
 
 		-- print "===== DOES THIS HAPPEN? =========="
 
@@ -3759,6 +3762,17 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		(
 			SetQuietMode LPM_Root.quietMode
 		)
+
+
+
+
+-- TODO: put cameraOverscan in here
+print "---------- testeroo -------------"
+print LPM_Root.renderCamera
+
+
+
+
 
 		--And go!!
 		with defaultAction #logmsg
