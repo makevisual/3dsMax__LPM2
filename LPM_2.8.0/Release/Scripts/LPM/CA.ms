@@ -19,15 +19,15 @@ www.lukashi.com
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	
-	
-	
-	
-	
+
+
+
+
+
 	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-	
-	
-	
+
+
+
 */
 
 
@@ -47,19 +47,19 @@ version:2
 		expanded type:#boolean
 		renderType type:#integer default:3
 		previewSize type:#integer default:50
-		
+
 		DistributedRender type:#boolean default:false
 		LastActivePass type:#string default:""
-		
+
 		PostConvertVrimg2exr type:#string default:"C:\\Program Files\\Chaos Group\\V-Ray\\3dsmax 2014 for x64\\tools\\vrimg2exr.exe"
 		PostConvert type:#boolean default:false
 		PostConvertCompression type:#integer default:3
 		PostConvertHalfFoat type:#boolean default:false
 		PostConvertDatawindow type:#boolean default:false
-		
+
 		PostRenderFrameScript type:#boolean default:false
 		PostRenderFrameScriptText type:#string default:""
-		
+
 		--namesUpdated
 		namesUpdated type:#boolean default:false
 		maxFileRenderRoot type:#string
@@ -118,29 +118,29 @@ attribID:#(0x83813919, 0x02155421)
 		type type:#string
 		expanded type:#boolean
 		active type:#boolean default:true
-		
+
 		hideMode type:#integer default:1
-		
+
 		useRootDir type:#boolean default:false
 		rootDir type:#string default:""
-		
+
 		UseCustomPath type:#boolean default:false
 		CustomPath type:#string default:"$Shot\\$APass$Pass$Element\\$APass$Pass$Element_"
-		
-		
+
+
 		isAdjustment type:#boolean default:false
 		AdjustmentFor type:#node
-		
+
 		VRayRaw type:#boolean default:false
 		VRayRawFileType type:#integer default:1
 		VRayRawFull type:#boolean default:false
 		VRayRawDeep type:#boolean default:false
-		
+
 		PostConvert type:#boolean default:false
 		PostConvertCompression type:#integer default:3
 		PostConvertHalfFoat type:#boolean default:false
 		PostConvertDatawindow type:#boolean default:false
-		
+
 	)
 )
 
@@ -166,33 +166,33 @@ attribID:#(0x21912344, 0x01013380)
 		props type:#intTab tabSizeVariable:true
 		initialized type:#boolean
 		active type:#boolean default:true
-		
+
 		qualityType type:#integer
-		
+
 		global_switches_check type:#boolean
 			displacement type:#boolean
 			reflrefr type:#boolean
-			
+
 		anti_aliasing_check type:#boolean
 			aaMin type:#integer
 			aaMax type:#integer
-			
+
 		GI_illum_check type:#boolean
 			giOn type:#boolean
-			
+
 		GI_check type:#boolean
 			giSkylightOn type:#boolean
 			giSkylightMap type:#texturemap
 			giSkylightCol type:#color
 			giSkylightMult type:#float
 			giSkylightMapCheck type:#boolean
-			
+
 			giRefOn type:#boolean
 			giRefCol type:#color
 			giRefMap type:#texturemap
 			giRefMult type:#float
 			giRefMapCheck type:#boolean
-			
+
 		moblur_check type:#boolean
 			moblurOn type:#boolean
 			moblurSubdivs type:#integer
@@ -200,11 +200,11 @@ attribID:#(0x21912344, 0x01013380)
 		prog_check type:#boolean
 			progMaxSubdiv type:#float
 			progTime type:#float
-			
+
 		dmc_check type:#boolean
 			dmcThresh type:#float
 			dmcMult type:#float
-		
+
 	)
 )
 
@@ -217,15 +217,15 @@ attribID:#(0x24de5872, 0x3b5a78e9)
 		active type:#boolean default:true
 		WriteMode type:#boolean default:true
 		InputPass type:#node
-		
+
 		IrMapOn type:#boolean default:false
 		IrmapMode type:#integer default:1
 		IrmapUseCamera type:#boolean default:false
-		
+
 		LightCacheOn type:#boolean default:false
 		LightCacheMode type:#integer default:1
 		LightCacheUseCamera type:#boolean default:false
-		
+
 		DontRenderFinal type:#boolean default:true
 	)
 )
@@ -255,7 +255,7 @@ attribID:#(0x73e22a56, 0x439f0d00)
 	)
 )
 
---TODO: Dabelow cameraOverscan
+-- Dabelow cameraOverscan
 cameraOverscanPropsCA = attributes cameraOverscanProps
 attribID:#(0x54e3ca47, 0x1381f195)
 (
@@ -272,7 +272,41 @@ attribID:#(0x54e3ca47, 0x1381f195)
 	)
 )
 
---TODO: Dabelow vray5
+-- Dabelow nukeExport
+nukeExportPropsCA = attributes nukeExportProps
+attribID:#(0x6250aff1, 0x44179dee)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+
+		folderName type:#string
+		cameraEnable type:#boolean
+		objectsEnable type:#boolean
+		objectsList type:#stringTab tabSizeVariable:true
+		scriptEnable type:#boolean
+	)
+)
+
+-- Dabelow aeExport
+aeExportPropsCA = attributes aeExportProps
+attribID:#(0x2116dbbc, 0x278662ed)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+
+		folderName type:#string
+		cameraEnable type:#boolean
+		objectsEnable type:#boolean
+		objectsList type:#stringTab tabSizeVariable:true
+	)
+)
+
+
+-- Dabelow vray5
 vray5RenderElementsPropsCA = attributes vray5RenderElementsProps
 attribID:#(0x6743c747, 0x742f062b)
 (
@@ -282,12 +316,12 @@ attribID:#(0x6743c747, 0x742f062b)
 		active type:#boolean default:true
  		-- initialized type:#boolean
 
-		elementOverride type:#boolean		
+		elementOverride type:#boolean
 		activeElement type:#stringTab tabSizeVariable:true
 	)
 )
 
---TODO: Dabelow vray5
+-- Dabelow vray5
 vray5PropsCA = attributes vray5Props
 attribID:#(0x2aa18b31, 0x23cf92fb)
 (
@@ -297,33 +331,33 @@ attribID:#(0x2aa18b31, 0x23cf92fb)
 		props type:#intTab tabSizeVariable:true
 		initialized type:#boolean
 		active type:#boolean default:true
-		
+
 		qualityType type:#integer
-		
+
 		global_switches_check type:#boolean
 			displacement type:#boolean
 			reflrefr type:#boolean
-			
+
 		anti_aliasing_check type:#boolean
 			aaMin type:#integer
 			aaMax type:#integer
-			
+
 		GI_illum_check type:#boolean
 			giOn type:#boolean
-			
+
 		GI_check type:#boolean
 			giSkylightOn type:#boolean
 			giSkylightMap type:#texturemap
 			giSkylightCol type:#color
 			giSkylightMult type:#float
 			giSkylightMapCheck type:#boolean
-			
+
 			giRefOn type:#boolean
 			giRefCol type:#color
 			giRefMap type:#texturemap
 			giRefMult type:#float
 			giRefMapCheck type:#boolean
-			
+
 		moblur_check type:#boolean
 			moblurOn type:#boolean
 			moblurSubdivs type:#integer
@@ -331,11 +365,11 @@ attribID:#(0x2aa18b31, 0x23cf92fb)
 		prog_check type:#boolean
 			progMaxSubdiv type:#float
 			progTime type:#float
-			
+
 		dmc_check type:#boolean
 			dmcThresh type:#float
 			dmcMult type:#float
-		
+
 	)
 )
 
@@ -347,23 +381,23 @@ attribID:#(0x52ce8e55, 0x3829ed6b)
 	(
 		type type:#string
 		active type:#boolean default:true
-		
+
 		layersOn type:#boolean default:false
 		layersRGB type:#boolean default:false
 		layers type:#stringTab tabSizeVariable:true
-		
+
 		ObjectIDsOn type:#boolean default:false
 		ObjectIDsRGB type:#boolean default:true
 		ObjectIDs  type:#string default:"1,3,5-10"
-		
+
 		MaterialIDsOn type:#boolean default:false
 		MaterialIDsRGB type:#boolean default:true
 		MaterialIDs  type:#string default:"1,3,5-10"
-		
+
 		nodesOn type:#boolean default:false
 		nodesRGB type:#boolean default:false
 		nodes type:#nodeTab tabSizeVariable:true
-		
+
 	)
 )
 
@@ -399,7 +433,7 @@ attribID:#(0x01028309, 0x03010930)
 		type type:#string
 		props type:#stringTab tabSizeVariable:true
 		initialized type:#boolean
-		active type:#boolean default:true		
+		active type:#boolean default:true
 		--Time output
 		timeOutputTgl type:#boolean
 		_rendTimeType type:#integer
@@ -408,7 +442,7 @@ attribID:#(0x01028309, 0x03010930)
 		_rendEnd type:#time
 		_rendFileNumberBase type:#integer
 		_rendPickupFrames type:#string
-		
+
 		--Output
 		outputSizeTgl type:#boolean
 		_renderWidth type:#integer
@@ -427,7 +461,7 @@ attribID:#(0x01028309, 0x03010930)
 		_rendSimplifyAreaLights type:#boolean
 		_rendForce2Side type:#boolean
 		_rendSuperBlack type:#boolean
-		
+
 
 		--Advanced Lighting
 		advancedLightingTgl type:#boolean
@@ -436,12 +470,12 @@ attribID:#(0x01028309, 0x03010930)
 		--Filetype
 		fileTypeTgl type:#boolean
 		_fileType type:#string
-		
+
 		--Gamma
 		gammaTgl type:#boolean default:false
 		_fileOutGamma type:#float default:1.0
-		
-		
+
+
 		--Camera
 		cameraTgl type:#boolean
 		_Camera type:#node
@@ -454,19 +488,19 @@ attribID:#(0x01028309, 0x03010930)
 		preScript type:#string
 		usePostScript type:#boolean
 		postScript type:#string
-		
+
 		--renderType
 		rendertype type:#string default:"view"
 		renderTypeTgl type:#boolean
-		
+
 		autoUpdateName type:#boolean default:true
 		disableFinalOutput type:#boolean default:false
-		
+
 	)
 )
 
 envEffectCA = attributes envEffect
-attribID:#(0x01020380, 0x03018300)	
+attribID:#(0x01020380, 0x03018300)
 (
 	parameters main
 	(
@@ -474,7 +508,7 @@ attribID:#(0x01020380, 0x03018300)
 		initialized type:#boolean
 		--render Element
 		activeElement type:#stringTab tabSizeVariable:true
-		elementOverride type:#boolean		
+		elementOverride type:#boolean
 		--atm nodes
 		activeAtm type:#stringTab tabSizeVariable:true
 		atmOverride type:#boolean
@@ -496,7 +530,7 @@ attribID:#(0x01020380, 0x03018300)
 )
 
 objectSetCA = attributes objectSet
-attribID:#(0x84319010, 0x01920100)	
+attribID:#(0x84319010, 0x01920100)
 (
 	parameters main
 	(
@@ -518,7 +552,7 @@ attribID:#(0x84319010, 0x01920100)
 	)
 )
 lightSetCA = attributes lightSet
-attribID:#(0x01828340, 0x02948239)		
+attribID:#(0x01828340, 0x02948239)
 (
 	parameters main
 	(
@@ -534,19 +568,19 @@ attribID:#(0x01828340, 0x02948239)
 		pMultiplier type:#float
 		pColorEnable type:#boolean
 		pColor type:#Color
-		
+
 		pCastShadows type:#integer default:1
 		pAffectDiffuse type:#integer default:1
 		pAffectSpecular type:#integer default:1
 		pAffectReflections type:#integer default:1
 		pUseTexture type:#integer default:1
-		
+
 		pVrayInvisible type:#integer default:1
-		
+
 		pTextureEnable type:#boolean
 		pTexture type:#texturemap
-		
-		
+
+
 		expanded type:#boolean
 	)
 )
@@ -561,9 +595,9 @@ version:2
 		type type:#string
 		active type:#boolean default:true
 		autoUpdate type:#boolean default:true
-		
+
 		gi_id 			type:#integer default:2
-		caustics_id 		type:#integer default:2		
+		caustics_id 		type:#integer default:2
 		physical_id 		type:#integer default:0
 		physical_status 	type:#integer default:3
 		streaks_id 		type:#integer default:0
@@ -573,15 +607,15 @@ version:2
 		openexr_name 	type:#string default:"<<none>>"
 		camera_name 		type:#string default:"<<none>>"
 		physical_scale 	type:#float default:80000
-		
+
 		fov 			type:#float default:35
-		
+
 		--camera sliders
 		film_iso_slider 	type:#integer default:2
 		camera_shutter_slider type:#integer default:10
 		f_number_slider 	type:#integer default:5
 		bg_multiply 		type:#float default:1
-		
+
 		--Motion blur
 		mb_aktiv 		type:#boolean default:off
 		blur_all 		type:#boolean default:on
@@ -590,7 +624,7 @@ version:2
 		motion_segments 	type:#integer default:1
 		time_samples 	type:#integer default:5
 		rapid_samples	type:#integer default:1
-		
+
 		--open
 		rAboutOpen type:#boolean default:false
 		rPhysicOpen type:#boolean default:false
@@ -614,7 +648,7 @@ attribID:#(0x236b7a3b, 0x4be701be)
 		postLPM type:#boolean default:false
 		preRender type:#boolean default:true
 		postRender type:#boolean default:false
-		
+
 		PostRenderFrameScript type:#boolean default:false
 		PostRenderFrameScriptText type:#string default:""
 	)
@@ -660,21 +694,21 @@ attribID:#(0x426c7db3, 0x343c98d9)
 			)
 			else
 				i+=1
-		)	
-		
+		)
+
 	)
 	fn __AddItem IKey IVal=
 	(
-		IKey=toLower IKey	
+		IKey=toLower IKey
 
 		p=(keys.count+1)
-		
+
 		--Initialize all arrays
 		keys[p]=IKey
 		dClass[p]=classof Ival as string
 		dMaxObject[p]=undefined
 		dNode[p]=undefined
-		
+
 		try
 		(
 			sc=superclassof IVal
@@ -684,7 +718,7 @@ attribID:#(0x426c7db3, 0x343c98d9)
 				dNode[p]=IVal
 			)
 			else if(sc==material) or (sc==textureMap) or(sc==positionController) then
-			(	
+			(
 				dValue[p]=dValue[p]="__MAXOBJECT__"
 				dMaxObject[p]=IVal
 			)
@@ -728,7 +762,7 @@ attribID:#(0x426c7db3, 0x343c98d9)
 			return col
 
 	)
-	
+
 	fn setValue IKey IVal =
 	(
 		__DeleteAll IKey
@@ -771,8 +805,8 @@ attribID:#(0x46a023af, 0x761d5f73)
 		active type:#boolean default:true
 		--active Modifiers
 		activeModifiers type:#stringTab tabSizeVariable:true
-		activeNode type:#node		
-		
+		activeNode type:#node
+
 	)
 )
 
