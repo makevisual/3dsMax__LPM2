@@ -103,6 +103,6 @@ function curPostRenderAction =
     cameraOverscan_Override_PostRender()
 )
 
-if LPM_RenderDispatchAction == #preRender then curPrerenderAction()
-if LPM_RenderDispatchAction == #postRender then curPostRenderAction()
-if LPM_RenderDispatchAction == #PreviewRender then()
+--if LPM_RenderDispatchAction == #preRender then curPrerenderAction()
+--if LPM_RenderDispatchAction == #postRender then curPostRenderAction()
+--if LPM_RenderDispatchAction == #PreviewRender then()

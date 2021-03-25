@@ -13,6 +13,8 @@ struct Vray5_RestoreDataStr
     rendShowVFB             = undefined,
     rendSaveFile            = undefined,
     output_useram           = undefined,
+    rendUseActiveView       = undefined,
+    regionDimensions        = undefined,
 
     -- Vray5 Render Element Override
     vrayVFBElementStates    = undefined,
@@ -67,6 +69,8 @@ function vray5_Globals_Override_PreRender =
     Vray5_RestoreData.output_useram       = renderers.current.output_useram
     Vray5_RestoreData.rendShowVFB         = rendShowVFB
     Vray5_RestoreData.rendSaveFile        = rendSaveFile
+    Vray5_RestoreData.rendUseActiveView   = rendUseActiveView
+    Vray5_RestoreData.regionDimensions    = (vfbControl #getregion )
 
     -- Fetch, parse and make the output directory
     thePath=getFilenamePath rendOutputFilename
@@ -84,6 +88,8 @@ function vray5_Globals_Override_PreRender =
     renderers.current.output_genpreview     = true                           -- Not sure if this needs to be on or not
     rendShowVFB                             = false                          -- Turn off max default frame buffer
     rendSaveFile                            = false                          -- Turn off max default file save option
+    rendUseActiveView                       = false                          -- Disables the lock on the camera view, this causes bugs on network renders knowing which camera to use
+    vfbControl #setregion 0 0 0 0                                            -- Sets the region render to zero pixels, effectivly disabling the render region function
 
     -- If the renderer is set to progressive, it turns the memory frame buffer on, which is necessary for it to work
     -- otherwise it turns the memory frame buffer off, which is the preferred method, for memory handling, and performance
@@ -106,6 +112,8 @@ function vray5_Globals_Override_PostRender =
     renderers.current.output_useram         = Vray5_RestoreData.output_useram
     rendShowVFB                             = Vray5_RestoreData.rendShowVFB
     rendSaveFile                            = Vray5_RestoreData.rendSaveFile
+    rendUseActiveView                       = Vray5_RestoreData.rendUseActiveView
+    vfbControl #setregion Vray5_RestoreData.regionDimensions[1][1] Vray5_RestoreData.regionDimensions[1][2] Vray5_RestoreData.regionDimensions[1][3] Vray5_RestoreData.regionDimensions[1][4]
 )
 
 function vray5_Globals_Override_Preview_PreRender =
