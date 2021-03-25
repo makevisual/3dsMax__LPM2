@@ -88,7 +88,7 @@ function vray5_Globals_Override_PreRender =
     renderers.current.output_genpreview     = true                           -- Not sure if this needs to be on or not
     rendShowVFB                             = false                          -- Turn off max default frame buffer
     rendSaveFile                            = false                          -- Turn off max default file save option
-    rendUseActiveView                       = false                          -- Disables the lock on the camera view, this causes bugs on network renders knowing which camera to use
+    rendUseActiveView                       = true                           -- Disables the lock on the camera view, this causes bugs on network renders knowing which camera to use
     vfbControl #setregion 0 0 0 0                                            -- Sets the region render to zero pixels, effectivly disabling the render region function
 
     -- If the renderer is set to progressive, it turns the memory frame buffer on, which is necessary for it to work
