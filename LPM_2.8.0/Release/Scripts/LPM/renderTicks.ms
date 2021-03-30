@@ -31,19 +31,27 @@
 		
 	--
 	timedisplaymode=#frameTicks	
-	
 	outFileNameNoExt = ""
 	for x = 1 to (rendOutputFilename.count - 4) do
 	(
 		outFileNameNoExt += rendOutputFilename[x]
 	)
-	
-	theCurrentTime = (currentTime as integer) / ticksPerFrame
-	
+
+	theCurrentTime = DeadlineUtil.CurrentFrame
+
 	convertedTime = theCurrentTime / 10.0
-	sliderTime = convertedTime
-			
-	render frame:convertedTime outputFile:(outFileNameNoExt + "_" + theCurrentTime as string + ".exr") vfb:true	
+	--sliderTime = convertedTime
+	
+	fname = (theCurrentTime as string)
+		
+	for j in (fname.count + 1) to 5 do
+	(
+		fname = "0" + fname
+	)
+
+	fname = outFileNameNoExt + "_" + fname + ".exr"
+	
+	render frame:convertedTime outputFile:fname vfb:true	
 	--
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
