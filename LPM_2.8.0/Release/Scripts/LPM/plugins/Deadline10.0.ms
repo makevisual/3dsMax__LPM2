@@ -1238,7 +1238,7 @@ struct LPM_DeadlineAPI
 							if LPM_SMTDSettings.renderTicks then --Tyson
 							(
 								SMTDSettings.UseCustomFrameList = true;
-								SMTDSettings.CustomFrameList = #(10.1, 10.2, 10.3, 10.4, 10.5)
+								SMTDSettings.CustomFrameList = #(10,11,12)
 							)
 						)
 					)
