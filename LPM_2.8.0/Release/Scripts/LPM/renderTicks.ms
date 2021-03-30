@@ -41,6 +41,7 @@
 
 	convertedTime = theCurrentTime / 10.0
 	sliderTime = convertedTime
+	currentime = convertedTime
 	
 	fname = (theCurrentTime as string)
 		
@@ -55,10 +56,8 @@
 	
 	rendSaveFile = true
 	rendOutputFilename = fname
-	max quick render
 	
-	--render frame:convertedTime outputfile:fname renderElements:true
-	--
+	render()
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
 	true--return true if the task has finished successfully, return false to fail the task.
