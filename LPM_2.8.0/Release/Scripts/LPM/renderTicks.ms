@@ -54,7 +54,7 @@
 	
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")
 	
-	renderers.current.output_rawFileName = fname	
+	try(renderers.current.output_rawFileName = fname)catch()
 	rendOutputFilename = fname	
 	render()
 	
