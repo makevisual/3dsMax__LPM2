@@ -53,6 +53,7 @@
 	
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " [" + fname + "]")
 	
+	rendSaveFile = true
 	rendOutputFilename = fname
 	render frame:convertedTime
 	--
