@@ -818,6 +818,7 @@ fn loadDeadlineSettings cp isPreviewMode= -- dabelow
 	LPM_SMTDSettings.submitGroup 		= cp.submitGroup
 	LPM_SMTDSettings.submitLimitsOn 	= cp.submitLimitsOn
 	LPM_SMTDSettings.submitLimits 		= cp.submitLimits
+	LPM_SMTDSettings.renderTicks 		= cp.renderTicks --Tyson
 ),
 
 -- Dabelow
@@ -839,6 +840,8 @@ fn createDeadlineProps theName=
 
 	cp.submitLimitsOn = false
 		cp.submitLimits = #()
+		
+	cp.renderTicks = false --Tyson
 
 	cp
 ),

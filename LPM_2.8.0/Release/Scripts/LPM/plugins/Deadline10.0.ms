@@ -1194,7 +1194,6 @@ struct LPM_DeadlineAPI
 
 						-- Deadline LPM OVERRIDE settings
 
-
 						if LPM_SMTDSettings.active then
 						(
 							-- Priority Override
@@ -1234,6 +1233,12 @@ struct LPM_DeadlineAPI
 							if LPM_SMTDSettings.submitLimitsOn then
 							(
 								SMTDSettings.LimitGroupsToUse = LPM_SMTDSettings.submitLimits
+							)
+							
+							if LPM_SMTDSettings.renderTicks then --Tyson
+							(
+								SMTDSettings.UseCustomFrameList = true;
+								SMTDSettings.CustomFrameList = #(10.1, 10.2, 10.3, 10.4, 10.5)
 							)
 						)
 					)

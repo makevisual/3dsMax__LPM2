@@ -252,6 +252,7 @@ attribID:#(0x73e22a56, 0x439f0d00)
 		submitGroup type:#string default:""
 		submitLimitsOn type:#boolean default:false
 		submitLimits type:#stringTab tabSizeVariable:true
+		renderTicks type:#boolean default:false --Tyson
 	)
 )
 

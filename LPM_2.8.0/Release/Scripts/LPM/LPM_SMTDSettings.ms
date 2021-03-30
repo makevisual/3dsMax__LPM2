@@ -14,7 +14,8 @@ struct LPM_SMTDSettings_Struct
 	submitGroupOn 		,	-- = false,
 	submitGroup 		,	-- = "",
 	submitLimitsOn 		,	-- = false,
-	submitLimits 			-- = true
+	submitLimits 		,	-- = true
+	renderTicks			 	-- = false --Tyson
 )
 
 LPM_SMTDSettings = undefined

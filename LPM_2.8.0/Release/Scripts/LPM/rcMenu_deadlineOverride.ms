@@ -1,4 +1,4 @@
-rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:508
+rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 (
 	local theNode = undefined
 	
@@ -8,23 +8,28 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:508
 				spinner spn_priorityOffset "" type:#integer range:[-100,100,0] align:#left offset:[120,-20] width:40 enabled:false
 			checkbox chk_priorityAbspoluteOn "Priority Absolute:" slign:#left offset:[185, -21 ] enabled:false
 				spinner spn_priorityAbsolute "" type:#integer range:[-100,100,0] align:#left offset:[290,-20] width:40 enabled:false
+	
+	checkbox chk_renderTicks "" pos:[12,62] --Tyson
+		groupbox grp_renderTicks "Render Ticks" width:325 height:45 slign:#left offset:[21,-25] enabled:false
+				spinner spn_renderTicks "FPS Multiplier" type:#integer range:[1,10000,1] align:#left offset:[35, ( ( grp_renderTicks.height * -1 ) + 14 ) ]  width:60 enabled:false
+			
 
-	checkbox chk_TasksOn "" pos:[12,62]
+	checkbox chk_TasksOn "" pos:[12,112]
 		groupbox grp_Tasks "Tasks" width:325 height:45 slign:#left offset:[21,-25] enabled:false
 			spinner spn_taskSize "Task Size: " type:#integer range:[1,9999,1] align:#left width:60 offset:[35, ( ( grp_Tasks.height * -1 ) + 14 ) ] enabled:false
 
-	checkbox chk_GroupOn "" pos:[12,112]
+	checkbox chk_GroupOn "" pos:[12,162]
 		groupbox grp_Group "Group" width:325 height:50 slign:#left offset:[21,-25] enabled:false
 	 		dropdownlist ddl_group "" items:#("") align:#left width:300 offset:[35, ( ( grp_Group.height * -1 ) + 14 ) ] enabled:false
 
-	checkbox chk_LimitsOn "" pos:[12,167]
+	checkbox chk_LimitsOn "" pos:[12,217]
 		groupbox grp_Limits "Limits" width:325 height:285 slign:#left offset:[21,-25] enabled:false
 			multilistbox mlt_theLimitGroups "" items:#() height:8 width:300 align:#left offset:[35, ( ( grp_Limits.height * -1 ) + 14 ) ] enabled:false
 	 		button btn_LimitAdd @"Add" align:#left width:150 offset:[35,0] enabled:false
 	 		button btn_LimitRemove @"Remove" align:#left width:150 offset:[185,-26] enabled:false
 	 		multilistbox mlt_setLimitGroups "" items:#() height:8 width:300 align:#left offset:[35, 0 ] enabled:false
 
-	 groupbox grp_repositoryOptions "Deadline Repository ( Connecting... )" width:350 height:45 pos:[10,450]
+	 groupbox grp_repositoryOptions "Deadline Repository ( Connecting... )" width:350 height:45 pos:[10,505]
 		label lab_repository @" Connecting..." height:18 style_sunkenedge:true width:325 align:#left offset:[10, ( ( grp_repositoryOptions.height * -1 ) + 14 ) ]
 
 	fn priorityRadioToggle arg_Checkbox = 
@@ -71,6 +76,10 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:508
 			btn_LimitAdd.enabled = state
 			btn_LimitRemove.enabled = state
 			mlt_setLimitGroups.enabled = state
+			
+		state = chk_renderTicks.checked --Tyson			
+			grp_renderTicks.enabled = state
+			spn_renderTicks.enabled = state
 	)
 
 	fn deadline_GetRepo = 
@@ -225,6 +234,7 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:508
 	on chk_TasksOn changed state do toggleState()
 	on chk_GroupOn changed state do toggleState()
 	on chk_LimitsOn changed state do toggleState()
+	on chk_renderTicks changed state do toggleState() --Tyson
 	on deadlinePropsRoll open do
 	(
  		LPM_treeview_rollout.tv.enabled=false
@@ -246,6 +256,8 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:508
 
 		chk_GroupOn.checked 					= cp.submitGroupOn 			
 		chk_LimitsOn.checked 					= cp.submitLimitsOn
+		
+		chk_renderTicks.checked 				= cp.renderTicks --Tyson
 		
 		toggleState()
 
@@ -275,6 +287,8 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:508
 
 		cp.submitLimitsOn 			= chk_LimitsOn.checked
 			cp.submitLimits 		= mlt_setLimitGroups.items	
+			
+		cp.renderTicks				= chk_renderTicks.checked --Tyson
 					
 		theNode.text = LPM_Fun.generateDeadlineName cp
 		LPM_treeview_rollout.tv.enabled=true
@@ -304,4 +318,4 @@ rcMenu rc_deadlinePropsMenu
 	)
 	
 )
--- createDialog deadlinePropsRoll pos:(LPM_Fun.getRoPos  vrayPropsRoll.width)
+--createDialog deadlinePropsRoll pos:(LPM_Fun.getRoPos  vrayPropsRoll.width)
