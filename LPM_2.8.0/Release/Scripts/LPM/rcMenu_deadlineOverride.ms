@@ -11,7 +11,7 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 	
 	checkbox chk_renderTicks "" pos:[12,62] --Tyson
 		groupbox grp_renderTicks "Render Ticks" width:325 height:45 slign:#left offset:[21,-25] enabled:false
-				spinner spn_renderTicks "FPS Multiplier" type:#integer range:[1,10000,1] align:#left offset:[35, ( ( grp_renderTicks.height * -1 ) + 14 ) ]  width:60 enabled:false
+				spinner spn_renderTicksMult "FPS Multiplier" type:#integer range:[1,10000,1] align:#left offset:[35, ( ( grp_renderTicks.height * -1 ) + 14 ) ]  width:60 enabled:false
 			
 
 	checkbox chk_TasksOn "" pos:[12,112]
@@ -79,7 +79,7 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 			
 		state = chk_renderTicks.checked --Tyson			
 			grp_renderTicks.enabled = state
-			spn_renderTicks.enabled = state
+			spn_renderTicksMult.enabled = state
 	)
 
 	fn deadline_GetRepo = 
@@ -258,6 +258,7 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 		chk_LimitsOn.checked 					= cp.submitLimitsOn
 		
 		chk_renderTicks.checked 				= cp.renderTicks --Tyson
+		spin_renderTicksMult.value 				= cp.renderTicksMult --Tyson
 		
 		toggleState()
 
@@ -288,7 +289,9 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 		cp.submitLimitsOn 			= chk_LimitsOn.checked
 			cp.submitLimits 		= mlt_setLimitGroups.items	
 			
+			
 		cp.renderTicks				= chk_renderTicks.checked --Tyson
+		cp.renderTicksMult			= spn_renderTicksMult.value --Tyson
 					
 		theNode.text = LPM_Fun.generateDeadlineName cp
 		LPM_treeview_rollout.tv.enabled=true

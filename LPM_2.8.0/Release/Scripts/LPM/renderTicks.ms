@@ -40,6 +40,7 @@
 	currTime = 10.5	
 	sliderTime = currTime
 			
+	convertedTime = (currTime * 10) as integer
 	render frame:currTIme outputFile:(outFileNameNoExt + "_" + (currTime * 10) as string + ".exr") vfb:true	
 	--
 	
