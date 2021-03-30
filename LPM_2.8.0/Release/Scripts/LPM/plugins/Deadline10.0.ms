@@ -1237,8 +1237,8 @@ struct LPM_DeadlineAPI
 							
 							if LPM_SMTDSettings.renderTicks then --Tyson
 							(
-								SMTDSettings.UseCustomFrameList = true;
-								SMTDSettings.CustomFrameList = #(10:10,10:20,12:30)
+								SMTDSettings.SubmitAsMXSJob = true;
+								SMTDSettings.MAXScriptFile = LPM_Dir + "renderTicks.ms"
 							)
 						)
 					)
