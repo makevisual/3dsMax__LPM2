@@ -41,7 +41,7 @@
 	theCurrentTime = (currentTime as integer) / ticksPerFrame
 	
 	convertedTime = theCurrentTime / 10.0
-	sliderTime = currTime
+	sliderTime = convertedTime
 			
 	render frame:convertedTime outputFile:(outFileNameNoExt + "_" + theCurrentTime as string + ".exr") vfb:true	
 	--
