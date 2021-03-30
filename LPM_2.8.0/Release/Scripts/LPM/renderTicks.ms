@@ -40,7 +40,7 @@
 	theCurrentTime = DeadlineUtil.CurrentFrame
 
 	convertedTime = theCurrentTime / 10.0
-	--sliderTime = convertedTime
+	sliderTime = convertedTime
 	
 	fname = (theCurrentTime as string)
 		
