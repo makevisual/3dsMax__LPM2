@@ -51,9 +51,10 @@
 
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
-	du.LogMessage ("Rendering frame: " + (convertedTime as string) + "[" + fname + "]")
+	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " [" + fname + "]")
 	
-	render frame:convertedTime outputFile:fname vfb:true	
+	rendOutputFilename = fname
+	render frame:convertedTime
 	--
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
