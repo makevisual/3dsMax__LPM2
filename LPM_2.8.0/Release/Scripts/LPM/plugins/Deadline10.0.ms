@@ -1244,7 +1244,6 @@ struct LPM_DeadlineAPI
 					)
 					catch
 					(
-
 						submit_fail()
 					)
 
