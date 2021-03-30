@@ -2,7 +2,7 @@
 Lukas Lepicovsky
 L Pass Manager
 lukashi@gmail.com
-www.lukashi.com
+www.lukashi.com 
 
 
     Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
