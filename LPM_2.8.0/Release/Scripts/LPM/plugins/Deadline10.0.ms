@@ -1242,9 +1242,10 @@ struct LPM_DeadlineAPI
 								SMTDSettings.UseCustomFrameList = true
 								
 								SMTDSettings.CustomFrameList = #()
-								for j in rendStart to rendEnd do
+								for j in rendStart to rendEnd by 1 / (PM_SMTDSettings.renderTicksMult as float) do
 								(
-									adjustedTime = ((j as integer) / ticksPerFrame) * LPM_SMTDSettings.renderTicksMult
+									adjustedTime = (((j as integer) / (ticksPerFrame as float)) * LPM_SMTDSettings.renderTicksMult) as integer
+									
 									append SMTDSettings.CustomFrameList adjustedTime
 								)
 								
