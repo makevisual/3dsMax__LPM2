@@ -51,6 +51,8 @@
 
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
+	du.LogMessage ("Rendering frame: " + (convertedTime as string) + "[" + fname + "]")
+	
 	render frame:convertedTime outputFile:fname vfb:true	
 	--
 	
