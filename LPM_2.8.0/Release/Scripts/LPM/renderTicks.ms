@@ -31,7 +31,16 @@
 		
 	--
 	timedisplaymode=#frameTicks	
-	render frame:10.5 outputFile:rendOutputFilename vfb:true	
+	
+	outFileNameNoExt = ""
+	for x = 1 to (rendOutputFilename.count - 4) do
+	(
+		outFileNameNoExt += rendOutputFilename[x]
+	)
+	currTime = 10.5	
+	sliderTime = currTime
+			
+	render frame:currTIme outputFile:(outFileNameNoExt + "_" + (currTime * 10) as string + ".exr") vfb:true	
 	--
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
