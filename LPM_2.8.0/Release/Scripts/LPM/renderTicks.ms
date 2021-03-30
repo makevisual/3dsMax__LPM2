@@ -37,11 +37,13 @@
 	(
 		outFileNameNoExt += rendOutputFilename[x]
 	)
-	currTime = 10.5	
+	
+	theCurrentTime = (currentTime as integer) / ticksPerFrame
+	
+	convertedTime = theCurrentTime / 10.0
 	sliderTime = currTime
 			
-	convertedTime = (currTime * 10) as integer
-	render frame:currTIme outputFile:(outFileNameNoExt + "_" + (currTime * 10) as string + ".exr") vfb:true	
+	render frame:convertedTime outputFile:(outFileNameNoExt + "_" + theCurrentTime as string + ".exr") vfb:true	
 	--
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration

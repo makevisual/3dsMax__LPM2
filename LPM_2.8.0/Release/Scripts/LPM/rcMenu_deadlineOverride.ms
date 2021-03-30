@@ -258,7 +258,7 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 		chk_LimitsOn.checked 					= cp.submitLimitsOn
 		
 		chk_renderTicks.checked 				= cp.renderTicks --Tyson
-		spin_renderTicksMult.value 				= cp.renderTicksMult --Tyson
+		spn_renderTicksMult.value 				= cp.renderTicksMult --Tyson
 		
 		toggleState()
 
