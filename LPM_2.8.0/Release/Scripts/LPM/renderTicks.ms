@@ -55,7 +55,7 @@
 	
 	rendSaveFile = true
 	rendOutputFilename = fname
-	render frame:convertedTime
+	render frame:convertedTime outputfile:fname
 	--
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
