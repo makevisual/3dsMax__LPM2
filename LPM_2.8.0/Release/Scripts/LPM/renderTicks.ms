@@ -31,11 +31,7 @@
 		
 	--
 	timedisplaymode=#frameTicks	
-	outFileNameNoExt = ""
-	for x = 1 to (rendOutputFilename.count - 4) do
-	(
-		outFileNameNoExt += rendOutputFilename[x]
-	)
+	
 	renderTicksMult = rendNthFrame as float --value stored here during pass kickoff
 
 	theCurrentTime = DeadlineUtil.CurrentFrame
@@ -43,20 +39,7 @@
 	convertedTime = theCurrentTime / renderTicksMult
 	sliderTime = convertedTime
 	currentime = convertedTime
-		
-	fname = (theCurrentTime as string)		
-	for j in (fname.count + 1) to 5 do
-	(
-		fname = "0" + fname
-	)
-
-	fname = outFileNameNoExt + "_" + fname + ".exr"
-	
-	
-	rendSaveFile = false
-	--renderers.current.output_rawFileName = fname
-	--rendOutputFilename = fname
-		
+				
 	du.LogMessage (
 	
 	"Rendering frame: " + "t: [" + theCurrentTime as string + 
@@ -68,7 +51,7 @@
 	
 	)	
 	
-	render()
+	render frame:convertedTime
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
 	true--return true if the task has finished successfully, return false to fail the task.
