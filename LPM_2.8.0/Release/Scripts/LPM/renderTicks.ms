@@ -43,20 +43,19 @@
 	convertedTime = theCurrentTime / renderTicksMult
 	sliderTime = convertedTime
 	currentime = convertedTime
-	
-	fname = "#####"
-	/*
-	fname = (theCurrentTime as string)
 		
+	fname = (theCurrentTime as string)		
 	for j in (fname.count + 1) to 5 do
 	(
 		fname = "0" + fname
-	)*/
+	)
 
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
-	--renderers.current.output_rawFileName = fname
-	--rendOutputFilename = fname	
+	
+	rendSaveFile = false
+	renderers.current.output_rawFileName = fname
+	rendOutputFilename = ""
 	
 	
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " renderTicksMult " + renderTicksMult as string + " fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
