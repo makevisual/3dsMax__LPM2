@@ -84,8 +84,11 @@ rollout deadlinePropsRoll "Deadline override 1.0" width:370 height:558
 
 	fn deadline_GetRepo = 
 	(
-		deadline_ini = @"C:\ProgramData\Thinkbox\Deadline8\deadline.ini"
-		deadlineRepo = ( getinisetting deadline_ini "Deadline" "NetworkRoot" )
+		-- This used to be hard coded, now it runs off of the deadline ini file
+		Environment 			= dotNetClass "System.Environment"
+		PROGRAMDATA 			= Environment.GetEnvironmentVariable "PROGRAMDATA"
+		deadline_ini = ( PROGRAMDATA + @"\Thinkbox\Deadline10\deadline.ini" )
+		if doesFileExist deadline_ini then ( deadlineRepo = ( getinisetting deadline_ini "Deadline" "NetworkRoot" ) )
 
 		return deadlineRepo
 	)
