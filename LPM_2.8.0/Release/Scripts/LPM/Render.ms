@@ -3567,7 +3567,7 @@ fn LPM_hardwareRender thePass theShot:undefined=
 			)
 		)
 	)
-
+	
 	timesArray=#()
 	case _rendTimeType of
 	(

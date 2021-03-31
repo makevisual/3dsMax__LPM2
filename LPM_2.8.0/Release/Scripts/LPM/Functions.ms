@@ -2,7 +2,7 @@
 Lukas Lepicovsky
 L Pass Manager
 lukashi@gmail.com
-www.lukashi.com
+www.lukashi.com 
 
 
     Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
@@ -818,6 +818,8 @@ fn loadDeadlineSettings cp isPreviewMode= -- dabelow
 	LPM_SMTDSettings.submitGroup 		= cp.submitGroup
 	LPM_SMTDSettings.submitLimitsOn 	= cp.submitLimitsOn
 	LPM_SMTDSettings.submitLimits 		= cp.submitLimits
+	LPM_SMTDSettings.renderTicks 		= cp.renderTicks --Tyson
+	LPM_SMTDSettings.renderTicksMult	= cp.renderTicksMult --Tyson	
 ),
 
 -- Dabelow
@@ -839,6 +841,9 @@ fn createDeadlineProps theName=
 
 	cp.submitLimitsOn = false
 		cp.submitLimits = #()
+		
+	cp.renderTicks = false --Tyson
+	cp.renderTicksMult = 1 --Tyson
 
 	cp
 ),

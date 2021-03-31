@@ -1135,7 +1135,7 @@ struct LPM_DeadlineAPI
 					prg_submitProgress.value = (100*(i-1))/renderCollect.count
 					submission_report = ("Submitting Pass - " + (LPM_Fun.getName renderCollect[i][1].name) +"  ( " + (i as string) + " of "+ (renderCollect.count as string) + " )" )
 					log_append submission_report 4
-
+					
 					--Pre render action
 					SMTDLPMInterface.prg_submitProgress2.value=10
 
@@ -1194,7 +1194,6 @@ struct LPM_DeadlineAPI
 
 						-- Deadline LPM OVERRIDE settings
 
-
 						if LPM_SMTDSettings.active then
 						(
 							-- Priority Override
@@ -1235,11 +1234,28 @@ struct LPM_DeadlineAPI
 							(
 								SMTDSettings.LimitGroupsToUse = LPM_SMTDSettings.submitLimits
 							)
+							
+							if LPM_SMTDSettings.renderTicks then --Tyson
+							(
+								rendNthFrame = LPM_SMTDSettings.renderTicksMult; --this is how we pass our ticks mult to each farm machine 
+								SMTDSettings.SubmitAsMXSJob = true;
+								SMTDSettings.MAXScriptFile = LPM_Dir + "renderTicks.ms"
+								SMTDSettings.UseCustomFrameList = true
+								SMTDSettings.LocalRendering = false
+								
+								SMTDSettings.CustomFrameList = #()
+								for j in rendStart to rendEnd by 1 / (LPM_SMTDSettings.renderTicksMult as float) do
+								(
+									adjustedTime = (((j as integer) / (ticksPerFrame as float)) * LPM_SMTDSettings.renderTicksMult) as integer
+									
+									append SMTDSettings.CustomFrameList adjustedTime
+								)
+								
+							)
 						)
 					)
 					catch
 					(
-
 						submit_fail()
 					)
 
@@ -1262,10 +1278,12 @@ struct LPM_DeadlineAPI
 					log_append "Restoring Scene to pre submission state..." 4
 
 					LPM_Render.fnPostRenderAction renderCollect[i][1] renderCollect[i][2]
+					
 					if(keyboard.escPressed) then flag=false
 
 					SMTDLPMInterface.prg_submitProgress2.value=100
 					log_append  ("time (s) " +((timeStamp() - ts2)/1000.000) as string ) 4
+					
 				)
 
 
