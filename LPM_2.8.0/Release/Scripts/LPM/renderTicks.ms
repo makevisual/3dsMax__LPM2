@@ -54,8 +54,8 @@
 	vrayfname = outFileNameNoExt + "_vraw" + ".exr"
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
-	rendOutputFilename = fname	
-	renderers.current.output_rawFileName = vrayfname
+	rendOutputFilename = "" --fname	
+	renderers.current.output_rawFileName = fname
 	
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " renderTicksMult " + renderTicksMult as string + " fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
 	
