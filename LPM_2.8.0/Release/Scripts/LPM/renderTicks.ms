@@ -53,8 +53,7 @@
 	fname = outFileNameNoExt + "." + fname + ".exr"
 	badname = outFileNameNoExt + "." + fname
 	
-	rendSaveFile = false
-	
+	rendSaveFile = false	
 	renderers.current.output_rawFileName = fname
 	rendOutputFilename = fname
 		
@@ -75,9 +74,13 @@
 	--deadline will save the files using convertedTime (passed to the render function 'frame' argument) as the file number
 	--but that's incorrect...and we've baked the proper file number into the filename, so rename accordingly
 	
+	du.LogMessage ("Searching for files to rename: " + (badname + "*.*"))
+	
 	badfiles = getfiles (badname + "*.*")
 	for badfile in badfiles do
 	(
+		du.LogMessage ("Found file to rename: " + badfile)
+	
 		badExt = badfile.count
 		dotCount = 0
 		for j in badfile.count to 1 by -1 do
