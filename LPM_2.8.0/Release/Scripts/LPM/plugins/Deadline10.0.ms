@@ -1241,6 +1241,7 @@ struct LPM_DeadlineAPI
 								SMTDSettings.SubmitAsMXSJob = true;
 								SMTDSettings.MAXScriptFile = LPM_Dir + "renderTicks.ms"
 								SMTDSettings.UseCustomFrameList = true
+								SMTDSettings.LocalRendering = false
 								
 								SMTDSettings.CustomFrameList = #()
 								for j in rendStart to rendEnd by 1 / (LPM_SMTDSettings.renderTicksMult as float) do
