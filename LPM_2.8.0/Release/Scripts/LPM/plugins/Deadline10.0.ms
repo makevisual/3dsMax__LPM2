@@ -1237,6 +1237,7 @@ struct LPM_DeadlineAPI
 							
 							if LPM_SMTDSettings.renderTicks then --Tyson
 							(
+								rendNthFrame = LPM_SMTDSettings.renderTicksMult; --this is how we pass our ticks mult to each farm machine 
 								SMTDSettings.SubmitAsMXSJob = true;
 								SMTDSettings.MAXScriptFile = LPM_Dir + "renderTicks.ms"
 								SMTDSettings.UseCustomFrameList = true

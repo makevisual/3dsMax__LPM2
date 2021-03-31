@@ -36,10 +36,11 @@
 	(
 		outFileNameNoExt += rendOutputFilename[x]
 	)
+	renderTicksMult = rendNthFrame as float --value stored here during pass kickoff
 
 	theCurrentTime = DeadlineUtil.CurrentFrame
 
-	convertedTime = theCurrentTime / 10.0
+	convertedTime = theCurrentTime / renderTicksMult
 	sliderTime = convertedTime
 	currentime = convertedTime
 	
@@ -52,10 +53,11 @@
 
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
-	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")
-	
-	try(renderers.current.output_rawFileName = fname)catch()
 	rendOutputFilename = fname	
+	try(renderers.current.output_rawFileName = fname)catch()
+	
+	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " renderTicksMult " + renderTicksMult as string + " fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
+	
 	render()
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
