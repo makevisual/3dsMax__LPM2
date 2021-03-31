@@ -55,9 +55,8 @@
 	
 	rendSaveFile = false
 	renderers.current.output_rawFileName = fname
-	rendOutputFilename = ""
-	
-	
+	rendOutputFilename = fname
+		
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " renderTicksMult " + renderTicksMult as string + " fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
 	
 	render()
