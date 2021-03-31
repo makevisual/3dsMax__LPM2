@@ -51,10 +51,11 @@
 		fname = "0" + fname
 	)
 
+	vrayfname = outFileNameNoExt + "_vraw" + ".exr"
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
 	rendOutputFilename = fname	
-	try(renderers.current.output_rawFileName = fname)catch()
+	renderers.current.output_rawFileName = vrayfname
 	
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " renderTicksMult " + renderTicksMult as string + " fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
 	

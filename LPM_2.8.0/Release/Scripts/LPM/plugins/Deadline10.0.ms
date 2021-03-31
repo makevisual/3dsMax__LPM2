@@ -1135,13 +1135,14 @@ struct LPM_DeadlineAPI
 					prg_submitProgress.value = (100*(i-1))/renderCollect.count
 					submission_report = ("Submitting Pass - " + (LPM_Fun.getName renderCollect[i][1].name) +"  ( " + (i as string) + " of "+ (renderCollect.count as string) + " )" )
 					log_append submission_report 4
-
+					
 					--Pre render action
 					SMTDLPMInterface.prg_submitProgress2.value=10
 
 					LPM_Render.fnPreRenderAction renderCollect[i][1] renderCollect[i][2]
 					thePass=renderCollect[i][1]
 					theShot=renderCollect[i][2]
+					origRendNthFrame = rendNthFrame --Tyson
 
 					--local reMgr = maxOps.getCurRenderElementMgr()
 					--stickyElementsActive = reMgr.GetElementsActive()
@@ -1281,6 +1282,8 @@ struct LPM_DeadlineAPI
 
 					SMTDLPMInterface.prg_submitProgress2.value=100
 					log_append  ("time (s) " +((timeStamp() - ts2)/1000.000) as string ) 4
+					
+					if (rendNthFrame != origRendNthFrame) then rendNthFrame = origRendNthFrame --Tyson
 				)
 
 
