@@ -44,14 +44,15 @@
 	sliderTime = convertedTime
 	currentime = convertedTime
 		
-	fname = (theCurrentTime as string)		
-	for j in (fname.count + 1) to 5 do
+	numberstring = (theCurrentTime as string)		
+	for j in (numberstring.count + 1) to 5 do
 	(
-		fname = "0" + fname
+		numberstring = "0" + numberstring
 	)
-
-	fname = outFileNameNoExt + "." + fname + ".exr"
-	badname = outFileNameNoExt + "." + fname
+	
+	fname = outFileNameNoExt + "." + numberstring + ".exr"
+	badname = outFileNameNoExt + "." + numberstring
+	
 	
 	rendSaveFile = false	
 	renderers.current.output_rawFileName = fname
