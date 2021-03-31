@@ -31,7 +31,11 @@
 		
 	--
 	timedisplaymode=#frameTicks	
-	
+	outFileNameNoExt = ""
+	for x = 1 to (rendOutputFilename.count - 4) do
+	(
+		outFileNameNoExt += rendOutputFilename[x]
+	)
 	renderTicksMult = rendNthFrame as float --value stored here during pass kickoff
 
 	theCurrentTime = DeadlineUtil.CurrentFrame
@@ -39,7 +43,21 @@
 	convertedTime = theCurrentTime / renderTicksMult
 	sliderTime = convertedTime
 	currentime = convertedTime
-				
+		
+	fname = (theCurrentTime as string)		
+	for j in (fname.count + 1) to 5 do
+	(
+		fname = "0" + fname
+	)
+
+	fname = outFileNameNoExt + "." + fname + ".exr"
+	badname = outFileNameNoExt + "." + fname
+	
+	rendSaveFile = false
+	
+	renderers.current.output_rawFileName = fname
+	rendOutputFilename = fname
+		
 	du.LogMessage (
 	
 	"Rendering frame: " + "t: [" + theCurrentTime as string + 
@@ -52,6 +70,44 @@
 	)	
 	
 	render frame:convertedTime
+	
+	--IMPORTANT:
+	--deadline will save the files using convertedTime (passed to the render function 'frame' argument) as the file number
+	--but that's incorrect...and we've baked the proper file number into the filename, so rename accordingly
+	
+	badfiles = getfiles (badname + "*.*")
+	for badfile in badfiles do
+	(
+		badExt = badfile.count
+		dotCount = 0
+		for j in badfile.count to 1 by -1 do
+		(
+			if badfile[j] == "." then 
+			(
+				dotCount += 1
+				
+				if (dotCount == 2) then
+				(
+					badExt = j - 1
+				)
+			)
+		)
+			
+		if (badExt != badfile.count) then
+		(
+			goodfile = ""
+			for j in 1 to badExt do
+			(
+				goodfile += badfile[j]
+			)
+			goodfile += ".exr"
+			
+			du.LogMessage ("Rename: [" + badfile +"] to [" + goodfile + "]")
+			
+			renameFile badfile goodfile
+		)
+		
+	)
 	
 	du.LogMessage ("Finished tickRender Job in "+ ((timestamp() - st)/1000.0) as string + " sec.") --output the job duration
 	true--return true if the task has finished successfully, return false to fail the task.
