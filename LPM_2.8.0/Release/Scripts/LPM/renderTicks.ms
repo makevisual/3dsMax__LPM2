@@ -57,7 +57,16 @@
 	--renderers.current.output_rawFileName = fname
 	--rendOutputFilename = fname
 		
-	du.LogMessage ("Rendering frame: " + "t: [" + theCurrentTime as string + "] convertedT: " [" + (convertedTime as string) + "] renderTicksMult: [" + renderTicksMult as string + "] fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
+	du.LogMessage (
+	
+	"Rendering frame: " + "t: [" + theCurrentTime as string + 
+	"] convertedT: [" + (convertedTime as string) + 
+	"] renderTicksMult: [" + renderTicksMult as string + 
+	"] fname: [" + fname + 
+	"] raw: [" + renderers.current.output_rawFileName + 
+	"]"
+	
+	)	
 	
 	render()
 	
