@@ -55,8 +55,9 @@
 
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
-	rendOutputFilename = "" --fname	
-	renderers.current.output_rawFileName = fname
+	--renderers.current.output_rawFileName = fname
+	--rendOutputFilename = fname	
+	
 	
 	du.LogMessage ("Rendering frame: " + (convertedTime as string) + " renderTicksMult " + renderTicksMult as string + " fname: [" + fname + "] raw: [" + renderers.current.output_rawFileName + "]")	
 	
