@@ -1142,7 +1142,6 @@ struct LPM_DeadlineAPI
 					LPM_Render.fnPreRenderAction renderCollect[i][1] renderCollect[i][2]
 					thePass=renderCollect[i][1]
 					theShot=renderCollect[i][2]
-					origRendNthFrame = rendNthFrame --Tyson
 
 					--local reMgr = maxOps.getCurRenderElementMgr()
 					--stickyElementsActive = reMgr.GetElementsActive()
@@ -1278,12 +1277,12 @@ struct LPM_DeadlineAPI
 					log_append "Restoring Scene to pre submission state..." 4
 
 					LPM_Render.fnPostRenderAction renderCollect[i][1] renderCollect[i][2]
+					
 					if(keyboard.escPressed) then flag=false
 
 					SMTDLPMInterface.prg_submitProgress2.value=100
 					log_append  ("time (s) " +((timeStamp() - ts2)/1000.000) as string ) 4
 					
-					if (rendNthFrame != origRendNthFrame) then rendNthFrame = origRendNthFrame --Tyson
 				)
 
 
