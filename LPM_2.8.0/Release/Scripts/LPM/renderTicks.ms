@@ -32,8 +32,10 @@
 	--
 	timedisplaymode=#frameTicks	
 	outFileNameNoExt = ""
-	for x = 1 to (rendOutputFilename.count - 4) do
+	for x = 1 to rendOutputFilename.count do
 	(
+		if rendOutputFilename[x] == "." then exit
+		
 		outFileNameNoExt += rendOutputFilename[x]
 	)
 	renderTicksMult = rendNthFrame as float --value stored here during pass kickoff
