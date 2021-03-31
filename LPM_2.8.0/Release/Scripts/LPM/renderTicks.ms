@@ -62,7 +62,7 @@
 	"Rendering frame: " + "t: [" + theCurrentTime as string + 
 	"] convertedT: [" + (convertedTime as string) + 
 	"] renderTicksMult: [" + renderTicksMult as string + 
-	"] fname: [" + fname + 
+	"] fname: [" + rendOutputFilename + 
 	"] raw: [" + renderers.current.output_rawFileName + 
 	"]"
 	
