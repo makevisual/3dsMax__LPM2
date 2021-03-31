@@ -44,14 +44,15 @@
 	sliderTime = convertedTime
 	currentime = convertedTime
 	
+	fname = "#####"
+	/*
 	fname = (theCurrentTime as string)
 		
 	for j in (fname.count + 1) to 5 do
 	(
 		fname = "0" + fname
-	)
+	)*/
 
-	vrayfname = outFileNameNoExt + "_vraw" + ".exr"
 	fname = outFileNameNoExt + "_" + fname + ".exr"
 	
 	rendOutputFilename = "" --fname	
