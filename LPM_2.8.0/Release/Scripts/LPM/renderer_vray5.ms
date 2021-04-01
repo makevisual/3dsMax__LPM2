@@ -4,6 +4,9 @@
 
 struct Vray5_RestoreDataStr
 (
+    -- Scene specific properties
+    matEditor_open          = undefined,
+
     -- Renderer specific globals
     output_on               = undefined,
     output_rawFileName      = undefined,
@@ -72,6 +75,9 @@ function vray5_Globals_Override_PreRender =
     Vray5_RestoreData.rendUseActiveView   = rendUseActiveView
     Vray5_RestoreData.regionDimensions    = (vfbControl #getregion )
 
+    -- Scene properties 
+    Vray5_RestoreData.matEditor_open    = MatEditor.isOpen() 
+
     -- Fetch, parse and make the output directory
     thePath=getFilenamePath rendOutputFilename
     theFile=getFilenameFile rendOutputFilename
@@ -90,6 +96,7 @@ function vray5_Globals_Override_PreRender =
     rendSaveFile                            = false                          -- Turn off max default file save option
     rendUseActiveView                       = true                           -- Disables the lock on the camera view, this causes bugs on network renders knowing which camera to use
     vfbControl #setregion 0 0 0 0                                            -- Sets the region render to zero pixels, effectivly disabling the render region function
+    MatEditor.Close()                                                        -- Close the material editor ( faster operation )
 
     -- If the renderer is set to progressive, it turns the memory frame buffer on, which is necessary for it to work
     -- otherwise it turns the memory frame buffer off, which is the preferred method, for memory handling, and performance
@@ -114,6 +121,9 @@ function vray5_Globals_Override_PostRender =
     rendSaveFile                            = Vray5_RestoreData.rendSaveFile
     rendUseActiveView                       = Vray5_RestoreData.rendUseActiveView
     vfbControl #setregion Vray5_RestoreData.regionDimensions[1][1] Vray5_RestoreData.regionDimensions[1][2] Vray5_RestoreData.regionDimensions[1][3] Vray5_RestoreData.regionDimensions[1][4]
+
+    -- Open the material editor if it was open
+    if Vray5_RestoreData.matEditor_open then (MatEditor.Open())
 )
 
 function vray5_Globals_Override_Preview_PreRender =
@@ -248,7 +258,7 @@ function curPostRenderAction =
     -- print "== Vray5 PostRenderAction =="
 
     --Only runs the Post render action if Settings were altered in the prerender based on the restorepoint flag
-    if LPM_RenderDispatchAction == #PreviewRender then
+    if LPM_RenderDispatchAction != #PreviewRender then
     (
         vray5_Globals_Override_PostRender()
         vray5_Override_PostRender()
