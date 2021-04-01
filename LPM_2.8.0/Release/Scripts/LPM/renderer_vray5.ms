@@ -260,8 +260,8 @@ function curPostRenderAction =
     --Only runs the Post render action if Settings were altered in the prerender based on the restorepoint flag
     if LPM_RenderDispatchAction != #PreviewRender then
     (
-        vray5_Globals_Override_PostRender()
-        vray5_Override_PostRender()
+        try( vray5_Globals_Override_PostRender() )catch() -- TODO: remove later????
+        try( vray5_Override_PostRender() )catch() -- TODO: remove later????
     )
 
      vray5_RE_Override_PostRender()
