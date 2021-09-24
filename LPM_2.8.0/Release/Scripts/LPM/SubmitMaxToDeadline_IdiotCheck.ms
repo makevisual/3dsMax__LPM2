@@ -8,8 +8,8 @@ struct SMTDIdiotCheck
 		
 		if curSize > 100000000 then
 		(
-			if curSize > 500000000 then ( return #("fail", 1, #( "Filesize over 500MB, reference or cache scene elements externally." ) )	)
-			else ( return #("fail", 0, #( "Filesize over 100MB, reference or cache scene elements externally." ), chkMessage) )
+			if curSize > 500000000 then ( return #("fail", 1, #( "Filesize over 500MB, reference or cache scene elements externally." ), chkMessage ) )
+			else( return #("fail", 0, #( "Filesize over 100MB, reference or cache scene elements externally." ), chkMessage ) )
 		)
 
 		return #("pass", 0,"0", chkMessage )

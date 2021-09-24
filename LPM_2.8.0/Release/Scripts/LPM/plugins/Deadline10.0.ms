@@ -156,7 +156,9 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.sticky_holdOnSubmit 			= LPM_Fun.GetIni "Deadline Settings" "HoldOnSubmit" booleanClass false
 				LPM_deadlineInfo.sticky_frameBufferMode			= LPM_Fun.GetIni "Deadline Settings" "FrameBufferMode" integer 1
 				LPM_deadlineInfo.sticky_renderElementsExr	 	= LPM_Fun.GetIni "Deadline Settings" "RenderElementsToEXR" booleanClass true
-				LPM_deadlineInfo.sticky_submitAsSuspended 		= LPM_Fun.GetIni "Deadline Settings" "SubmitAsSuspended" booleanClass false
+				-- Removed Submit as Suspended as sticky upon user consensus 
+				LPM_deadlineInfo.sticky_submitAsSuspended 		= false
+				-- LPM_deadlineInfo.sticky_submitAsSuspended 		= LPM_Fun.GetIni "Deadline Settings" "SubmitAsSuspended" booleanClass false
 				-- UI UPDATES
 				spn_chunkSize.value 							= SMTDSettings.ChunkSize
 				local theVal 									= findItem #(#normal, #nth, #NthBlock, #NthRasterRefine, #reverse, #fromBothEnds, #FromCenter, #fromBothEndsAndCenter, #random) SMTDSettings.OutOfOrderMethod
@@ -171,7 +173,9 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.submit_recoveryHold			= LPM_deadlineInfo.sticky_holdOnSubmit
 				ddl_frameBufferMode.selection 					= LPM_deadlineInfo.sticky_frameBufferMode
 				chk_renderElementsExr.checked 					= true
-				btn_submitSuspended.checked 					= LPM_deadlineInfo.sticky_submitAsSuspended
+				-- Removed Submit as Suspended as sticky upon user consensus 
+				-- btn_submitSuspended.checked 					= LPM_deadlineInfo.sticky_submitAsSuspended
+				btn_submitSuspended.checked 					= false
 			)
 
 			-- Save sticky settings to the .INI
@@ -538,7 +542,11 @@ struct LPM_DeadlineAPI
 						)
 					)
 
-					log_append curCheckResult[4] 3
+					-- TODO: Find a better saftey net around failed checks
+
+					--log_append curCheckResult[4] 3
+					try ( log_append curCheckResult[4] 3 )
+					catch ( log_append "Error running idiot check" 4 )
 				)
 
 				-- Print results to the log
@@ -1139,6 +1147,7 @@ struct LPM_DeadlineAPI
 					--Pre render action
 					SMTDLPMInterface.prg_submitProgress2.value=10
 
+					-- TODO: This is where to start looking for the LOCAL RENDER button frame range fix
 					LPM_Render.fnPreRenderAction renderCollect[i][1] renderCollect[i][2]
 					thePass=renderCollect[i][1]
 					theShot=renderCollect[i][2]

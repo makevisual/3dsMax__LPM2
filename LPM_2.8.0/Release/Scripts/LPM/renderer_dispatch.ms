@@ -8,5 +8,6 @@ case curRenderer of
     default                                                 : () --print"default"
     "Default_Scanline_Renderer:Default_Scanline_Renderer"   : () --print "Scanline"
     "V_Ray_5__update_1:V_Ray_5__update_1"                   : ( filein ( LPM_Dir+"renderer_vray5.ms" ) )
+    "V_Ray_5__update_1_3:V_Ray_5__update_1_3"               : ( filein ( LPM_Dir+"renderer_vray5.1.3.ms" ) )
     "V_Ray_GPU_5__update_1:V_Ray_GPU_5__update_1"           : ( print "Vray5 GPU not currently supported" )
 )
