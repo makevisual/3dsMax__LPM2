@@ -28,7 +28,7 @@ function cameraOverscan_Override_PreRender =
     curFov = LPM_OperatorData.cameraOverscan.fovOverride
 
     -- Wire the FOV
-    case curClass of
+    case ( classof curCam ) of
     (
         Freecamera:
             (
@@ -43,7 +43,8 @@ function cameraOverscan_Override_PreRender =
         Physical:
             (
             print "PHYS"
-            paramWire.connect curCam.baseObject[#fov] newCam.baseObject[#fov] ( "fov * " + ( curFov as string ) )0
+            newCam.specify_fov = off
+            paramWire.connect curCam.baseObject[#Lens_Focal_Length_mm] newCam.baseObject[#Lens_Focal_Length_mm] ( "Lens_Focal_Length_mm  * " + ( ( 1 / curFov ) as string ) )
             )
     )
 
