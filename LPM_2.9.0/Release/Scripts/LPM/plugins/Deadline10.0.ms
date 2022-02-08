@@ -3,6 +3,9 @@
 
 global SMTDSettings, SMTDFunctions, SMTDIdiotCheck, SMTDLPMInterface, LPM_deadlineInfo
 
+
+-- This used to only be a part of the LPM Deadline submitter, but now it is making its way around a bit more, need to figure out a better solution
+-- Currently it in Deadline10.0.ms in LPM and P4DS_deadlineInfoClass.ms 
 struct LPM_deadlineInfoStr
 (
 	submit_enable 					= true,
