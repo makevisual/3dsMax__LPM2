@@ -3758,13 +3758,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			)
 		)
 
-		if(renderType==#local) then
-		(
-			SetQuietMode LPM_Root.quietMode
-		)
-
-
-
 
 -- TODO: put cameraOverscan in here
 print "---------- testeroo -------------"
@@ -3772,13 +3765,17 @@ print LPM_Root.renderCamera
 
 
 
-
-
 		--And go!!
 		with defaultAction #logmsg
 		(
-			--max quick render
-			render()
+			if(renderType==#local)
+			then
+			(
+				SetQuietMode LPM_Root.quietMode
+				render fromframe:cp._rendStart toframe:cp._rendEnd
+			)
+			else(render())--max quick render
+
 		)
 
 		SetQuietMode false

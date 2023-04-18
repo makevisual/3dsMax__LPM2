@@ -2280,6 +2280,8 @@ fn localRenderSubmit=
 
 	if ProjRenderPathTest[1] then
 	(
+
+
 		ProjRenderPath = getProjRenderPath()
 		if ProjRenderPath != LPM_Root.rootDir then
 		(
@@ -2297,6 +2299,7 @@ fn localRenderSubmit=
 		)
 		else
 		(
+
 				if(LPM_Root.renderType==2) or (LPM_Root.renderType==4) then
 					renderFlag=#hwPreview
 				else

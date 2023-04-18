@@ -41,15 +41,9 @@
   		newSet.intP[4] = 3 -- invisible to camera
  		newSet.parent=thePass
 
- 		-- Environment Operator
-		envProps=LPM_Fun.createNode "Environment Override" "envProps"
-		envProps.initialized = true
-		envProps.backgroundOverride = true -- todo fix this bullshit
-		envProps.backgroundOverride = false 
-		envProps.bgColor = (color 0 0 0)
-		envProps.parent=thePass
-		envProps.activeElement = #("VRaySelfIllumination", "VRayReflection", "VRayDepthRGB", "VRayGlobalIllumination")
-		envProps.elementOverride = true
+ 		---- Environment Operator
+		theSet=LPM_Fun.createVray5RenderElementsProps "vray5RenderElements"
+		theSet.parent=thePass
 		
 		--All Lights Off
 		newSet=LPM_Fun.createLightSet "All Lights"
