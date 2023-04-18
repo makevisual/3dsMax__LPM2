@@ -701,28 +701,30 @@ struct LPM_DeadlineAPI
 			-- updates UI job name with max filename
 			fn ui_update_jobComment =
 			(
-				commentStr = ""
-
-				re = renderers.current
-				if re.imageSampler_type == 1
-				then
-					(
-						commentStr += "BUCKET"
-						commentStr += ( " - SR: " + ( re.imageSampler_shadingRate as string ) )
-						commentStr += ( " | MAX: " + ( re.twoLevel_fineSubdivs as string ) )
-						commentStr += ( " | THR: " + ( re.twoLevel_threshold as string ) )
-					)
-				if re.imageSampler_type == 3
-				then
-					(
-						commentStr += "PROG"
-						commentStr += ( " - TIME: " + ( re.progressive_max_render_time as string ) )
-						commentStr += ( " | SAMPLES: " + ( re.progressive_maxSamples as string ) )
-						commentStr += ( " | THR: " + ( re.progressive_noise_threshold as string ) )
-					)
-
-				LPM_deadlineInfo.dl_jobComment  = commentStr
-				lab_CustomCommentField.text = LPM_deadlineInfo.dl_jobComment
+				try( -- TODO: Fixup to have propper renderer specific handling
+					commentStr = ""
+	
+					re = renderers.current
+					if re.imageSampler_type == 1
+					then
+						(
+							commentStr += "BUCKET"
+							commentStr += ( " - SR: " + ( re.imageSampler_shadingRate as string ) )
+							commentStr += ( " | MAX: " + ( re.twoLevel_fineSubdivs as string ) )
+							commentStr += ( " | THR: " + ( re.twoLevel_threshold as string ) )
+						)
+					if re.imageSampler_type == 3
+					then
+						(
+							commentStr += "PROG"
+							commentStr += ( " - TIME: " + ( re.progressive_max_render_time as string ) )
+							commentStr += ( " | SAMPLES: " + ( re.progressive_maxSamples as string ) )
+							commentStr += ( " | THR: " + ( re.progressive_noise_threshold as string ) )
+						)
+	
+					LPM_deadlineInfo.dl_jobComment  = commentStr
+					lab_CustomCommentField.text = LPM_deadlineInfo.dl_jobComment
+				)catch()
 			)
 
 			-- updates UI Batch name with the max filename
