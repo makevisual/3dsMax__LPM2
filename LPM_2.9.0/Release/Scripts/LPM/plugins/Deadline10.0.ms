@@ -503,10 +503,45 @@ struct LPM_DeadlineAPI
 		 		LPM_deadlineInfo.plugins_missingInstances	= getMissingPluginInstances()
 			)
 
+			fn idiotCheck_logReports report =
+			(
+				-- Get the time and parse it into a nice formatted string
+				curTime = getLocalTime()
+				parsedTime = ( ( curTime[1] as string ) + "_" + ( curTime[2] as string ) + "_" + ( curTime[4] as string ) + "__" + ( curTime[5] as string ) + "-" + ( curTime[6] as string ) + "-" + ( curTime[7] as string ) )
+				parsedErrors = ( ( report.count ) as string )
+				curFilename = ( parsedTime + @"__" + parsedErrors + ".toml" )
+
+				-- Get the location to put the reports into, using the users name
+				dir = ( LPM_deadlineInfo.dl_NetworkRoot + @"\reports\MAKE" )
+				outDir = ( dir + @"\" + LPM_deadlineInfo.dl_user + @"\" )
+				makeDir outDir
+				outFilePath 	= ( outDir + curFilename )
+
+				-- Build the report information
+				reportsString = ""
+				i = 1
+
+				for r in report do
+				(
+					reportsString += ("report_" + ( i as string ) + " = \"" + ( r as string ) + "\"\n" )
+					i += 1
+				)
+
+				-- Create and write the file
+				curFile = createFile outFilePath
+				format "[Errors]" to: curFile
+				format "\n" to: curFile
+				format reportsString to: curFile
+				close curFile
+
+				return outFilePath
+			)
 
 			-- run the idiot checks
 			fn idiotCheck_run =
 			(
+				print "Running Idiot Checks"
+
 				ts = timeStamp()
 
 				log_append "Running idiot checks" 4
@@ -555,6 +590,10 @@ struct LPM_DeadlineAPI
 				-- Print results to the log
 				log_append ( "All checks took " + ( ( (timeStamp() - ts ) / 1000.000 ) as string ) + " seconds" ) 4
 				for result in resultsArray do ( log_append result 5	)
+
+				-- Store for later and return the checks
+				LPM_SMTDSettings.idiotCheckReports = resultsArray
+				return resultsArray
 
 			)
 
@@ -933,6 +972,12 @@ struct LPM_DeadlineAPI
 	 				if LPM_treeview_rollout.skipIdiotChecks.checked
 	 				then ( idiotCheck_skip() )
  					else ( idiotCheck_run() )
+ 					-- else
+ 					-- (
+ 					-- 	reports = idiotCheck_run()
+ 					-- 	idiotCheck_logReports reports
+ 					-- )
+
 
 	 				-- Move Log to bottom of Dialog
 	 				submitLog.pos=[ 3 , 715 ]
@@ -1061,6 +1106,11 @@ struct LPM_DeadlineAPI
 				renderSceneDialog.close()
 				SMTDLPMInterface.submit_commitChanges()
 				SMTDLPMInterface.ui_saveStickySettings()
+
+				-- Log the failed idiot checks to the repository location
+ 				idiotCheck_logReports LPM_SMTDSettings.idiotCheckReports
+
+
 
 				-- Disables any viewport locks in the render dialog
 			--	rendUseActiveView = true
@@ -1417,7 +1467,8 @@ struct LPM_DeadlineAPI
 			-- Event handler for running the idiot checks
 			on btn_idiotCheck pressed do
 			(
-				idiotCheck_run()
+				reports = idiotCheck_run()
+				idiotCheck_logReports reports
 				ui_update_submit()
 			)
 
@@ -1694,4 +1745,4 @@ struct LPM_DeadlineAPI
 )
 
 append LPM_NetworkPlugins (LPM_DeadlineAPI())
---LPM_DeadlineAPI.submit()
+LPM_DeadlineAPI.submit()

@@ -44,7 +44,8 @@ struct SMTDIdiotCheck
 			(
 				if cam.mpassEnabled == true then
 				(
-					result = ( "\" " + (cam.name) + " \"  has multipass enabled! ")
+					--result = ( "\" " + (cam.name) + " \"  has multipass enabled! ")
+					result = ( "' " + (cam.name) + " '  has multipass enabled! ")
 					join results #( result )
 				)else()
 			)catch()			
@@ -99,28 +100,28 @@ struct SMTDIdiotCheck
 	),
 
 	-- Examines if there are any render elements set to active, and warns user against it. All elements shold be handled by an LPM elements operator
-	function RenderElementsEnabled = 
-	(
-		re = maxOps.GetCurRenderElementMgr() 						-- Get the render elements manager
-		numElements = re.NumRenderElements() 						-- Get the number of render elements
-		chkMessage = "IC: Checked to make sure render elements are not active"
-
-		theElements = #()
-		for i in 1 to numElements do
-		(
-			theEle=re.GetRenderElement (i-1)
-			append theElements theEle
-		)
-
-		errors = 0
-		for element in theElements do ( if element.enabled then errors += 1 )
-
-		message = ( "There are " +  ( errors as string ) + " render elements active, they should be disabled and handled through and Elements and effects override.")
-
-		if errors > 0
-		then ( return #( "fail", 4, #( message ), chkMessage ) )
-		return #("pass", 0,"0", chkMessage )
-	),
+--	function RenderElementsEnabled = 
+--	(
+--		re = maxOps.GetCurRenderElementMgr() 						-- Get the render elements manager
+--		numElements = re.NumRenderElements() 						-- Get the number of render elements
+--		chkMessage = "IC: Checked to make sure render elements are not active"
+--
+--		theElements = #()
+--		for i in 1 to numElements do
+--		(
+--			theEle=re.GetRenderElement (i-1)
+--			append theElements theEle
+--		)
+--
+--		errors = 0
+--		for element in theElements do ( if element.enabled then errors += 1 )
+--
+--		message = ( "There are " +  ( errors as string ) + " render elements active, they should be disabled and handled through and Elements and effects override.")
+--
+--		if errors > 0
+--		then ( return #( "fail", 4, #( message ), chkMessage ) )
+--		return #("pass", 0,"0", chkMessage )
+--	),
 
 	-- Looks for any active hairfarm render effects, which probably shouldnt be on if you are rendering with Vray
 	function activeHairFarmEffects =
@@ -167,7 +168,6 @@ struct SMTDIdiotCheck
 		results = #()
 		nb_instances = #()
 		nb_instances = getClassInstances Normal_Bump 
-
 
 
 		if nb_instances.count > 0
