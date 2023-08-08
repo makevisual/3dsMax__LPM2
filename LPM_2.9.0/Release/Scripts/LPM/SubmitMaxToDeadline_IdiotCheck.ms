@@ -258,8 +258,14 @@ struct SMTDIdiotCheck
 			then ()
 			else
 			(
-				if sceneAsset != "D:\\tmp.exr"
-				then ( append outList sceneAsset )
+				-- Exceptions test, below add any test to permit an asset through
+				skip = false 
+
+				if sceneAsset == "D:\\tmp.exr" then ( skip = true )
+				if ( ( filenameFromPath sceneAsset ) == "1.exr" ) then ( skip = true )
+
+				-- if the asset is skippable, it will not flag an error
+				if ( skip == false ) then ( append outList sceneAsset )
 			)
 		)
 
