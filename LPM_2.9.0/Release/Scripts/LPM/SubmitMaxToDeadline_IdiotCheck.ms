@@ -182,24 +182,24 @@ struct SMTDIdiotCheck
 	 	return #("pass", 0,"0", chkMessage )
 	),
 
-	function renderLockedView =
-	(
-
-		chkMessage = "IC: Checked if rendereing a locked viewport"
-		results = #()
-
-		if rendUseActiveView == false
-		then
-		(
-
-			result = (  " A locked view is set to render, this will be unlocked to ensure the correct camera is being rendered"  )
-			join results #( result )
-
-			return #("fail", 2, results, chkMessage )
-		)
-
-	 	return #("pass", 0,"0", chkMessage )
-	),
+--	function renderLockedView =
+--	(
+--
+--		chkMessage = "IC: Checked if rendereing a locked viewport"
+--		results = #()
+--
+--		if rendUseActiveView == false
+--		then
+--		(
+--
+--			result = (  " A locked view is set to render, this will be unlocked to ensure the correct camera is being rendered"  )
+--			join results #( result )
+--
+--			return #("fail", 2, results, chkMessage )
+--		)
+--
+--	 	return #("pass", 0,"0", chkMessage )
+--	),
 
  	function renderHiddenLights =
  	(

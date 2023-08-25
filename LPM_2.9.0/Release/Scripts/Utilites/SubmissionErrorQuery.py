@@ -4,6 +4,9 @@ import configparser
 from collections import namedtuple
 import datetime
 
+timeRange = [[2023,8,2], [2023,8,2]]
+timeRange = [None, None]
+
 # Class for holding parsed information for an error report
 class ReportInformation:
     def __init__(self, user, date_year, date_month, date_day, errorCount):
@@ -83,6 +86,7 @@ def collectUserReports(user):
 	userDir 	= (repoDir + "\\" + user)	# this is the current users folder
 	validExt 	= ".toml" 					# this is the extension for valid error report file types
 	curReports 	= [] 						# a new empty list for the errors 
+	curReports 	= [] 						# a new empty list for the errors 
 	
 	# Get a list of all files with the specified extension in the folder
 	file_list = [file for file in os.listdir(userDir) if file.endswith(validExt)]
@@ -93,11 +97,128 @@ def collectUserReports(user):
 		# generate a userReport for each report file
 		newUserReport = generateReport(user, file)
 
+
+
+
+
+
+
 		# add it to the reports list
 		curReports.append(newUserReport)
 
+
+
+####--------- add date filter in here
+
+
+
+
+
+
+
+
+
+
+
+#	reportsInTimeRange = []
+#
+#	if ( dateTimeStart == None ) and ( dateTimeEnd == None ):
+#		reportsInTimeRange = userReports
+#
+#	if ( dateTimeStart != None ) and ( dateTimeEnd == None ):
+#
+#		filteredUserReports = []
+#
+#		for userReport in userReports:
+#
+#			for report in userReport.reports:
+#
+#				if int(report.date_year) >= dateTimeStart[0] and int(report.date_month) >= dateTimeStart[1] and int(report.date_day) >= dateTimeStart[2]:
+#					
+#					filteredUserReports.append(report)
+#
+#			userReport.reports = filteredUserReports
+#
+#			updateUserReportData(userReport)
+#
+#			reportsInTimeRange.append(userReport)
+#
+#		pass
+#
+#	if ( dateTimeStart == None ) and ( dateTimeEnd != None ):
+#		
+#		for userReport in userReports:
+#
+#			# print (userReport.user)
+#
+#			for report in userReport.reports:
+#
+#				if int(report.date_year) <= dateTimeEnd[0] and int(report.date_month) <= dateTimeEnd[1] and int(report.date_day) <= dateTimeEnd[2]:
+#
+#					filteredUserReports.append(report)
+#
+#			userReport.reports = filteredUserReports
+#
+#		pass
+#
+#	if ( dateTimeStart != None ) and ( dateTimeEnd != None ):
+#
+#		for userReport in userReports:
+#
+#			print (userReport.user)
+#
+#			for report in userReport.reports:
+#
+#				if int(report.date_year) >= dateTimeStart[0] and int(report.date_month) >= dateTimeStart[1] and int(report.date_day) >= dateTimeStart[2] and int(report.date_year) <= dateTimeEnd[0] and int(report.date_month) <= dateTimeEnd[1] and int(report.date_day) <= dateTimeEnd[2]:
+#					
+#					filteredUserReports.append(report)
+#
+#			userReport.reports = filteredUserReports
+#
+#		pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	# return the collected reports
 	return curReports
+
+def updateUserReportData(userReport):
+
+		# Required class information
+		curErrorCount 	= 0
+
+		# Tally report file count and assign it
+		userReport.curFileCount = len(userReport.reports)
+
+		# Tally error count and assign it
+		for report in userReport.reports: 
+			#print(report.errorCount)
+			curErrorCount += report.errorCount
+
+		userReport.ErrorCount = curErrorCount
+
+		# Calculate error rate and assign it ( try for divide by zero )
+		try:
+			userReport.errorRate = ( userReport.ErrorCount / userReport.curFileCount )
+		except:
+			userReport.errorRate = 0
 
 # Gets the users, and for each user it collects the reports, then adds all of those together and returns all the users reports sorted as 'userReports'
 def collectAllUserReports():
@@ -144,26 +265,15 @@ def analyzeReports(reports):
 		print("Total Error Count: 		", 	report.errorCount)
 		print("Error Rate: 			", 	report.errorRate)	
 
-def generateCSVtext(reports, dateTimeStart, dateTimeEnd):
+def generateCSVtext(userReports):
+
 	# declare Vars
-	entryStr = "user,submissions with errors,total error count,error rate\n"
-
-	reportsInTimeRange = []
-
-	if ( dateTimeStart == None ) and ( dateTimeEnd == None ):
-		reportsInTimeRange = reports
-
-	if ( dateTimeStart != None ) and ( dateTimeEnd == None ):
-		pass
-
-	if ( dateTimeStart == None ) and ( dateTimeEnd != None ):
-		pass
-
-	if ( dateTimeStart != None ) and ( dateTimeEnd != None ):
-		pass
+	entryStr = "user,submissions,total error count,error rate\n"
 
 	# generate the string for the file
-	for report in reportsInTimeRange:
+	for report in userReports:
+
+		print (report.user,report.fileCount,report.errorCount,report.errorRate)
 
 		entryStr += report.user
 		entryStr += ","
@@ -176,25 +286,10 @@ def generateCSVtext(reports, dateTimeStart, dateTimeEnd):
 
 	return entryStr
 
-def generateCSV(reports, dateTimeStart, dateTimeEnd):
+def generateCSV(reports):
 
 	# Generate the output string based on time arguments passed
-	outStr = generateCSVtext(reports, dateTimeStart, dateTimeEnd)
-	
-#	# declare Vars
-#	entryStr = "user,submissions with errors,total error count,error rate\n"
-#
-#	# generate the string for the file
-#	for report in reports:
-#
-#		entryStr += report.user
-#		entryStr += ","
-#		entryStr += str(report.fileCount)
-#		entryStr += ","
-#		entryStr += str(report.errorCount)
-#		entryStr += ","
-#		entryStr += str(report.errorRate)
-#		entryStr += "\n"
+	outStr = generateCSVtext(reports)
 
 	# Parse the CSV output directory
 	repoDir 		= getDeadlineRepo()
@@ -212,27 +307,18 @@ def generateCSV(reports, dateTimeStart, dateTimeEnd):
 	csvFilename 	= ( "LPM_Users_Reports__" + current_datetime_str + ".csv" )
 	csvOutFilePath 	= ( csvOutDir + "\\" + csvFilename )
 
-
-	print (csvOutFilePath)
 	# write the entryStr to the csvOutFilePath
 	with open(csvOutFilePath, 'w') as file:
 		file.write(outStr)
 
-	print(outStr)
-	# print("CSV File exported to: ", csvOutFilePath)
+	print("----", "CSV File export", "----")
+	print(csvOutFilePath)
 
 
 # Collect all user reports, analyze them, and generate a csv that has the data collected for a spreadsheet
 allUserReports = collectAllUserReports()
+
+# Call this function for a quick readout and analysis of all the reports
 analyzeReports(allUserReports)
 
-
-
-# should be 37 reports for aaron_dabelow
-generateCSV(allUserReports, None, None)
-
-# should be 22 reports for aaron_dabelow
-#generateCSV(allUserReports, [2023,8,7], None)
-
-# should be 2 reports for aaron_dabelow
-# generateCSV(allUserReports, "2022_8_2", "2023_8_2")
+# generateCSV(allUserReports)
