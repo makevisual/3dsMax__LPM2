@@ -503,10 +503,57 @@ struct LPM_DeadlineAPI
 		 		LPM_deadlineInfo.plugins_missingInstances	= getMissingPluginInstances()
 			)
 
+			fn idiotCheck_logReports report =
+			(
+
+				-- Get the filename and parse it into a nice property string 
+				filename = ( maxFilePath + maxFileName )
+				filename = ( substituteString Filename "\\" "/" )
+				filenamePropString = ("filename = \"" + filename + "\"\n" )
+
+				-- Get the username and parse it into a nice property string 
+				usernamePropString = ("username = \"" + LPM_deadlineInfo.dl_user + "\"\n" )
+
+				-- Get the time and parse it into a nice formatted string
+				curTime = getLocalTime()
+				parsedTime = ( ( curTime[1] as string ) + "_" + ( curTime[2] as string ) + "_" + ( curTime[4] as string ) + "__" + ( curTime[5] as string ) + "-" + ( curTime[6] as string ) + "-" + ( curTime[7] as string ) )
+				parsedErrors = ( ( report.count ) as string )
+				curFilename = ( parsedTime + @"__" + parsedErrors + ".toml" )
+
+				-- Get the location to put the reports into, using the users name
+				dir = ( LPM_deadlineInfo.dl_NetworkRoot + @"\reports\MAKE\LPM" )
+				outDir = ( dir + @"\" + LPM_deadlineInfo.dl_user + @"\" )
+				makeDir outDir
+				outFilePath 	= ( outDir + curFilename )
+
+				-- Build the report information
+				reportsString = ""
+				i = 1
+
+				for r in report do
+				(
+					reportsString += ("report_" + ( i as string ) + " = \"" + ( r as string ) + "\"\n" )
+					i += 1
+				)
+
+				-- Create and write the file
+				curFile = createFile outFilePath
+				format "[User]\n" to: curFile
+				format usernamePropString to: curFile
+				format "[Files]\n" to: curFile
+				format filenamePropString to: curFile
+				format "[Errors]\n" to: curFile
+				format reportsString to: curFile
+				close curFile
+
+				return outFilePath
+			)
 
 			-- run the idiot checks
 			fn idiotCheck_run =
 			(
+				print "Running Idiot Checks"
+
 				ts = timeStamp()
 
 				log_append "Running idiot checks" 4
@@ -555,6 +602,10 @@ struct LPM_DeadlineAPI
 				-- Print results to the log
 				log_append ( "All checks took " + ( ( (timeStamp() - ts ) / 1000.000 ) as string ) + " seconds" ) 4
 				for result in resultsArray do ( log_append result 5	)
+
+				-- Store for later and return the checks
+				LPM_SMTDSettings.idiotCheckReports = resultsArray
+				return resultsArray
 
 			)
 
@@ -933,10 +984,10 @@ struct LPM_DeadlineAPI
 	 				if LPM_treeview_rollout.skipIdiotChecks.checked
 	 				then ( idiotCheck_skip() )
  					else ( idiotCheck_run() )
-
+ 	
 	 				-- Move Log to bottom of Dialog
 	 				submitLog.pos=[ 3 , 715 ]
-	 				submitLog.height=138
+	 				submitLog.height=190
 	 				btn_connectCancel.visible = false
 
 	 				-- Enable UI item visibility
@@ -946,7 +997,7 @@ struct LPM_DeadlineAPI
 					ui_update_submit()
 
 					-- Resize Interface
-					LPM_DeadlineSubmitRo.height = 857
+					LPM_DeadlineSubmitRo.height = 909
  				)
  				else
  				(
@@ -1040,13 +1091,13 @@ struct LPM_DeadlineAPI
  			fn submit_preOptimize =
  			(
 
- 				print "Submit Pre Optimze"
+ 				-- print "Submit Pre Optimze"
  			)
 
 			fn submit_preAction =
 			(
 
-				print "Submit Pre Action"
+				-- print "Submit Pre Action"
 
 				-- Set Timestamp and Alert to starting submission
 				LPM_deadlineInfo.submit_timeStamp  = timeStamp()
@@ -1061,6 +1112,11 @@ struct LPM_DeadlineAPI
 				renderSceneDialog.close()
 				SMTDLPMInterface.submit_commitChanges()
 				SMTDLPMInterface.ui_saveStickySettings()
+
+				-- Log the failed idiot checks to the repository location
+ 				idiotCheck_logReports LPM_SMTDSettings.idiotCheckReports
+
+
 
 				-- Disables any viewport locks in the render dialog
 			--	rendUseActiveView = true
@@ -1134,7 +1190,7 @@ struct LPM_DeadlineAPI
 
 			fn submit_action =
 			(
-				print "Submit Action"
+				-- print "Submit Action"
 
 				renderCollect = LPM_Fun.getWhoToRender()
 				flag=true
@@ -1331,7 +1387,7 @@ struct LPM_DeadlineAPI
  			fn submit_postOptimize =
  			(
 
- 				print "Submit Post Optimze"
+ 				-- print "Submit Post Optimze"
 
  			)
 
@@ -1339,7 +1395,7 @@ struct LPM_DeadlineAPI
  			-- Restore the scene to pre Submission state
 			fn submit_postAction =
 			(
-				print "Submit Post Action"
+				-- print "Submit Post Action"
 
 				-- rendUseActiveView = LPM_deadlineInfo.submit_viewToRenderLock
 
@@ -1417,7 +1473,7 @@ struct LPM_DeadlineAPI
 			-- Event handler for running the idiot checks
 			on btn_idiotCheck pressed do
 			(
-				idiotCheck_run()
+				reports = idiotCheck_run()
 				ui_update_submit()
 			)
 
@@ -1650,7 +1706,7 @@ struct LPM_DeadlineAPI
 			on btn_optimizeScene pressed do
 			(
 
-				print("Not Connected")
+				-- print("Not Connected")
 			)
 
 			-- Event handler for controling if submission is optimized or not
@@ -1694,4 +1750,4 @@ struct LPM_DeadlineAPI
 )
 
 append LPM_NetworkPlugins (LPM_DeadlineAPI())
---LPM_DeadlineAPI.submit()
+-- LPM_DeadlineAPI.submit()

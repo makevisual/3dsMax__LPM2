@@ -1,0 +1,4 @@
+[Errors]
+report_1 = "Framerate not set to 24fps!"
+report_2 = "5 Files not in Project"
+report_3 = "Filesize over 100MB, reference or cache scene elements externally."

@@ -15,6 +15,7 @@ struct LPM_SMTDSettings_Struct
 	submitGroup 		,	-- = "",
 	submitLimitsOn 		,	-- = false,
 	submitLimits 		,	-- = true
+	idiotCheckReports 	,	-- = true
 	renderTicks			,	-- = false --Tyson
 	renderTicksMult		 	-- = 1 --Tyson
 )
