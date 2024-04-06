@@ -1,0 +1,6 @@
+[Files] 
+filename = "W:/Projects/Hot Wheels - MT - Crushzilla Playset/Assets/Sets/BOX_BoxingRingRoom/Build/Layout/BOX_BoxingRingRoom_Layout_v008__AD_Test_v001.max"
+[Errors] 
+report_1 = "Framerate not set to 24fps!"
+report_2 = "13 Files not in Project"
+report_3 = "Filesize over 100MB, reference or cache scene elements externally."
