@@ -38,6 +38,8 @@ filein "rcMenu_deadlineOverride.ms" 					-- Dabelow
 filein "rcMenu_Utilities.ms" 							-- Dabelow
 filein "rcMenu_vray5RenderElementsOverride.ms" 			-- Dabelow vray5
 filein "rcMenu_vray5Override.ms" 						-- Dabelow vray5
+filein "rcMenu_vray6RenderElementsOverride.ms" 			-- Dabelow vray6
+filein "rcMenu_vray6Override.ms" 						-- Dabelow vray6
 filein "rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
 filein "rcMenu_nukeExport.ms"							-- Dabelow nukeExport
 filein "rcMenu_aeExport.ms"								-- Dabelow aeExport
@@ -3292,6 +3294,8 @@ rcMenu rc_PassMenu
 		seperator set5
 		menuItem vray5PropsAdd "Vray5 Override" 								-- Dabelow vray5
 		menuItem vray5RenderElementsPropsAdd "Vray5 RenderElement Override" 	-- Dabelow vray5
+		menuItem vray6PropsAdd "Vray6 Override" 								-- Dabelow vray6
+		menuItem vray6RenderElementsPropsAdd "Vray6 RenderElement Override" 	-- Dabelow vray6
 	)
 	seperator set10
 	menuItem    duplicatePass "Duplicate Pass"
@@ -3506,6 +3510,28 @@ rcMenu rc_PassMenu
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
 		thePass=thePassNode.tag.value
 		theSet=LPM_Fun.createVray5Props "vray5"
+		theSet.parent=thePass
+		LPM_treeview_rollout.addPassTV thePassNode
+
+	)
+
+		-- Dabelow vray6
+	on vray6RenderElementsPropsAdd picked do
+	(
+		thePassNode=LPM_treeview_rollout.tv.selectedNode
+		thePass=thePassNode.tag.value
+		theSet=LPM_Fun.createVray6RenderElementsProps "vray6RenderElements"
+		theSet.parent=thePass
+		LPM_treeview_rollout.addPassTV thePassNode
+
+	)
+
+	-- Dabelow vray6
+	on vray6PropsAdd picked do
+	(
+		thePassNode=LPM_treeview_rollout.tv.selectedNode
+		thePass=thePassNode.tag.value
+		theSet=LPM_Fun.createVray6Props "vray6"
 		theSet.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode
 

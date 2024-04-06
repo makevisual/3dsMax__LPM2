@@ -114,6 +114,8 @@ fn destroyAllDialogs=
 		try(destroyDialog SMTDLPMInterface)catch()	-- Dabelow
 		try(destroyDialog vray5PropsRoll)catch()				-- Dabelow vray5
 		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
+		try(destroyDialog vray6PropsRoll)catch()				-- Dabelow vray6
+		try(destroyDialog vray6RenderElementsPropsRoll)catch()	-- Dabelow vray6
 		try(destroyDialog cameraOverscanPropsRoll)catch()		-- Dabelow cameraOverscan
 		try(destroyDialog nukeExportPropsRoll)catch()			-- Dabelow nukeExport
 		try(destroyDialog aeExportPropsRoll)catch()				-- Dabelow aeExport
@@ -214,13 +216,20 @@ fn setIcon theNode=
 			"ModifierOver":LPM_Fun.setImageIndex theNode theNode.tag.value.active 32 33
 			"VRayGI":LPM_Fun.setImageIndex theNode theNode.tag.value.active 40 41
 			"AutoMask":LPM_Fun.setImageIndex theNode theNode.tag.value.active 42 43
+			
+			--- This needs to be updated to the correct index for the icons / bitmaps .bmp to be correct
+
 			"Deadline":LPM_Fun.setImageIndex theNode theNode.tag.value.active 46 47 			-- Dabelow
 
-			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 				-- Dabelow vray5
 			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 	-- Dabelow vray5
+			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 				-- Dabelow vray5
+
 			"cameraOverscan":LPM_Fun.setImageIndex theNode theNode.tag.value.active 52 53  		-- Dabelow cameraOverscan
 			"nukeExport":LPM_Fun.setImageIndex theNode theNode.tag.value.active 54 55  			-- Dabelow nukeExport
 			"aeExport":LPM_Fun.setImageIndex theNode theNode.tag.value.active 56 57  			-- Dabelow aeExport
+
+			"vray6RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 58 59 	-- Dabelow vray6
+			"vray6":LPM_Fun.setImageIndex theNode theNode.tag.value.active 60 61 				-- Dabelow vray6
 		)
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
 ),
@@ -265,6 +274,8 @@ fn passByNode theNode =
 			"Deadline":theNode.parent.tag.value 				-- Dabelow
 			"vray5":theNode.parent.tag.value 					-- Dabelow vray5
 			"vray5RenderElements":theNode.parent.tag.value 		-- Dabelow vray5
+			"vray6":theNode.parent.tag.value 					-- Dabelow vray6
+			"vray6RenderElements":theNode.parent.tag.value 		-- Dabelow vray6
 			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
 			"nukeExport":theNode.parent.tag.value 				-- Dabelow nukeExport
 			"aeExport":theNode.parent.tag.value 				-- Dabelow aeExport
@@ -598,6 +609,8 @@ fn createNode pName type=
 		"Deadline":custAttributes.add theNode deadlinePropsCA 							-- Dabelow
 		"vray5":custAttributes.add theNode vray5PropsCA 								-- Dabelow vray5
 		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA 	-- Dabelow vray5
+		"vray6":custAttributes.add theNode vray6PropsCA 								-- Dabelow vray6
+		"vray6RenderElements":custAttributes.add theNode vray6RenderElementsPropsCA 	-- Dabelow vray6
 		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
 		"nukeExport":custAttributes.add theNode nukeExportPropsCA 						-- Dabelow nukeExport
 		"aeExport":custAttributes.add theNode aeExportPropsCA 							-- Dabelow aeExport
@@ -859,6 +872,7 @@ fn loadVray5RenderElementsSettings cp isPreviewMode=
 	LPM_SMTDSettings.activeElement 		= cp.activeElement
 ),
 
+-- createVray5RenderElementsProps
 -- Dabelow vray5
 fn createVray5RenderElementsProps theName=
 (
@@ -868,7 +882,6 @@ fn createVray5RenderElementsProps theName=
 	cp.elementOverride = true
 	cp.activeElement = #()
 
-
 	print "-- createVray5RenderElementsProps --"
 	print cp
 
@@ -876,7 +889,6 @@ fn createVray5RenderElementsProps theName=
 ),
 
 -- vray5 Override
-
 -- Dabelow vray5
 fn createVray5Props theName=
 (
@@ -923,6 +935,83 @@ fn createVray5Props theName=
 	cp.initialized=true
 	cp
 ),
+
+
+-- vray6RenderElements
+-- dabelow vray6
+fn loadVray6RenderElementsSettings cp isPreviewMode=
+(
+	if isPreviewMode then ( return false )
+
+	LPM_SMTDSettings.active 	 		= cp.active
+	LPM_SMTDSettings.elementOverride 	= cp.elementOverride
+	LPM_SMTDSettings.activeElement 		= cp.activeElement
+),
+
+-- createVray6RenderElementsProps
+-- Dabelow vray6
+fn createVray6RenderElementsProps theName=
+(
+	cp=LPM_Fun.createNode theName "vray6RenderElements"
+
+	cp.active = true
+	cp.elementOverride = true
+	cp.activeElement = #()
+
+	print "-- createVray6RenderElementsProps --"
+	print cp
+
+	cp
+),
+
+-- vray6 Override
+-- Dabelow vray6
+fn createVray6Props theName=
+(
+	cp=LPM_Fun.createNode theName "vray6"
+
+	cp.qualityType = 1
+
+	cp.global_switches_check = false
+		cp.displacement = true
+		cp.reflrefr = true
+
+	cp.anti_aliasing_check = false
+		cp.AAmin = 1
+		cp.AAmax = 4
+
+	cp.GI_illum_check = false
+		cp.giOn = false
+
+	cp.GI_check = false
+		cp.giSkylightOn = false
+		cp.giSkylightMap = undefined
+		cp.giSkylightCol = (color 205 230 255)
+		cp.giSkylightMult = 1
+		cp.giSkylightMapCheck = true
+
+		cp.giRefOn = false
+		cp.giRefMult = 1
+		cp.giRefMap = undefined
+		cp.giRefCol = (color 0 0 0)
+		cp.giRefMapCheck = true
+
+	cp.moblur_check = false
+		cp.moblurOn = false
+		cp.moblurSubdivs = 6
+
+	cp.prog_check = false
+		cp.progMaxSubdiv = 100
+		cp.progTime = 1
+
+	cp.dmc_check = false
+		cp.dmcThresh = .01
+		cp.dmcMult = 1
+
+	cp.initialized=true
+	cp
+),
+
 
 fn createVrayProps theName=
 (
@@ -1454,6 +1543,61 @@ fn generateVray5PropName cp=
 	)
 
 	theName += "Vray5 Override "
+
+	if (cp.global_switches_check) then
+	(
+		theName += "[Globals] "
+	)
+	if (cp.anti_aliasing_check) then
+	(
+		theName += "[AA] "
+	)
+	if (cp.GI_check) then
+	(
+		theName += "[GI] "
+	)
+	if (cp.moblur_check) then
+	(
+		theName += "[Moblur] "
+	)
+	if (cp.prog_check) then
+	(
+		theName += "[Prog] "
+	)
+	if (cp.dmc_check) then
+	(
+		theName += "[DMC] "
+	)
+
+	theName
+),
+
+-- Dabelow vray6
+fn generateVray6RenderElementsName cp=
+(
+	--theName = ( cp.type + " Override" )
+	theName = ( "VRay6 Render Elements Override" )
+	theName
+),
+
+-- Dabelow vray6
+fn generateVray6PropName cp=
+(
+	theName = ""
+
+
+	if (cp.qualityType == 1) then
+	(
+		theName = "[Final/Prev] "
+	)else if (cp.qualityType == 2) then
+	(
+		theName = "[Final] "
+	)else if (cp.qualityType == 3) then
+	(
+		theName = "[Prev] "
+	)
+
+	theName += "Vray6 Override "
 
 	if (cp.global_switches_check) then
 	(

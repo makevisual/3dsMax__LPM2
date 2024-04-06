@@ -14,14 +14,14 @@ global atmRollout
 global objectSetProps
 global lightSetProps
 global commonRollout
-Global LPM_activePass
-Global LPM_LoadingPreset
-Global LPM_Operators
+global LPM_activePass
+global LPM_LoadingPreset
+global LPM_Operators
 
-Global LPM_activeElement
+global LPM_activeElement
 
-Global SelectLayarRoll
-Global doubleClick
+global SelectLayarRoll
+global doubleClick
 
 global LPM_oldRenderSettings
 global LPM_oldRenderSettingsNew
@@ -33,9 +33,9 @@ global LPMPassSelectRoll
 
 global LPM_SMTDSettings 				-- Dabelow
 global LPM_NukeAPI 						-- Dabelow
-global LPM_RenderDispatchThePass 		-- Dabelow Vray5
-global LPM_RenderDispatchAction 		-- Dabelow Vray5
-global LPM_RenderDispatchRestoreData 	-- Dabelow Vray5
+global LPM_RenderDispatchThePass 		-- Dabelow Vray5 / Render Dispatch ( future renderer compatable )
+global LPM_RenderDispatchAction 		-- Dabelow Vray5 / Render Dispatch ( future renderer compatable )
+global LPM_RenderDispatchRestoreData 	-- Dabelow Vray5 / Render Dispatch ( future renderer compatable )
 global LPM_OperatorData 				-- Dabelow 
 
 global iconPath = LPM_Dir + "icons/"

@@ -2154,12 +2154,6 @@ struct LPM_RenderAPI
 									theEle.enabled=true
 								)
 								catch ()
-								-- try						-- dabelow vray5
-								-- (						-- dabelow vray5
-								-- 	theEle.vrayVFB=true		-- dabelow vray5
-								-- )						-- dabelow vray5
-								-- catch ()					-- dabelow vray5
-
 							)
 							else
 							(
@@ -2168,12 +2162,6 @@ struct LPM_RenderAPI
 									theEle.enabled=false
 								)
 								catch ()
-								--try 						-- dabelow vray5
-								--( 						-- dabelow vray5
-								--	theEle.vrayVFB=false 	-- dabelow vray5
-								--) 						-- dabelow vray5
-								--catch () 					-- dabelow vray5
-
 							)
 						)
 					)
@@ -3298,20 +3286,9 @@ struct LPM_RenderAPI
 					try
 					(
 						vr = renderers.current
-						--cls=r.classid
-						--if (cls[1]==1941615238 and cls[2]==2012806412) then r.showLastVFB()
-
-
+						
 						theRenderer=(classof vr) as string
 
-
-						-- if ((findString theRenderer "V_Ray") != undefined) then 	-- Dabelow VRay5
-						-- ( 														-- Dabelow VRay5
-						-- 	if vr.output_on then 									-- Dabelow VRay5
-						-- 	( 														-- Dabelow VRay5
-						-- 		vr.showLastVFB() 									-- Dabelow VRay5
-						-- 	) 														-- Dabelow VRay5
-						-- ) 														-- Dabelow VRay5
 					)
 					catch
 					(
@@ -3742,9 +3719,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		if(isPreviewMode) then
 		(
 			rendOutputFilename=LPM_Fun.getPreviewFile thePass
-
-			-- Dabelow VRAY5 disabled because not needed anymore
-			--LPM_Render.setVray rendOutputFilename thePass
 
 			makeDir ((getDir #preview)+"\\"+maxFileName+"_"+"\\") all:true
 			deleteFile rendOutputFilename

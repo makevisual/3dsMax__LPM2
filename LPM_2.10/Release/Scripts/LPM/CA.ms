@@ -375,6 +375,73 @@ attribID:#(0x2aa18b31, 0x23cf92fb)
 	)
 )
 
+-- Dabelow vray6
+vray6RenderElementsPropsCA = attributes vray6RenderElementsProps
+attribID:#(0x43bd437f, 0x5de2aa2d)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+ 		-- initialized type:#boolean
+
+		elementOverride type:#boolean
+		activeElement type:#stringTab tabSizeVariable:true
+	)
+)
+
+-- Dabelow vray6
+vray6PropsCA = attributes vray6Props
+attribID:#(0x31571798, 0x239ee7fe)
+(
+	parameters main
+	(
+		type type:#string
+		props type:#intTab tabSizeVariable:true
+		initialized type:#boolean
+		active type:#boolean default:true
+
+		qualityType type:#integer
+
+		global_switches_check type:#boolean
+			displacement type:#boolean
+			reflrefr type:#boolean
+
+		anti_aliasing_check type:#boolean
+			aaMin type:#integer
+			aaMax type:#integer
+
+		GI_illum_check type:#boolean
+			giOn type:#boolean
+
+		GI_check type:#boolean
+			giSkylightOn type:#boolean
+			giSkylightMap type:#texturemap
+			giSkylightCol type:#color
+			giSkylightMult type:#float
+			giSkylightMapCheck type:#boolean
+
+			giRefOn type:#boolean
+			giRefCol type:#color
+			giRefMap type:#texturemap
+			giRefMult type:#float
+			giRefMapCheck type:#boolean
+
+		moblur_check type:#boolean
+			moblurOn type:#boolean
+			moblurSubdivs type:#integer
+
+		prog_check type:#boolean
+			progMaxSubdiv type:#float
+			progTime type:#float
+
+		dmc_check type:#boolean
+			dmcThresh type:#float
+			dmcMult type:#float
+
+	)
+)
+
 
 AutoMaskCA = attributes AutoMask
 attribID:#(0x52ce8e55, 0x3829ed6b)
