@@ -2436,6 +2436,12 @@ struct LPM_RenderAPI
 
 				------------- DISPATCH START -------------
 
+				-- TODO: Clean up this once done vray6 integration
+
+				clearListener()
+				print(timestamp())
+
+
 				LPM_RenderDispatchThePass 	= thePass
 				LPM_RenderDispatchAction 	= #preRender
 				if isPreviewMode == true then ( LPM_RenderDispatchAction = #PreviewRender )
@@ -3734,8 +3740,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 
 -- TODO: put cameraOverscan in here
-print "---------- testeroo -------------"
-print LPM_Root.renderCamera
+-- print "---------- testeroo -------------"
+-- print LPM_Root.renderCamera
 
 
 

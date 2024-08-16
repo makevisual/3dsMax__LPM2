@@ -22,3 +22,5 @@ filein (LPM_Dir+"OperatorData.ms") 		-- Dabelow
 print LPM_VersionNumber
 --Set Fileoutput Path Token String to default
 LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass\\$APass$Pass"
+
+-- Hello

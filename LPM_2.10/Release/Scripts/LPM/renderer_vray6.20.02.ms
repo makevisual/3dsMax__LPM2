@@ -134,7 +134,7 @@ function Vray6_Globals_Override_Preview_PreRender =
 
 function Vray6_RE_Override_PreRender =
 (
-    -- print "= Vray6 Vray6_RE_Override_PreRender ="
+    print "= Vray6 Vray6_RE_Override_PreRender ="
 
     -- object for holding render element states
     struct elementObjStr
@@ -172,6 +172,10 @@ function Vray6_RE_Override_PreRender =
     -- get the active pass from the global variable
     thePass = LPM_RenderDispatchThePass
 
+-- TODO:
+    -- Elements are beiing stored, but not being applied, keep looking around here
+
+
     -- Collect the operators that are "Vray6RenderElements", get their "activeElementList" and enable them
     theVray6RenderElements =for it in thePass.children where ((it.type=="Vray6RenderElements") and (it.active)) collect it
     for theVray6RenderElement in theVray6RenderElements do
@@ -183,8 +187,9 @@ function Vray6_RE_Override_PreRender =
         -- loop through all of the render elements
         for i in 0 to ( re.NumRenderElements() - 1 ) do
         (
-            try -- Try Catch for elements that do not have a .vrayVFB property, like vryaAlpha, that cannot render int the frame buffer
+            -- try -- Try Catch for elements that do not have a .vrayVFB property, like vryaAlpha, that cannot render int the frame buffer
             (
+                print (curElement)
                 -- turn the render element off
                 curElement = ( re.GetRenderElement i )
                 curElement.vrayVFB = false
@@ -195,7 +200,7 @@ function Vray6_RE_Override_PreRender =
                     if curElement.elementName == activeElement then (curElement.vrayVFB = true)
                 )
             )
-            catch()
+            -- catch()
         )
     )
 )
@@ -226,7 +231,7 @@ function Vray6_Override_PostRender =
 
 function curPrerenderAction =
 (
-    --print "== Vray6 PreRenderAction =="
+    print "== Vray6 PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray6_RestoreDataStr()
@@ -240,7 +245,7 @@ function curPrerenderAction =
 
 function curPreviewPrerenderAction =
 (
-    --print "== Vray6 Preview PreRenderAction =="
+    print "== Vray6 Preview PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray6_RestoreDataStr()

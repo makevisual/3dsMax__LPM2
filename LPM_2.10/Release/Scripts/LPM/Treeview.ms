@@ -462,7 +462,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	fn makeItalic theNode=
 	(
-		print theNode --TORE: This was causing issues with the vray6 Render elements override
+		-- print theNode --TORE: This was causing issues with the vray6 Render elements override
 		try(
 		
 		obj=theNode.tag.value
@@ -2279,7 +2279,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on tv textChanged arg do
 	(
-		print "changed"
+		-- print "changed"
 	)
 
 
@@ -2625,7 +2625,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					LPM_treeview_rollout.updateTV()
 					try
 					(
-						print LPM_treeview_rollout.tv.selectedNode
+						-- print LPM_treeview_rollout.tv.selectedNode
 						LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 					)
 					catch
@@ -2716,6 +2716,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		TmpSelNode = tv.GetNodeAt arg.location
 	)
+
 
 
 	on tv MouseUp arg do
