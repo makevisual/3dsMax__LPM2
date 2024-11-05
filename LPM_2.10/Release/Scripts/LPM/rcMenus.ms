@@ -2646,30 +2646,19 @@ rcMenu rc_MainMenu
 (
 	local scenePath=(getdir #maxroot)+"Scenes\\LPM\\"
 
-	menuItem	renderDialog	"Render..."
-	menuItem settingsMenu "Settings..."
+	menuItem	renderDialog	"Render"
+	
 	subMenu "Utilities"
 	(
 		menuItem nukeSceneGenerate "Build scene from Nuke Script"
 		seperator s1
 		menuitem elementGenerate "Generate Default Elements"
-		--menuItem elementDepthSet "Set Depth Element Distance"
 		menuItem elementAOSet "Set AO Element Size"
--- 		seperator s1
 	)
 
 	subMenu		"Help"
 	(
-		subMenu		"LPM 1.09 Help"
-		(
-			menuItem	helpMenu	"LPM 1.09 Help"
-			menuItem	AboutMenu	"About LPM 1.09..."
-		)
-
-		menuItem hotkeyMenu "Hotkeys..."
-		menuItem	HelpMenuNew	"LPM 2.0 Help..."
-
-		menuItem	AboutMenuNew	"About LPM 2.0..."
+		menuItem	HelpMenuNew	"LPM Help"
 	)
 
 	on elementGenerate picked do
@@ -2696,16 +2685,9 @@ rcMenu rc_MainMenu
 		)
 	)
 
--- 	on elementDepthSet picked do
--- 	(
--- 		utilityTools.rollout_setDepthprops_Function()
--- 		messagebox "DEPTH"
--- 	)
-
 	on elementAOSet picked do
 	(
 		utilityTools.rollout_setAOprops_Function()
--- 		messagebox "AO"
 	)
 
 	on quickScripts picked do
@@ -2713,15 +2695,9 @@ rcMenu rc_MainMenu
 		LPM_Fun.quickScripts()
 	)
 
-
 	on helpMenuNew picked do
 	(
-		shellLaunch "http://www.grovergol.com/?page_id=9" ""
-	)
-
-	on helpMenu picked do
-	(
-		shellLaunch "http://www.lukashi.com/LPM.php" ""
+		shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" ""
 	)
 
 	on aboutMenu picked do
@@ -2740,13 +2716,10 @@ rcMenu rc_MainMenu
 
 	)
 
-	on settingsMenu Picked do
-	(
-
-		filein (LPM_Dir + "SettingsRO.ms")
-
-
-	)
+--	on settingsMenu Picked do
+--	(
+--		filein (LPM_Dir + "SettingsRO.ms")
+--	)
 
 
 	on hotkeyMenu picked do

@@ -17,6 +17,7 @@ global commonRollout
 global LPM_activePass
 global LPM_LoadingPreset
 global LPM_Operators
+global LPM_VersionNumber
 
 global LPM_activeElement
 

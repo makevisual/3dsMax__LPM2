@@ -193,4 +193,4 @@ struct LPM_MaxFileSubmitAPI
 	)
 )
 
-append LPM_NetworkPlugins (LPM_MaxFileSubmitAPI())
+LPM_MaxFileSubmitAPI.submit()

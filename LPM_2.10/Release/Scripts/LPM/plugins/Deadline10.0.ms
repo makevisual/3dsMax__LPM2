@@ -1753,5 +1753,4 @@ struct LPM_DeadlineAPI
 	)
 )
 
-append LPM_NetworkPlugins (LPM_DeadlineAPI())
 -- LPM_DeadlineAPI.submit()

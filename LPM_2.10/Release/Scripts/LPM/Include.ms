@@ -13,8 +13,8 @@ filein (LPM_Dir+"rcMenus.ms")
 filein (LPM_Dir+"LPM_SMTDSettings.ms") 	-- Dabelow
 filein (LPM_Dir+"NukeAPI.ms") 			-- Dabelow
 filein (LPM_Dir+"treeView.ms")
-LPM_PluginFiles=getfiles(LPM_Dir+"plugins/*")
-for f in LPM_PluginFiles do filein f
+-- LPM_PluginFiles=getfiles(LPM_Dir+"plugins/*")
+-- for f in LPM_PluginFiles do filein f
 filein (LPM_Dir+"operatorsAPI.ms")
 filein (LPM_Dir+"MAKE_nukeem.ms")
 filein (LPM_Dir+"OperatorData.ms") 		-- Dabelow
@@ -22,5 +22,5 @@ filein (LPM_Dir+"OperatorData.ms") 		-- Dabelow
 print LPM_VersionNumber
 --Set Fileoutput Path Token String to default
 LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass\\$APass$Pass"
-
+LPM_Root.renderType = 3 -- Force to shots
 -- Hello

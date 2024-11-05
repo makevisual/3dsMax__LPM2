@@ -2282,67 +2282,71 @@ fn getROPos dialogWidth=
 
 fn launchNetworkRender=
 (
-	ProjRenderPathTest = CheckProjRenderPath()
+	filein (LPM_Dir+@"plugins\Deadline10.0.ms")
+	LPM_DeadlineAPI.submit()
 
-	if ProjRenderPathTest[1] then
-	(
-		ProjRenderPath = getProjRenderPath()
-		if ProjRenderPath != LPM_Root.rootDir then
-		(
-			if (queryBox "Saving directory is not correct. Continue?") then
-			(
-				if(maxfilepath=="") then
-				(
-					messagebox "Please save the max file before a net render"
-					return false
-				)
-
-				theNetworkType=LPM_Fun.getIni "Settings" "Network Type" string "Backburner"
-				plug=0
-				for it in LPM_NetworkPlugins where it.type==theNetworkType do
-					plug=it
-				if(plug==0) then
-				(
-					messagebox ("Could not find network submission plugin:"+theNetworkType)
-					return false
-				)
-
-				result=plug.submit()
-				if(result!=#SUCCESS) then
-				(
-					messagebox result
-				)
-			)
-		)
-		else
-		(
-				if(maxfilepath=="") then
-				(
-					messagebox "Please save the max file before a net render"
-					return false
-				)
-
-				theNetworkType=LPM_Fun.getIni "Settings" "Network Type" string "Backburner"
-				plug=0
-				for it in LPM_NetworkPlugins where it.type==theNetworkType do
-				plug=it
-				if(plug==0) then
-				(
-					messagebox ("Could not find network submission plugin:"+theNetworkType)
-					return false
-				)
-
-				result=plug.submit()
-				if(result!=#SUCCESS) then
-				(
-					messagebox result
-				)
-		)
-	)
-	else
-	(
-		messageBox ProjRenderPathTest[2]
-	)
+	
+--	ProjRenderPathTest = CheckProjRenderPath()
+--
+--	if ProjRenderPathTest[1] then
+--	(
+--		ProjRenderPath = getProjRenderPath()
+--		if ProjRenderPath != LPM_Root.rootDir then
+--		(
+--			if (queryBox "Saving directory is not correct. Continue?") then
+--			(
+--				if(maxfilepath=="") then
+--				(
+--					messagebox "Please save the max file before a net render"
+--					return false
+--				)
+--
+--				theNetworkType=LPM_Fun.getIni "Settings" "Network Type" string "Backburner"
+--				plug=0
+--				for it in LPM_NetworkPlugins where it.type==theNetworkType do
+--					plug=it
+--				if(plug==0) then
+--				(
+--					messagebox ("Could not find network submission plugin:"+theNetworkType)
+--					return false
+--				)
+--
+--				result=plug.submit()
+--				if(result!=#SUCCESS) then
+--				(
+--					messagebox result
+--				)
+--			)
+--		)
+--		else
+--		(
+--				if(maxfilepath=="") then
+--				(
+--					messagebox "Please save the max file before a net render"
+--					return false
+--				)
+--
+--				theNetworkType=LPM_Fun.getIni "Settings" "Network Type" string "Backburner"
+--				plug=0
+--				for it in LPM_NetworkPlugins where it.type==theNetworkType do
+--				plug=it
+--				if(plug==0) then
+--				(
+--					messagebox ("Could not find network submission plugin:"+theNetworkType)
+--					return false
+--				)
+--
+--				result=plug.submit()
+--				if(result!=#SUCCESS) then
+--				(
+--					messagebox result
+--				)
+--		)
+--	)
+--	else
+--	(
+--		messageBox ProjRenderPathTest[2]
+--	)
 
 ),
 

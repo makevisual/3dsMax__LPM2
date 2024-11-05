@@ -190,7 +190,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	button renderPassButton "$" pos:[80,2] images:#(iconPath+"Render_24i.bmp",undefined,13,5,5,6,6,true) tooltip:"Render active pass, shift click for half resolution, (Hotkey-able)"
 	button colorButton "tgl" pos:[100,2] images:#(iconPath+"colorOn.bmp",undefined,1,1,1,1,1) tooltip:"Click to color pass, shift click to restore" visible:false----------------------------------------- INVISIBLE
 	checkbutton hideButton "rdr" pos:[180,2] images:#(iconPath+"eyeOpen.bmp",undefined,1,1,1,1,1) tooltip:"Hide by category floater." visible:false----------------------------------------------------
-	checkbutton playButton "time" pos:[120,2] images:#(iconPath+"play.bmp",undefined,1,1,1,1,1) tooltip:"Play shots in order, skips inactive shots" --visible:false-----------------------------------
+	-- checkbutton playButton "time" pos:[120,2] images:#(iconPath+"play.bmp",undefined,1,1,1,1,1) tooltip:"Play shots in order, skips inactive shots" --visible:false-----------------------------------
 
 	button quickScriptsButton "QS" pos:[180,25] tooltip:"Quick Scripts" height:30 width:30 images:#(iconPath+"Quick_Scripts.bmp",undefined,1,1,1,1,1,true)
 
@@ -198,10 +198,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	dropDownList previewTypeDDL pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp") -- visible:false--------------------------------------------------------------------------------------
  	dropDownList cameraDDL "" pos:[0,32] width:100 items:#("-----------------------") -- visible:false----------------------------------------------------------------------------------------------------------------
 
-	dropDownList renderTypeDDL "" items:#("Passes", "Passes Hardware Preview", "Shots", "Shots Hardware Preview") pos:[0,200] width:88 height:19 tooltip:"Render Mode"
+	-- dropDownList renderTypeDDL "" items:#("Passes", "Passes Hardware Preview", "Shots", "Shots Hardware Preview") pos:[0,200] width:88 height:19 tooltip:"Render Mode"
 
-	button localRenderButton "Local" pos:[40,200] height:22 width:70 tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
-	button networkRenderButton "Network" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+	button tyPreviewButton "TyPreview" pos:[40,200] height:22 width:60 enabled:false tooltip:"TODO:"
+	button nukeRenderButton "NukeFile" pos:[40,200] height:22 width:55 enabled:false tooltip:"TODO:"
+	button maxFileRenderButton "Bake Files" pos:[40,200] height:22 width:55 enabled:true tooltip:"TODO:"
+	button localRenderButton "Local" pos:[40,200] height:22 width:55 enabled:false tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+	button networkRenderButton "Deadline" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
 	checkbutton skipIdiotChecks "Skip IC" pos:[165,200] height:22 width:40 tooltip:"When enabled, Idiot checks will be skipped with a time penalty"
 	button setRenderDirButton "Set" pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
 	button openRenderDirButton "..." pos:[202,200] height:21 width:17 tooltip:"Opens the render directory"
@@ -261,9 +264,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		quickScriptsButton.enabled = false
 
 		openRenderDirButton.enabled = false
-		renderTypeDDL.enabled = false
-		playButton.enabled = false
+		-- renderTypeDDL.enabled = false
+		-- playButton.enabled = false
 
+		tyPreviewButton.enabled = false
+		nukeRenderButton.enabled = false 
+		maxFileRenderButton.enabled = false 
 		localRenderButton.enabled = false
 		networkRenderButton.enabled = false
 
@@ -301,9 +307,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		quickScriptsButton.enabled = true
 
 		openRenderDirButton.enabled = true
-		renderTypeDDL.enabled = true
-		playButton.enabled = true
-
+		-- renderTypeDDL.enabled = true
+		-- playButton.enabled = true
+		
+		tyPreviewButton.enabled = true 
+		nukeRenderButton.enabled = true
+		maxFileRenderButton.enabled = true
 		localRenderButton.enabled = true
 		networkRenderButton.enabled = true
 
@@ -1493,16 +1502,20 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		yPos=((theSize.y - 48) as integer)
 
 
-		renderTypeDDL.pos= [0,yPos+25]
-		localRenderButton.pos=[xSize-180,yPos+25]
+		-- renderTypeDDL.pos= [0,yPos+25]
+
+		tyPreviewButton.pos=[xSize-340,yPos+25]
+		nukeRenderButton.pos=[xSize-280,yPos+25]
+		maxFileRenderButton.pos=[xSize-225,yPos+25]
+		localRenderButton.pos=[xSize-170,yPos+25]
+
 		networkRenderButton.pos=[xSize-110,yPos+25]
 		skipIdiotChecks.pos=[xSize-40,yPos+25]
 
-		playButton.pos=[90,yPos+25]
+		-- playButton.pos=[90,yPos+25]
 
 		openRenderDirButton.pos=[xSize-17,yPos+1]
 		setRenderDirButton.pos=[xSize-38,yPos+1]
-
 		OutputPathDDL.width=xSize-40
 		OutputPathDDL.pos = [0,yPos]
 
@@ -1923,7 +1936,15 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	on networkRenderButton pressed do
 	(
 		LPM_Fun.setWhoToRenderByRenderType()
-		LPM_Fun.launchNetworkRender()
+		filein (LPM_Dir+@"plugins\Deadline10.0.ms")
+		LPM_DeadlineAPI.submit()
+	)
+
+	on maxFileRenderButton pressed do
+	(
+		LPM_Fun.setWhoToRenderByRenderType()
+		print (LPM_Dir+@"plugins\maxFileSubmit.ms")
+		LPM_MaxFileSubmitAPI.submit()
 	)
 
 	on DrRenderButton changed state do
@@ -1960,11 +1981,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			)
 	)
 
-	on renderTypeDDL selected item do
-	(
-		LPM_Root.renderType=renderTypeDDL.selection
-		updateRenderButtonsState()
-	)
+-- 	on renderTypeDDL selected item do
+-- 	(
+-- 		LPM_Root.renderType=renderTypeDDL.selection
+-- 		updateRenderButtonsState()
+-- 	)
 
 	on previewSizeDDL selected item do
 	(
@@ -2128,138 +2149,138 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			try (destroyDialog displayRollout)catch()
 	)
 
-	on playButton changed state do
-	(
-		rollout LPM_progressRO "Shot"
-		(
-			label shotName text:"Shot"
-			checkButton loopButton "Loop"
-			on LPM_progressRO open do
-				loopButton.checked=timeConfiguration.playbackLoop
-			on loopButton changed state do
-			()
-				--timeConfiguration.playbackLoop=state
-		)
-
-		animationRangeBack = animationRange
-		sliderTimeBack = sliderTime
-
-		if(state==false) then
-		(
-
-			stopAnimation()
-			stopper=false
-			animationRange = animationRangeBack
-		)
-		else
-		(
-
-
-
-			it=(GetDialogPos LPM_Treeview_rollout)
-			it.y-=45
-
-
-			stopper=true
-			theNode=tv.selectedNode
-			start=1
-
-			tmpShotCount = (for i=1 to shotRoot.children.count where (shotRoot.children[i].active and stopper) collect i)
-
-			if tmpShotCount.count !=0 then
-			(
-				timeConfiguration.playbackLoop=false
-				play_flag = true
-
-				TmpShotsPlaybackLimit = LPM_Fun.getIni "Settings" "ShotsPlaybackLimit" integer 5
-
-				for j=1 to TmpShotsPlaybackLimit where ((playButton.checked)and(play_flag)) do
-				(
-					for i=1 to shotRoot.children.count where (shotRoot.children[i].active and stopper) do
-					(
-						LPM_progressRo.shotName.text="Playing: "+shotRoot.children[i].name
-						cp=LPM_Fun.firstChildByType (shotRoot.children[i]) "commonProps"
-
-						if(isvalidnode shotRoot.children[i].displayPass) then
-						(
-							LPM_ActivePass=shotRoot.children[i].displayPass
-							updatePassDDL()
-							hideByActivePass()
-						)
-						if(cp!=undefined) then
-						(
-							if(cp.cameraTgl==true) then
-							(
-								try(
-										hide cameras
-
-										theViewport=viewport.activeViewport
-										case LPM_Fun.getIni "Settings" "shotViewport" string "Active Viewport" of
-										(
-											"Viewport 1": theViewport=1
-											"Viewport 2":if(viewport.numviews >= 2) then theViewport=2
-											"Viewport 3":if(viewport.numviews >= 3) then theViewport=3
-											"Viewport 4":if(viewport.numviews >= 4) then theViewport=4
-										)
-										viewport.activeViewport=theViewport
-										viewport.setCamera cp._Camera
-										unhide cp._Camera
-										if(isvalidnode cp._Camera.target) then
-											unhide cp._Camera.target
-
-									)catch()
-							)
-
-							if(cp.timeOutputTgl) then
-							(
-								case cp._rendTimeType of
-								(
-									2:
-									(
-										playAnimation()
-									)
-									3:
-									(
-										if(cp._rendStart < cp._rendEnd ) then
-										(
-											animationRange = interval cp._rendStart cp._rendEnd
-											sliderTime=cp._rendStart
-											playAnimation()
-
-										)
-										else
-										(
-											play_flag = false
-										)
-									)
-									default:
-									(
-										play_flag = false
-									)
-								)
-
-							)
-							else
-							(
-								playAnimation()
-							)
-
-						)
-						else
-						(
-							play_flag = false
-						)
-					)
-				)
-			)
-			playButton.checked=false
-			try(destroyDialog LPM_progressRo)catch()
-			animationRange = animationRangeBack
-			timeConfiguration.playbackLoop=true
-
-			sliderTime = sliderTimeBack
-		)
-	)
+--	on playButton changed state do
+--	(
+--		rollout LPM_progressRO "Shot"
+--		(
+--			label shotName text:"Shot"
+--			checkButton loopButton "Loop"
+--			on LPM_progressRO open do
+--				loopButton.checked=timeConfiguration.playbackLoop
+--			on loopButton changed state do
+--			()
+--				--timeConfiguration.playbackLoop=state
+--		)
+--
+--		animationRangeBack = animationRange
+--		sliderTimeBack = sliderTime
+--
+--		if(state==false) then
+--		(
+--
+--			stopAnimation()
+--			stopper=false
+--			animationRange = animationRangeBack
+--		)
+--		else
+--		(
+--
+--
+--
+--			it=(GetDialogPos LPM_Treeview_rollout)
+--			it.y-=45
+--
+--
+--			stopper=true
+--			theNode=tv.selectedNode
+--			start=1
+--
+--			tmpShotCount = (for i=1 to shotRoot.children.count where (shotRoot.children[i].active and stopper) collect i)
+--
+--			if tmpShotCount.count !=0 then
+--			(
+--				timeConfiguration.playbackLoop=false
+--				play_flag = true
+--
+--				TmpShotsPlaybackLimit = LPM_Fun.getIni "Settings" "ShotsPlaybackLimit" integer 5
+--
+--				for j=1 to TmpShotsPlaybackLimit where ((playButton.checked)and(play_flag)) do
+--				(
+--					for i=1 to shotRoot.children.count where (shotRoot.children[i].active and stopper) do
+--					(
+--						LPM_progressRo.shotName.text="Playing: "+shotRoot.children[i].name
+--						cp=LPM_Fun.firstChildByType (shotRoot.children[i]) "commonProps"
+--
+--						if(isvalidnode shotRoot.children[i].displayPass) then
+--						(
+--							LPM_ActivePass=shotRoot.children[i].displayPass
+--							updatePassDDL()
+--							hideByActivePass()
+--						)
+--						if(cp!=undefined) then
+--						(
+--							if(cp.cameraTgl==true) then
+--							(
+--								try(
+--										hide cameras
+--
+--										theViewport=viewport.activeViewport
+--										case LPM_Fun.getIni "Settings" "shotViewport" string "Active Viewport" of
+--										(
+--											"Viewport 1": theViewport=1
+--											"Viewport 2":if(viewport.numviews >= 2) then theViewport=2
+--											"Viewport 3":if(viewport.numviews >= 3) then theViewport=3
+--											"Viewport 4":if(viewport.numviews >= 4) then theViewport=4
+--										)
+--										viewport.activeViewport=theViewport
+--										viewport.setCamera cp._Camera
+--										unhide cp._Camera
+--										if(isvalidnode cp._Camera.target) then
+--											unhide cp._Camera.target
+--
+--									)catch()
+--							)
+--
+--							if(cp.timeOutputTgl) then
+--							(
+--								case cp._rendTimeType of
+--								(
+--									2:
+--									(
+--										playAnimation()
+--									)
+--									3:
+--									(
+--										if(cp._rendStart < cp._rendEnd ) then
+--										(
+--											animationRange = interval cp._rendStart cp._rendEnd
+--											sliderTime=cp._rendStart
+--											playAnimation()
+--
+--										)
+--										else
+--										(
+--											play_flag = false
+--										)
+--									)
+--									default:
+--									(
+--										play_flag = false
+--									)
+--								)
+--
+--							)
+--							else
+--							(
+--								playAnimation()
+--							)
+--
+--						)
+--						else
+--						(
+--							play_flag = false
+--						)
+--					)
+--				)
+--			)
+--			playButton.checked=false
+--			try(destroyDialog LPM_progressRo)catch()
+--			animationRange = animationRangeBack
+--			timeConfiguration.playbackLoop=true
+--
+--			sliderTime = sliderTimeBack
+--		)
+--	)
 
 
 
@@ -3506,9 +3527,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	on LPM_treeview_rollout resized theSize do
 	(
 
-		if theSize[1] < 240 then
+		if theSize[1] < 345 then
 		(
-			LPM_treeview_rollout.width = 240
+			LPM_treeview_rollout.width = 345
 		)
 		if theSize[2] < 240 then
 		(
@@ -3549,7 +3570,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 				previewSizeDDL.selection=i
 
 		updateCameraDDL()
-		renderTypeDDL.selection=LPM_Root.renderType
+--		renderTypeDDL.selection=LPM_Root.renderType
 		--Update the render type
 		renderType=getRenderType()
 		for i=1 to previewTypeDDL.items.count do
