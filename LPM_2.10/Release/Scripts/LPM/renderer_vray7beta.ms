@@ -78,6 +78,9 @@ function Vray7_Globals_Override_PreRender =
     -- Scene properties 
     Vray7_RestoreData.matEditor_open    = MatEditor.isOpen() 
 
+    -- SMTD Settings
+    SMTDSettings.LimitGroupsToUse
+
     -- Fetch, parse and make the output directory
     thePath=getFilenamePath rendOutputFilename
     theFile=getFilenameFile rendOutputFilename
@@ -165,6 +168,26 @@ function Vray7_RE_Override_PreRender =
             append existingElements elementObj
         )catch()
     )
+
+
+    ---- Auto assign the correct deadline limit ----
+
+    -- make a new empty list
+    newList = #()
+
+    -- loop through existing SMTD Settings limits ( set by user / submitter )
+    for limit in SMTDSettings.LimitGroupsToUse do 
+        
+        -- add to the new empty list, if it is not v-ray 6 - effectivly removing that limit from the list 
+        if limit != "v-ray 6" then append newlist limit 
+
+    -- add v-ray 7 to the limit list, and remove any duplicates
+    append newlist "v-ray 7"
+    makeUniqueArray newList
+
+    -- set the SMTD Settings limit to the newly filtered list 
+    SMTDSettings.LimitGroupsToUse = newlist
+
 
     -- Store the collected data for later restoration
     LPM_RenderDispatchRestoreData.vrayVFBElementStates = existingElements

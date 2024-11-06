@@ -169,6 +169,27 @@ function Vray6_RE_Override_PreRender =
     -- Store the collected data for later restoration
     LPM_RenderDispatchRestoreData.vrayVFBElementStates = existingElements
 
+
+    ---- Auto assign the correct deadline limit ----
+
+    -- make a new empty list
+    newList = #()
+
+    -- loop through existing SMTD Settings limits ( set by user / submitter )
+    for limit in SMTDSettings.LimitGroupsToUse do 
+        
+        -- add to the new empty list, if it is not v-ray 7 - effectivly removing that limit from the list 
+        if limit != "v-ray 7" then append newlist limit 
+
+    -- add v-ray 6 to the limit list, and remove any duplicates
+    append newlist "v-ray 6"
+    makeUniqueArray newList
+
+    -- set the SMTD Settings limit to the newly filtered list 
+    SMTDSettings.LimitGroupsToUse = newlist
+
+
+
     -- get the active pass from the global variable
     thePass = LPM_RenderDispatchThePass
 
