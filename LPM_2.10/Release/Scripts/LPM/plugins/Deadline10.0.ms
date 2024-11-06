@@ -1753,4 +1753,5 @@ struct LPM_DeadlineAPI
 	)
 )
 
--- LPM_DeadlineAPI.submit()
+-- LPM_DeadlineAPI = LPM_DeadlineAPI()
+LPM_DeadlineAPI.submit()

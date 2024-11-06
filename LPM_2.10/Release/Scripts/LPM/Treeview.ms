@@ -1937,14 +1937,14 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	(
 		LPM_Fun.setWhoToRenderByRenderType()
 		filein (LPM_Dir+@"plugins\Deadline10.0.ms")
-		LPM_DeadlineAPI.submit()
+		-- LPM_DeadlineAPI.submit()
 	)
 
 	on maxFileRenderButton pressed do
 	(
 		LPM_Fun.setWhoToRenderByRenderType()
-		print (LPM_Dir+@"plugins\maxFileSubmit.ms")
-		LPM_MaxFileSubmitAPI.submit()
+		filein (LPM_Dir+@"plugins\maxFileSubmit.ms")
+		-- LPM_MaxFileSubmitAPI.submit()
 	)
 
 	on DrRenderButton changed state do
