@@ -12,6 +12,7 @@ case curRenderer of
     "V_Ray_GPU_5__update_1:V_Ray_GPU_5__update_1"           : ( print "Vray5 GPU not currently supported" )
     "V_Ray_6__update_2:V_Ray_6__update_2"                   : ( filein ( LPM_Dir+"renderer_vray6.20.02.ms" ) )
     "V_Ray_7_Beta:V_Ray_7_Beta"                             : ( filein ( LPM_Dir+"renderer_vray7beta.ms" ) )
+    "V_Ray_7_Hotfix_1:V_Ray_7_Hotfix_1"                     : ( filein ( LPM_Dir+"renderer_vray7.00.04.ms" ) )
 )
 
 
