@@ -1917,7 +1917,7 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 
 -------------------------------------------------------------------------------------------------------   commonRollout   -------------------------------------------------------------------------------------------------------
 
-rollout commonRollout "Common Properties" width:370 height:640
+rollout commonRollout "Common Properties" width:370 height:530
 (
 	GroupBox grp1 "Time Output" pos:[24,4] width:335 height:111 enabled:false
 	GroupBox grp2 "Output Size" pos:[24,112] width:336 height:88 enabled:false
@@ -1968,34 +1968,37 @@ rollout commonRollout "Common Properties" width:370 height:640
 	edittext _fileType "" pos:[91,418] width:53 height:19 readOnly:true
 	button pickTypeButton "Pick" pos:[39,419] width:47 height:16 enabled:false
 
-	checkbox gammaTgl "" pos:[182,405] width:15 height:16
-	GroupBox grp13 "Gamma" pos:[201,402] width:157 height:43 enabled:false
-	spinner _fileOutGamma "File Out Gamma" pos:[260,421] width:95 height:16 enabled:false range:[0.01,5,1]
 
-	label lbl1 "To" pos:[187,52] width:19 height:18 enabled:false
-	label lbl4 "Width:" pos:[33,132] width:35 height:14 enabled:false
-	label lbl5 "Height:" pos:[33,151] width:35 height:14 enabled:false
-	label lbl6 "Aperture Width(mm):" pos:[152,133] width:99 height:15 enabled:false
-	label lbl7 "Pixel Aspect:" pos:[186,153] width:61 height:15 enabled:false range:[0.01,100,.01]
+	checkbutton chkbtn_enableDeepOutput "Enable Deep Output" pos:[158,405] width:200 height:40
+
+	-- checkbox gammaTgl "" pos:[182,405] width:15 height:16
+	-- GroupBox grp13 "Gamma" pos:[201,402] width:157 height:43 enabled:false
+	-- spinner _fileOutGamma "File Out Gamma" pos:[260,421] width:95 height:16 enabled:false range:[0.01,5,1]
+
+	-- label lbl1 "To" pos:[187,52] width:19 height:18 enabled:false
+	-- label lbl4 "Width:" pos:[33,132] width:35 height:14 enabled:false
+	-- label lbl5 "Height:" pos:[33,151] width:35 height:14 enabled:false
+	-- label lbl6 "Aperture Width(mm):" pos:[152,133] width:99 height:15 enabled:false
+	-- label lbl7 "Pixel Aspect:" pos:[186,153] width:61 height:15 enabled:false range:[0.01,100,.01]
 
 
-	GroupBox grp8 "Pre Render Script" pos:[24,496] width:336 height:57
-	checkbox usePreScript "" pos:[5,505] width:18 height:15
-	button pickPreScript "Pick" pos:[37,510] width:47 height:17
-	checkbox usePostScript "" pos:[5,561] width:14 height:15
-	button pickPostScript "Pick" pos:[33,570] width:47 height:17
-	button EditPreScript "Edit..." pos:[85,510] width:42 height:17
-	button EditPostScript "Edit..." pos:[82,570] width:42 height:17
-	button newPreScript "New" pos:[183,510] width:42 height:17
-	button newPostScript "New" pos:[181,570] width:42 height:17
-	GroupBox grp16 "Post Render Script" pos:[24,554] width:336 height:60
-	edittext preScript "" pos:[33,531] width:320 height:18
-	edittext postScript "" pos:[27,590] width:326 height:18
-	button execPreScript "Execute" pos:[129,510] width:55 height:17
-	button execPostScript "Execute" pos:[126,570] width:55 height:17
+	--GroupBox grp8 "Pre Render Script" pos:[24,496] width:336 height:57
+	--checkbox usePreScript "" pos:[5,505] width:18 height:15
+	--button pickPreScript "Pick" pos:[37,510] width:47 height:17
+	--checkbox usePostScript "" pos:[5,561] width:14 height:15
+	--button pickPostScript "Pick" pos:[33,570] width:47 height:17
+	--button EditPreScript "Edit..." pos:[85,510] width:42 height:17
+	--button EditPostScript "Edit..." pos:[82,570] width:42 height:17
+	--button newPreScript "New" pos:[183,510] width:42 height:17
+	--button newPostScript "New" pos:[181,570] width:42 height:17
+	--GroupBox grp16 "Post Render Script" pos:[24,554] width:336 height:60
+	--edittext preScript "" pos:[33,531] width:320 height:18
+	--edittext postScript "" pos:[27,590] width:326 height:18
+	--button execPreScript "Execute" pos:[129,510] width:55 height:17
+	--button execPostScript "Execute" pos:[126,570] width:55 height:17
 
-	checkbox autoUpdateName "Auto Update Name" pos:[8,620] width:115 height:15
-	checkbox disableFinalOutput "Disable Final Image Output" pos:[150, 620] width:170 height:15
+	checkbox autoUpdateName "Auto Update Name" pos:[8,501] width:115 height:15
+	checkbox disableFinalOutput "Disable Final Image Output" pos:[150, 501] width:170 height:15
 	GroupBox RenderTypeGroup "Render Type" pos:[24,202] width:335 height:37
 	checkbox renderTypeTgl "" pos:[4,209] width:15 height:16
 	dropdownList renderTypeDDL "" pos:[34,216] width:116 height:21 items:#("view", "region", "crop", "blowup")
@@ -2015,7 +2018,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 			_rendEnd.enabled=state
 			_rendFileNumberBase.enabled=state
 			_rendPickupFrames.enabled=state
-			lbl1.enabled=state
+			-- lbl1.enabled=state
 
 			state=outputSizeTgl.checked
 			grp2.enabled=state
@@ -2030,12 +2033,10 @@ rollout commonRollout "Common Properties" width:370 height:640
 			addPreset.enabled=state
 			removePreset.enabled=state
 
-
-
-			lbl4.enabled=state
-			lbl5.enabled=state
-			lbl6.enabled=state
-			lbl7.enabled=state
+			-- lbl4.enabled=state
+			-- lbl5.enabled=state
+			-- lbl6.enabled=state
+			-- lbl7.enabled=state
 
 			state=optionsTgl.checked
 			grp3.enabled=state
@@ -2071,9 +2072,9 @@ rollout commonRollout "Common Properties" width:370 height:640
 			renderTypeDDL.enabled=state
 			RenderTypeGroup.enabled=state
 
-			state=gammaTgl.state
-			grp13.enabled=state
-			_fileOutGamma.enabled=state
+			-- state=gammaTgl.state
+			-- grp13.enabled=state
+			-- _fileOutGamma.enabled=state
 
 	)
 	on timeOutputTgl changed state do
@@ -2113,10 +2114,10 @@ rollout commonRollout "Common Properties" width:370 height:640
 	(
 		toggleState()
 	)
-	on gammaTgl changed state do
-	(
-		toggleState()
-	)
+--	on gammaTgl changed state do
+--	(
+--		toggleState()
+--	)
 	on editPreScript pressed do
 	(
 		try(edit preScript.text)catch()
@@ -2125,54 +2126,54 @@ rollout commonRollout "Common Properties" width:370 height:640
 	(
 		try(edit postScript.text)catch()
 	)
-	on pickPreScript pressed do
-	(
-		thePath=getOpenFileName()
-		if(thePath!=undefined) then
-		prescript.text=thePath
-		usePreScript.checked=true
-	)
-	on pickPostScript pressed do
-	(
-		thePath=getOpenFileName()
-		if(thePath!=undefined) then
-		postscript.text=thePath
-		usePostScript.checked=true
-	)
-	on newPreScript pressed do
-	(
-		thePath=getSaveFileName types:"maxscript(*.ms)|*.ms"
-		if(thePath!=undefined) then
-		(
-			close (createFile thePath)
-			edit thePath
-			preScript.text=thePath
-			usePreScript.checked=true
-		)
-	)
-
-	on newPostScript pressed do
-	(
-		thePath=getSaveFileName types:"maxscript(*.ms)|*.ms"
-
-
-		if(thePath!=undefined) then
-		(
-			close (createFile thePath)
-			edit thePath
-			postScript.text=thePath
-			usePostScript.checked=true
-		)
-	)
-
-	on execPreScript pressed do
-	(
-		try(fileIn preScript.text) catch (messagebox (getCurrentException()))
-	)
-	on execPostScript pressed do
-	(
-		try(fileIn postScript.text) catch (messagebox (getCurrentException()))
-	)
+--	on pickPreScript pressed do
+--	(
+--		thePath=getOpenFileName()
+--		if(thePath!=undefined) then
+--		prescript.text=thePath
+--		usePreScript.checked=true
+--	)
+--	on pickPostScript pressed do
+--	(
+--		thePath=getOpenFileName()
+--		if(thePath!=undefined) then
+--		postscript.text=thePath
+--		usePostScript.checked=true
+--	)
+--	on newPreScript pressed do
+--	(
+--		thePath=getSaveFileName types:"maxscript(*.ms)|*.ms"
+--		if(thePath!=undefined) then
+--		(
+--			close (createFile thePath)
+--			edit thePath
+--			preScript.text=thePath
+--			usePreScript.checked=true
+--		)
+--	)
+--
+--	on newPostScript pressed do
+--	(
+--		thePath=getSaveFileName types:"maxscript(*.ms)|*.ms"
+--
+--
+--		if(thePath!=undefined) then
+--		(
+--			close (createFile thePath)
+--			edit thePath
+--			postScript.text=thePath
+--			usePostScript.checked=true
+--		)
+--	)
+--
+--	on execPreScript pressed do
+--	(
+--		try(fileIn preScript.text) catch (messagebox (getCurrentException()))
+--	)
+--	on execPostScript pressed do
+--	(
+--		try(fileIn postScript.text) catch (messagebox (getCurrentException()))
+--	)
 
 
 	on pickTypeButton pressed do
@@ -2335,9 +2336,12 @@ rollout commonRollout "Common Properties" width:370 height:640
 		advancedLightingTgl.checked=cp.advancedLightingTgl
 		fileTypeTgl.checked=cp.fileTypeTgl
 		_fileType.text=cp._fileType
-		gammaTgl.checked=cp.gammaTgl
-		_fileOutGamma.value=cp._fileOutGamma
-		renderTypeTgl.checked=cp.renderTypeTgl
+
+--		gammaTgl.checked=cp.gammaTgl
+--		_fileOutGamma.value=cp._fileOutGamma
+--		renderTypeTgl.checked=cp.renderTypeTgl
+		chkbtn_enableDeepOutput.checked = cp.deepEXR
+
 
 		_CameraExport.checked=cp._CameraExport
 
@@ -2353,10 +2357,10 @@ rollout commonRollout "Common Properties" width:370 height:640
 		)
 
 
-		usePreScript.checked=cp.usePreScript
-		preScript.text=cp.preScript
-		usePostScript.checked=cp.usePostScript
-		postScript.text=cp.postScript
+--		usePreScript.checked=cp.usePreScript
+--		preScript.text=cp.preScript
+--		usePostScript.checked=cp.usePostScript
+--		postScript.text=cp.postScript
 
 		autoUpdateName.checked=cp.autoUpdateName
 		disableFinalOutput.checked=cp.disableFinalOutput
@@ -2398,12 +2402,13 @@ rollout commonRollout "Common Properties" width:370 height:640
 		cp._fileType=_fileType.text
 		cp.renderTypeTgl=renderTypeTgl.checked
 		cp.renderType=renderTypeDDL.selected
-		cp.gammaTgl=gammaTgl.state
-		cp._fileOutGamma=_fileOutGamma.value
-		cp.usePreScript=usePreScript.state
-		cp.preScript=preScript.text
-		cp.usePostScript=usePostScript.state
-		cp.postScript=postScript.text
+		cp.deepEXR=chkbtn_enableDeepOutput.checked
+--		cp.gammaTgl=gammaTgl.state
+--		cp._fileOutGamma=_fileOutGamma.value
+--		cp.usePreScript=usePreScript.state
+--		cp.preScript=preScript.text
+--		cp.usePostScript=usePostScript.state
+--		cp.postScript=postScript.text
 		cp.autoUpdateName=autoUpdateName.checked
 		cp.disableFinalOutput=disableFinalOutput.checked
 		cp.cameraTgl=cameraTgl.checked

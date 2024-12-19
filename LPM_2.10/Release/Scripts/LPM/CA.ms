@@ -544,6 +544,8 @@ attribID:#(0x01028309, 0x03010930)
 		gammaTgl type:#boolean default:false
 		_fileOutGamma type:#float default:1.0
 
+		--Deep
+		deepEXR type:#boolean default:false
 
 		--Camera
 		cameraTgl type:#boolean

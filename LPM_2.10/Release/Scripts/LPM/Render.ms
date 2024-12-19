@@ -122,11 +122,24 @@ struct LPM_RenderAPI
 			(
 				try(setRenderType (cp.renderType as name))catch()
 			)
-			if(cp.gammaTgl) then
-			(
-				fileOutGamma=cp._fileOutGamma
-				displayGamma=cp._fileOutGamma
-			)
+--			if(cp.gammaTgl) then
+--			(
+--				fileOutGamma=cp._fileOutGamma
+--				displayGamma=cp._fileOutGamma
+--			)
+--			if(cp.deepEXR) then
+--			(
+			try(
+				print "Processing Deep EXR Output Toggle "
+				print cp.deepEXR
+				renderers.current.output_rawExrDeep = cp.deepEXR
+			)catch()
+
+--				fileOutGamma=cp._fileOutGamma
+--				displayGamma=cp._fileOutGamma
+--			)
+			
+
 			rendSaveFile=not cp.disableFinalOutput
 		)
 		return cp
@@ -2438,8 +2451,8 @@ struct LPM_RenderAPI
 
 				-- TODO: Clean up this once done vray6 integration
 
-				clearListener()
-				print(timestamp())
+--				clearListener()
+--				print(timestamp())
 
 
 				LPM_RenderDispatchThePass 	= thePass

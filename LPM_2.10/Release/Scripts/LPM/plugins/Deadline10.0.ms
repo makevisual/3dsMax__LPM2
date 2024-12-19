@@ -629,7 +629,13 @@ struct LPM_DeadlineAPI
 
 				log_append ( "All Check Skipped" ) 4
 
+				
+				resultsArray = #(#("pass", 0,"0", "Idiiot Check Skipped" ))
+
 				LPM_deadlineInfo.submit_enable = true
+
+				LPM_SMTDSettings.idiotCheckReports = resultsArray
+				return resultsArray
 			)
 
 			-- Connects to the repository and loads various auxilary files and retrieves data from the deadline database
@@ -1118,63 +1124,9 @@ struct LPM_DeadlineAPI
 				SMTDLPMInterface.ui_saveStickySettings()
 
 				-- Log the failed idiot checks to the repository location
- 				idiotCheck_logReports LPM_SMTDSettings.idiotCheckReports
+				-- There is sometimes an error when launching LPM and skipping the IC before ever doing a deadline render, that can cause a crash - hence the try catch
+				try( idiotCheck_logReports LPM_SMTDSettings.idiotCheckReports ) catch()
 
-
-
-				-- Disables any viewport locks in the render dialog
-			--	rendUseActiveView = true
-
-				-- FrameBuffer Set
-			--	frameBuffer_Renderer_Check = renderers.current as string
-			--
-			--	frameBuffer_Renderer_Check= trimRight frameBuffer_Renderer_Check "1234567890_:"
-			--	frameBuffer_Renderer_Check = trimLeft frameBuffer_Renderer_Check "qwertyuiop[]asdfghjkl;'zxcvbnm,./QWERTYUIOP{}ASDFGHJKLZXCVBNM<>?-_1234567890"
-			--
-			--	if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
-			--	(
-			--		try
-			--		(
-			--			LPM_deadlineInfo.sticky_frameBufferMode_HOLD = renderers.current.output_on
-			--
-			--			if LPM_deadlineInfo.sticky_frameBufferMode == 2 then
-			--			(
-			--				renderers.current.output_on = true
-			--			)
-			--			else if LPM_deadlineInfo.sticky_frameBufferMode == 3 then
-			--			(
-			--				renderers.current.output_on = false
-			--			)
-			--		)
-			--		catch
-			--		(
-			--			print "LPM hit a snag while trying to set the frame buffer. This usually has something to do with the renderer. LPM will atempt to continue."
-			--		)
-			--	)
-			--	else
-			--	(
-			--		print ("LPM FrameBuffer Selection disabled because selected renderer is not Vray")
-			--	)
-
-			--	-- Encode Elements Set
-			--
-			--	LPM_deadlineInfo.sticky_renderElementsExr_HOLD = fopenexr.isAutoAddRenderElements()
-			--
-			--	fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr
-			--
-
-			--	try
-			--	(
-			--		if LPM_deadlineInfo.sticky_renderElementsExr == True then
-			--		(
-			--			renderers.current.output_on = false
-			--		)
-			--	)
-			--	catch
-			--	(
-			--		print "LPM hit a snag trying to set the frame buffer. This can happen if you're not using Vray. LPM will attempt to coninue"
-			--
-			--	)
 
 				-- Perform a hold if desired
 				if LPM_deadlineInfo.submit_recoveryHold then
@@ -1183,8 +1135,6 @@ struct LPM_DeadlineAPI
 					holdMaxFile()
 				)
 				else()
-
-
 
 
 				SMTDLPMInterface.prg_submitProgress.value = 0
@@ -1372,14 +1322,6 @@ struct LPM_DeadlineAPI
 					)
 
 					SMTDLPMInterface.prg_submitProgress.value = 95
-					-- log_append "Perfoming Scene post submit actions" 4
-					-- log_append ( "Total running time (s): " + ( (timeStamp() - ts ) / 1000.000 ) as string ) 4
-
-					-- sleep 1.25
-
-					-- if chk_closeOnComplete.checked == true
-					-- then ( destroydialog LPM_DeadlineSubmitRo )
-					-- else ( prg_submitProgress.visible = false )
 
 				)
 				catch()
@@ -1405,15 +1347,6 @@ struct LPM_DeadlineAPI
 
 				log_append "Perfoming Scene post submit actions" 4
 
-
-				-- Reverse Changes
-				-- if frameBuffer_Renderer_Check == ":V_Ray_Adv" then
-				-- (
-				-- renderers.current.output_on = LPM_deadlineInfo.sticky_frameBufferMode_HOLD
-				-- )
-				-- fopenexr.setAutoAddRenderElements LPM_deadlineInfo.sticky_renderElementsExr_HOLD
-
-
 				-- Re-enable the scene
 				undo on ()
 				resumeEditing()
@@ -1438,7 +1371,7 @@ struct LPM_DeadlineAPI
 			-- Handles the submission of a job
 			fn submit =
 			(
-  				clearListener()
+  				-- clearListener()
 				-- Disable viewport and UI as much as possible, save settings, and handle other initializing
   				SMTDLPMInterface.submit_preAction()
 

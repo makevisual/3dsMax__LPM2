@@ -88,6 +88,7 @@
 		VRay_Matte_Enable = True
 		VRay_Secondary_Matte_Enable = True
 		VRay_Matte_Alpha = -1.000000
+		VRay_Matte_ReflectionAmount = 0
 		"
 		newSet.intP[9]=2
 

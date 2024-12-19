@@ -100,6 +100,7 @@ function Vray7_Globals_Override_PreRender =
     rendUseActiveView                       = true                           -- Disables the lock on the camera view, this causes bugs on network renders knowing which camera to use
     vfbControl #setregion 0 0 0 0                                            -- Sets the region render to zero pixels, effectivly disabling the render region function
     MatEditor.Close()                                                        -- Close the material editor ( faster operation )
+    vfbControl #setregion "reset"                                            -- Turns off any region renders, before submitting
 
     -- If the renderer is set to progressive, it turns the memory frame buffer on, which is necessary for it to work
     -- otherwise it turns the memory frame buffer off, which is the preferred method, for memory handling, and performance
@@ -263,7 +264,6 @@ function curPrerenderAction =
 
     -- call each of the prerender functions
     Vray7_Globals_Override_PreRender()
-
     Vray7_RE_Override_PreRender()
     Vray7_Override_PreRender()
 )
