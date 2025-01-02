@@ -140,6 +140,9 @@ function Vray7_RE_Override_PreRender =
 (
     print "= Vray7 Vray7_RE_Override_PreRender ="
 
+    -- Disable the interactive renderer if it is running.
+    vrayStopIPR()
+
     -- object for holding render element states
     struct elementObjStr
     (

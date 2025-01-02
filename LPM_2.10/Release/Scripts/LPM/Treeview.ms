@@ -267,10 +267,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- renderTypeDDL.enabled = false
 		-- playButton.enabled = false
 
-		tyPreviewButton.enabled = false
-		nukeRenderButton.enabled = false 
+		-- TODO: Turn these back on when functionality added
+		-- tyPreviewButton.enabled = false
+		-- nukeRenderButton.enabled = false 
 		maxFileRenderButton.enabled = false 
-		localRenderButton.enabled = false
+		-- localRenderButton.enabled = false
 		networkRenderButton.enabled = false
 
 
@@ -310,10 +311,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- renderTypeDDL.enabled = true
 		-- playButton.enabled = true
 		
-		tyPreviewButton.enabled = true 
-		nukeRenderButton.enabled = true
+		-- TODO: Turn these back on when functionality added
+		-- tyPreviewButton.enabled = true 
+		-- nukeRenderButton.enabled = true
 		maxFileRenderButton.enabled = true
-		localRenderButton.enabled = true
+		-- localRenderButton.enabled = true
 		networkRenderButton.enabled = true
 
 		case LPM_Root.renderType of
