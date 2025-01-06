@@ -149,6 +149,8 @@ struct elementsDefStr
 		newElement.exr_compression 				= 9
 		newElement.use_dwa_compression_level	= true
 		newElement.dwa_compression_level 		= 45.0
+		newElement.exr_multipart 				= true 
+		newElement.exr_metadata					= ""
 
 		return newElement 
 	)
