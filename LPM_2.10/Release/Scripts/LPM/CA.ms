@@ -390,6 +390,21 @@ attribID:#(0x43bd437f, 0x5de2aa2d)
 	)
 )
 
+-- Dabelow vray render elements
+vrayRenderElementsPropsCA = attributes vrayRenderElementsProps
+attribID:#(0x25058692, 0x1e340ec9)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+ 		-- initialized type:#boolean
+
+		elementOverride type:#boolean
+		activeElement type:#stringTab tabSizeVariable:true
+	)
+)
+
 -- Dabelow vray6
 vray6PropsCA = attributes vray6Props
 attribID:#(0x31571798, 0x239ee7fe)

@@ -419,6 +419,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "vray6" 					--Dabelow vray6
 		getIconFromBitmap "vray6Off" 				--Dabelow vray6
 
+		getIconFromBitmap "vrayRenderElements" 					--Dabelow vrayRebderElements
+		getIconFromBitmap "vrayRenderElementsOff" 				--Dabelow vrayRebderElements
+
+		----------- TODO: Keep going from here
+
 		tv.imageList = ilTv
 	)
 
@@ -507,6 +512,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"vray5": 				nodeName = (LPM_Fun.generateVray5PropName theNode) 				-- Dabelow Vray5
 			"vray6RenderElements": 	nodeName = (LPM_Fun.generateVray6RenderElementsName theNode) 	-- Dabelow Vray6
 			"vray6": 				nodeName = (LPM_Fun.generateVray6PropName theNode) 				-- Dabelow Vray6
+			"vrayRenderElements": 	nodeName = (LPM_Fun.generateVrayRenderElementsName theNode) 	-- Dabelow VrayRenderElements
 			"cameraOverscan": 		nodeName = (LPM_Fun.generateCameraOverscanName theNode) 		-- Dabelow cameraOverscan
 			"nukeExport": 			nodeName = (LPM_Fun.generateNukeExportName theNode) 			-- Dabelow nukeExport
 			"aeExport": 			nodeName = (LPM_Fun.generateAeExportName theNode) 				-- Dabelow aeExport
@@ -844,6 +850,16 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			newVray6RenderElements.ForeColor = FontColor
 			newVray6RenderElements.BackColor = BackColor
 			makeItalic newVray6RenderElements
+		)
+
+ 		-- Dabelow vrayRenderElements
+		for vrayRenderElements in pmPass.children where vrayRenderElements.type=="vrayRenderElements" do
+		(
+			newVrayRenderElements=createTVnode newPass vrayRenderElements nodeType:"vrayRenderElements"
+
+			newVrayRenderElements.ForeColor = FontColor
+			newVrayRenderElements.BackColor = BackColor
+			makeItalic newVrayRenderElements
 		)
 
  		-- Dabelow vray6
@@ -1609,6 +1625,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	fn EditVray6RenderElements =
 	(
 		createDialog vray6RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+	)
+
+	--Dabelow VrayRenderElements
+	fn EditVrayRenderElements =
+	(
+		createDialog vrayRenderElementsPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)
 
 	--Dabelow Vray6
@@ -2545,6 +2567,14 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
 
+						-- Dabelow VRay
+						"vrayRenderElements":
+						(
+							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
+							delete theNode
+							LPM_treeview_rollout.tv.selectedNode.remove()
+						)
+
 						-- Dabelow VRay6
 						"vray6":
 						(
@@ -2940,6 +2970,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						LPM_Fun.setIcon hitNode
 					)
 
+					-- Dabelow VrayRenderElements
+					"vrayRenderElements":
+					(
+						hitNode.tag.value.active= not hitNode.tag.value.active
+						LPM_Fun.setIcon hitNode
+					)
+
 					-- Dabelow Vray6
 					"vray6":
 					(
@@ -3200,6 +3237,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"vray5RenderElements":popUpMenu rc_vray5RenderElementsPropsMenu 	-- Dabelow Vray5RenderElements
 					"vray6":popUpMenu rc_vray6PropsMenu 								-- Dabelow Vray6
 					"vray6RenderElements":popUpMenu rc_vray6RenderElementsPropsMenu 	-- Dabelow Vray6RenderElements
+					"vrayRenderElements":popUpMenu rc_vrayRenderElementsPropsMenu 		-- Dabelow VrayRenderElements
 					"cameraOverscan":popUpMenu rc_cameraOverscanPropsMenu 				-- Dabelow cameraOverscan
 					"nukeExport":popUpMenu rc_nukeExportPropsMenu 						-- Dabelow nukeExport
 					"aeExport":popUpMenu rc_aeExportPropsMenu 							-- Dabelow aeExport
@@ -3299,6 +3337,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"vray5":(EditVray5()) 									-- Dabelow Vray5
 					"vray6RenderElements":(EditVray6RenderElements()) 		-- Dabelow Vray6
 					"vray6":(EditVray6()) 									-- Dabelow Vray6
+					"vrayRenderElements":(EditVrayRenderElements()) 		-- Dabelow VrayRenderElements
 					"cameraOverscan":(EditCameraOverscan())					-- Dabelow cameraOverscan
 					"nukeExport":(EditNukeExport())							-- Dabelow nukeExport
 					"aeExport":(EditAeExport())								-- Dabelow aeExport
@@ -3315,9 +3354,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	 (
 		 dragnode=arg.item
 
-		 -- Dabelow Vray5 / cameraOverscan / nukeExport / aeExport / Vray6
+		 -- Dabelow Vray5 / cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
 		 it=arg.item.tag.value.type
-		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
+		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
 			tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 		try
 		(
@@ -3484,7 +3523,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theType=dragNode.tag.value.type
 
 					-- Dabelow vray5 / cameraOverscan / nukeExport / aeExport / Dabelow vray6
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray6RenderElements") or (theType=="vray5") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray5") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it

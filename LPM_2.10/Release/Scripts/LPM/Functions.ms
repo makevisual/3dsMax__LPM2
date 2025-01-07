@@ -116,6 +116,10 @@ fn destroyAllDialogs=
 		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
 		try(destroyDialog vray6PropsRoll)catch()				-- Dabelow vray6
 		try(destroyDialog vray6RenderElementsPropsRoll)catch()	-- Dabelow vray6
+
+		try(destroyDialog vrayPropsRoll)catch()					-- Dabelow vrayRenderElements
+		try(destroyDialog vrayRenderElementsPropsRoll)catch()	-- Dabelow vrayRenderElements
+
 		try(destroyDialog cameraOverscanPropsRoll)catch()		-- Dabelow cameraOverscan
 		try(destroyDialog nukeExportPropsRoll)catch()			-- Dabelow nukeExport
 		try(destroyDialog aeExportPropsRoll)catch()				-- Dabelow aeExport
@@ -230,6 +234,9 @@ fn setIcon theNode=
 
 			"vray6RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 58 59 	-- Dabelow vray6
 			"vray6":LPM_Fun.setImageIndex theNode theNode.tag.value.active 60 61 				-- Dabelow vray6
+
+			"vrayRenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 62 63 	-- Dabelow vrayRenderElements 
+			
 		)
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
 ),
@@ -276,6 +283,7 @@ fn passByNode theNode =
 			"vray5RenderElements":theNode.parent.tag.value 		-- Dabelow vray5
 			"vray6":theNode.parent.tag.value 					-- Dabelow vray6
 			"vray6RenderElements":theNode.parent.tag.value 		-- Dabelow vray6
+			"vrayRenderElements":theNode.parent.tag.value 		-- Dabelow vrayrenderelements
 			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
 			"nukeExport":theNode.parent.tag.value 				-- Dabelow nukeExport
 			"aeExport":theNode.parent.tag.value 				-- Dabelow aeExport
@@ -611,6 +619,7 @@ fn createNode pName type=
 		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA 	-- Dabelow vray5
 		"vray6":custAttributes.add theNode vray6PropsCA 								-- Dabelow vray6
 		"vray6RenderElements":custAttributes.add theNode vray6RenderElementsPropsCA 	-- Dabelow vray6
+		"vrayRenderElements":custAttributes.add theNode vrayRenderElementsPropsCA 		-- Dabelow vrayrenderelements
 		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
 		"nukeExport":custAttributes.add theNode nukeExportPropsCA 						-- Dabelow nukeExport
 		"aeExport":custAttributes.add theNode aeExportPropsCA 							-- Dabelow aeExport
@@ -959,6 +968,31 @@ fn createVray6RenderElementsProps theName=
 	cp.activeElement = #()
 
 	print "-- createVray6RenderElementsProps --"
+	print cp
+
+	cp
+),
+
+-- vrayRenderElements
+fn loadVrayRenderElementsSettings cp isPreviewMode=
+(
+	if isPreviewMode then ( return false )
+
+	LPM_SMTDSettings.active 	 		= cp.active
+	LPM_SMTDSettings.elementOverride 	= cp.elementOverride
+	LPM_SMTDSettings.activeElement 		= cp.activeElement
+),
+
+-- createVrayRenderElementsProps
+fn createVrayRenderElementsProps theName=
+(
+	cp=LPM_Fun.createNode theName "vrayRenderElements"
+
+	cp.active = true
+	cp.elementOverride = true
+	cp.activeElement = #()
+
+	print "-- createVrayRenderElementsProps --"
 	print cp
 
 	cp
@@ -1577,6 +1611,14 @@ fn generateVray6RenderElementsName cp=
 (
 	--theName = ( cp.type + " Override" )
 	theName = ( "VRay6 Render Elements Override" )
+	theName
+),
+
+-- Dabelow vrayRenderElements
+fn generateVrayRenderElementsName cp=
+(
+	--theName = ( cp.type + " Override" )
+	theName = ( "VRay Render Elements Override" )
 	theName
 ),
 

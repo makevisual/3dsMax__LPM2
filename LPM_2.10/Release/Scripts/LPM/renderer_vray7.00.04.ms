@@ -272,7 +272,7 @@ function Vray7_OptionRE_PreRender =
     --         if curElement.elementName   == arg_name then( return curElement )
     --     )
     -- )
-    
+
     -- function for applying metadata to all optionRE render elements in the scene
     function applyExrMetadataToAllOptionRes arg_string = (
 
@@ -295,15 +295,25 @@ function Vray7_OptionRE_PreRender =
         )
     )
 
-    -- Prep the metadata string
-    MAKE3dsMaxMetadata_maxFileName          = ( maxFileName as string )
-    MAKE3dsMaxMetadata_maxFilePath          = ( maxFilePath as string )
-    MAKE3dsMaxMetadata_localTime            = ( localTime as string )
-    MAKE3dsMaxMetadata_fileOutGamma         = ( fileOutGamma as string )
-    MAKE3dsMaxMetadata_rendOutputFilename   = ( rendOutputFilename as string )
-    MAKE3dsMaxMetadata_submitUsername       = ( sysInfo.username as string )
-    MAKE3dsMaxMetadata_submitComputername   = ( sysInfo.computername as string )
-    newStr = ( "MAKE3dsMaxMetadata_maxFileName = " + MAKE3dsMaxMetadata_maxFileName + "; MAKE3dsMaxMetadata_maxFilePath = " + MAKE3dsMaxMetadata_localTime + "; MAKE3dsMaxMetadata_fileOutGamma = " + MAKE3dsMaxMetadata_fileOutGamma + "; MAKE3dsMaxMetadata_rendOutputFilename = " + MAKE3dsMaxMetadata_rendOutputFilename + "; MAKE3dsMaxMetadata_submitUsername = " + MAKE3dsMaxMetadata_submitUsername + "; MAKE3dsMaxMetadata_submitComputername = " + MAKE3dsMaxMetadata_submitComputername )
+
+    newStr = ""
+
+    try( newStr += ( "MAKE3dsMaxMetadata_maxFileName = "                     + ( maxFileName as string ) )                                      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_maxFilePath = "                   + ( maxFilePath as string ) )                                      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_localTime = "                     + ( localTime as string ) )                                        )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_fileOutGamma = "                  + ( fileOutGamma as string ) )                                     )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_rendOutputFilename = "            + ( rendOutputFilename as string ) )                               )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_submitUsername = "                + ( sysInfo.username as string ) )                                 )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_submitComputername = "            + ( sysInfo.computername as string ) )                             )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_rendApertureWidth = "             + ( getRendApertureWidth() as string ) )                           )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_rendImageAspect = "               + ( getRendImageAspect() as string ) )                             )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_cameraFocalLenthMM = "            + ( LPM_Root.renderCamera.focal_length_mm as string ) )            )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_cameraShutterLenthFrames = "      + ( LPM_Root.renderCamera.shutter_length_frames as string ) )      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_cameraShutterOffsetFrames = "     + ( LPM_Root.renderCamera.shutter_offset_frames as string ) )      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_imageSampler_shadingRate = "+ ( renderers.current.imageSampler_shadingRate as string ) )      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_baseSubdivs = "    + ( renderers.current.twoLevel_baseSubdivs as string ) )      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_fineSubdivs = "    + ( renderers.current.twoLevel_fineSubdivs as string ) )      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_threshold = "      + ( renderers.current.twoLevel_threshold as string ) )      )catch()
 
     -- apply the metadata string to all option RE render elements
     applyExrMetadataToAllOptionRes newStr
