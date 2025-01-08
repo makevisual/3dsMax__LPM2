@@ -136,6 +136,13 @@ rollout vrayRenderElementsPropsRoll "VRay Render Elements Override 1.0" width:32
 		LVpopulate elementList filteredElements
  	)
 	
+	on vrayRenderElementsPropsRoll resized arg do
+	(
+
+		elementList.height = ( vrayRenderElementsPropsRoll.height - 34 )
+
+	)
+
 	on vrayRenderElementsPropsRoll close do
 	(
 		-- ca properties are set in the ItemChecked event, so every check operation updates the data
@@ -165,4 +172,4 @@ rcMenu rc_vrayRenderElementsPropsMenu
 	)
 	
 )
---createDialog vrayRenderElementsPropsRoll pos:(LPM_Fun.getRoPos  vrayRenderElementsPropsRoll.width)
+-- createDialog vrayRenderElementsPropsRoll pos:(LPM_Fun.getRoPos  vrayRenderElementsPropsRoll.width)

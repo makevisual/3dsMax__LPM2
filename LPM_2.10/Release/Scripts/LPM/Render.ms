@@ -1578,6 +1578,15 @@ struct LPM_RenderAPI
 						setProp it #castshadows objSetArray[i].intP[2]
 						setProp it #receiveshadows objSetArray[i].intP[3]
 						setProp it #primaryVisibility objSetArray[i].intP[4]
+
+						-- Special handling around vrayGausians
+						if classof it == VRayGaussiansGeom then(
+							
+							if objSetArray[i].intP[4] == 1 then()
+							if objSetArray[i].intP[4] == 2 then(it.affect_camera = on )
+							if objSetArray[i].intP[4] == 3 then(it.affect_camera = off )
+						)
+
 						setProp it #secondaryVisibility objSetArray[i].intP[5]
 						setProp it #motionBlurOn  objSetArray[i].intP[6]
 						setProp it #applyAtmospherics objSetArray[i].intP[7]
@@ -2597,6 +2606,13 @@ struct LPM_RenderAPI
 					theNode.castshadows=it[3]
 					theNode.receiveshadows=it[4]
 					theNode.primaryVisibility=it[5]
+
+					-- Special handling around vrayGausians
+					if ( classof theNode ) == VRayGaussiansGeom then(
+						if theNode.primaryVisibility == true then(theNode.affect_camera = on )
+						if theNode.primaryVisibility == false then(theNode.affect_camera = off )
+					)
+
 					theNode.secondaryVisibility=it[6]
 					theNode.motionBlurOn=it[7]
 					theNode.renderOccluded=it[8]
