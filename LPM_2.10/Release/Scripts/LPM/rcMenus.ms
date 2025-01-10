@@ -3259,22 +3259,22 @@ rcMenu rc_PassMenu
 		menuItem objectSetAdd "Object Set"
 		menuItem lightSetAdd "Light Set"
 		seperator set8
-		menuItem commonPropsAdd "Common Properties Override"
+		-- menuItem commonPropsAdd "Common Properties Override"
 		menuItem effectsPropsAdd "Element, Environment and Effects Override"
-		menuItem renderPropsAdd "Renderer Override"
-		menuItem deadlineAdd "Deadline Override" 								-- Dabelow
-		--menuItem vrayPropsAdd "Vray Override"
-		--menuItem VrayGIAdd "V-Ray GI"
-		--menuItem ModifierOverAdd "Modifier Override"
-		--menuItem AutoMaskAdd "AutoMask"
+		-- menuItem renderPropsAdd "Renderer Override"
+		-- menuItem deadlineAdd "Deadline Override" 								-- Dabelow
+		-- menuItem vrayPropsAdd "Vray Override"
+		-- menuItem VrayGIAdd "V-Ray GI"
+		-- menuItem ModifierOverAdd "Modifier Override"
+		-- menuItem AutoMaskAdd "AutoMask"
 		menuItem xrefObjAdd "Xref Object Override"
 		menuItem xrefSceneAdd "Xref Scene Override"
 		menuItem scriptAdd "Script"
 		seperator set5
-		menuItem vray5PropsAdd "Vray5 Override" 								-- Dabelow vray5
-		menuItem vray5RenderElementsPropsAdd "Vray5 RenderElement Override" 	-- Dabelow vray5
-		menuItem vray6PropsAdd "Vray6 Override" 								-- Dabelow vray6
-		menuItem vray6RenderElementsPropsAdd "Vray6 RenderElement Override" 	-- Dabelow vray6
+		-- menuItem vray5PropsAdd "Vray5 Override" 								-- Dabelow vray5
+		-- menuItem vray5RenderElementsPropsAdd "Vray5 RenderElement Override" 	-- Dabelow vray5
+		-- menuItem vray6PropsAdd "Vray6 Override" 								-- Dabelow vray6
+		-- menuItem vray6RenderElementsPropsAdd "Vray6 RenderElement Override" 	-- Dabelow vray6
 		menuItem vrayRenderElementsPropsAdd "Vray RenderElement Override" 	-- Dabelow vrayRenderElements
 	)
 	seperator set10
