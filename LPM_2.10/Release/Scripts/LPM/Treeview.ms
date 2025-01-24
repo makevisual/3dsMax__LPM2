@@ -1172,6 +1172,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 	)
 
+
+
+
 	fn updateCameraDDL=
 	(
 		--camera
@@ -1234,7 +1237,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	(
 		tv.nodes.clear()
 		fillInTreeView tv
-		UpdateButtons tv.selectedNode
 	)
 
 	fn AddScriptOverride =
@@ -1340,7 +1342,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		thePassNode=tv.selectedNode.parent
 		addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -1355,7 +1356,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		thePassNode=tv.selectedNode.parent
 		addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -1366,7 +1366,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		thePassNode=tv.selectedNode.parent
 		addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -1503,7 +1502,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			LPM_LightSetPropsBuff.expanded = theLightSet.expanded
 		)
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -1539,7 +1537,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			theLightSet.expanded = LPM_LightSetPropsBuff.expanded
 		)
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -1822,14 +1819,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			max undo
 			LPM_treeview_rollout.updateTV()
-
-			try
-			(
-				LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
-			)
-			catch
-			(
-			)
 		)
 	)
 
@@ -2096,12 +2085,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						)
 					)
 					LPM_treeview_rollout.updateTV()
-					try
-					(
-						LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
-					)
-					catch()
-
 					LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 				)
 			)
@@ -2189,11 +2172,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			(
 				max unhide all
 			)
-		)
-
-		if hitNode != undefined then
-		(
-			UpdateButtons hitNode
 		)
 
 		if hitNode != undefined then
@@ -2710,14 +2688,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		 dragnode=arg.item
 
 		 -- Dabelow Vray5 / cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
-		 it=arg.item.tag.value.type
-		 if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
-			tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
-		try
-		(
-			LPM_treeview_rollout.UpdateButtons dragnode
-		)
-		catch()
+		it=arg.item.tag.value.type
+		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
+		tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 	 )
 
 	 -- INSIDE Drag and Drop

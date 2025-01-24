@@ -2460,7 +2460,6 @@ rollout setPicker "Pick the Set"
 		thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 		LPM_treeview_rollout.addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 )
@@ -2492,7 +2491,6 @@ rollout matPicker "Pick the Material"
 		thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 		LPM_treeview_rollout.addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 )
@@ -2553,7 +2551,6 @@ rollout layerPicker "Pick Layers" height:420 width:200
 		thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 		LPM_treeview_rollout.addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -3230,7 +3227,6 @@ rcmenu rc_shotPassMenu
 			deleteItem theShot.passes index
 			deleteItem theSHot.passesOn index
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.fillInTreeView LPM_treeview_rollout.tv -- DABELOW
@@ -3786,7 +3782,6 @@ rcMenu rc_commonPropsMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -3862,7 +3857,6 @@ rcMenu rc_LPMVrayGIMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -3898,7 +3892,6 @@ rcMenu rc_AutoMaskMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4016,7 +4009,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4030,7 +4022,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4044,7 +4035,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4058,7 +4048,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4072,7 +4061,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4121,7 +4109,6 @@ rcMenu rc_ObjectSetMenu
 			theObjectSet=theObjectSetNode.tag.value
 			delete theObjectSet
 			theObjectSetNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4202,7 +4189,6 @@ rcMenu rc_matMenu
 			LPM_Fun.pruneArray theParent.mats theObj.leaf
 
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4236,7 +4222,6 @@ rcMenu rc_objectMenu
 			LPM_Fun.pruneArray theParent.nodes theObj.leaf
 
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4267,7 +4252,6 @@ rcMenu rc_layerMenu
 
 			LPM_Fun.pruneArray theParent.layers theObj.leaf
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4328,7 +4312,6 @@ rcMenu rc_wildCardMenu
 
 			theParent.wildcard=(for i=1 to theParent.wildCard.count where i!=theObj.index collect theParent.wildCard[i])
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4353,7 +4336,6 @@ rcMenu rc_namedSetMenu
 
 			theParent.namedSet=(for i=1 to theParent.namedSet.count where i!=theObj.index collect theParent.namedSet[i])
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4388,7 +4370,6 @@ rcMenu rc_xrefObj
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4428,7 +4409,6 @@ rcMenu rc_xrefScene
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4463,7 +4443,6 @@ rcMenu rc_photoStudioMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 		)
 	)
@@ -4500,7 +4479,6 @@ rcMenu rc_scriptMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4556,7 +4534,6 @@ rcMenu rc_ModifierOverMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4595,7 +4572,6 @@ rcMenu rc_atmPropsMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4645,7 +4621,6 @@ rcMenu rc_RenderPropsMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
