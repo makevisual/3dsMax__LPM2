@@ -3064,7 +3064,9 @@ rcMenu rc_shotMenu
 	menuItem renderShotNetwork "Submit Network"
 
 	seperator sepr4
+	menuItem duplicateShot "Duplicate Shot"
 	menuItem deleteShot "Delete Shot"
+
 
 
 	on AddCommon picked do
@@ -3169,6 +3171,15 @@ rcMenu rc_shotMenu
 		undo "LPM delete" on
 		(
 			LPM_treeview_rollout.deleteSelectedPass LPM_treeview_rollout.tv
+		)
+	)
+
+	on duplicateShot picked do
+	(
+		undo "LPM delete" on
+		(
+			LPM_treeview_rollout.duplicateSelectedShot LPM_treeview_rollout.tv
+			LPM_treeview_rollout.updateTV()
 		)
 	)
 

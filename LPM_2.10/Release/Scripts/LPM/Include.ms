@@ -1,4 +1,4 @@
-clearListener()
+
 global LPM_Dir = trimright (getThisScriptFilename()) "Include.ms"
 -- getFilenamePath( getThisScriptFilename() )
 
@@ -23,3 +23,4 @@ print LPM_VersionNumber
 --Set Fileoutput Path Token String to default
 LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass\\$APass$Pass"
 LPM_Root.renderType = 3 -- Force to shots
+-- Hello
