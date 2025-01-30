@@ -814,7 +814,6 @@ attribID:#(0x426c7db3, 0x343c98d9)
 			)
 			else
 			(
-				print "Could not find an appropriate container"
 				return false
 			)
 

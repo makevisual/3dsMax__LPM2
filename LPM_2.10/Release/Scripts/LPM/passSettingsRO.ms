@@ -158,7 +158,6 @@ rollout passSettingsRO "Pass Settings" width:264 height:380
 				try
 				(
 					thePass.AdjustmentFor = passArray[ddlAdjustmentFor.selection-1]
-					print thePass.AdjustmentFor 
 				)
 				catch
 				(

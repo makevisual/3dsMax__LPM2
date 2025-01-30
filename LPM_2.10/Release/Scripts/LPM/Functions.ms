@@ -1,34 +1,3 @@
-/*
-Lukas Lepicovsky
-L Pass Manager
-lukashi@gmail.com
-www.lukashi.com 
-
-
-    Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
-
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-
-	Modified by aaron dabelow ( http://aarondabelow.com/ ) for MAKE  ( http://makevisual.com/ )  2015-present
-
-
-*/
 
 Struct LPM_Fun_Struct
 (
@@ -91,7 +60,6 @@ fn destroyAllDialogs=
 
 	if(LPM_LoadingPreset!=true) and (callbacks.notificationParam()!=2) then
 	(
-		print "Close LPM Callback"
 		--try destroying all dialogs
 
 		try(destroyDialog LPM_renderRo)catch()
@@ -628,8 +596,6 @@ fn createNode pName type=
 
 	pName="LPM_"+pName
 
-	print thenNode
-
 	theNode.type=type
 
 	if(type=="pass") or (type=="shot") or (type=="passGroup") then
@@ -643,8 +609,6 @@ fn createNode pName type=
 		)
 	else
 		theNode.name=pName
-
-	-- 	print theNode
 
 	theNode
 ),
@@ -760,8 +724,6 @@ fn createCommonProps theName=
 fn loadVraySettings cp isPreviewMode=
 (
 	r = renderers.current
-
-	print isPreviewMode
 
 	if (isPreviewMode and cp.qualityType == 2) or (not isPreviewMode and cp.qualityType == 3) then
 	(
@@ -891,9 +853,6 @@ fn createVray5RenderElementsProps theName=
 	cp.elementOverride = true
 	cp.activeElement = #()
 
-	print "-- createVray5RenderElementsProps --"
-	print cp
-
 	cp
 ),
 
@@ -967,9 +926,6 @@ fn createVray6RenderElementsProps theName=
 	cp.elementOverride = true
 	cp.activeElement = #()
 
-	print "-- createVray6RenderElementsProps --"
-	print cp
-
 	cp
 ),
 
@@ -991,9 +947,6 @@ fn createVrayRenderElementsProps theName=
 	cp.active = true
 	cp.elementOverride = true
 	cp.activeElement = #()
-
-	print "-- createVrayRenderElementsProps --"
-	print cp
 
 	cp
 ),
@@ -2406,7 +2359,7 @@ fn renderSubmit mode netRenderSettings:undefined=
 	for i=1 to renderCollect.count where flag do
 	(
 		LPM_Fun.renderBarProgress=(100*(i-1))/renderCollect.count
-			print  mode
+
 			if mode==#hwPreview then
 			(
 				LPM_hardwareRender renderCollect[i][1] theShot:renderCollect[i][2]

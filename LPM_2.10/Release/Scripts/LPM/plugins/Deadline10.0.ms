@@ -1,4 +1,3 @@
---clearListener()
 --print ( timestamp() )
 
 global SMTDSettings, SMTDFunctions, SMTDIdiotCheck, SMTDLPMInterface, LPM_deadlineInfo
@@ -556,7 +555,6 @@ struct LPM_DeadlineAPI
 			-- run the idiot checks
 			fn idiotCheck_run =
 			(
-				print "Running Idiot Checks"
 
 				ts = timeStamp()
 
@@ -1371,7 +1369,6 @@ struct LPM_DeadlineAPI
 			-- Handles the submission of a job
 			fn submit =
 			(
-  				-- clearListener()
 				-- Disable viewport and UI as much as possible, save settings, and handle other initializing
   				SMTDLPMInterface.submit_preAction()
 

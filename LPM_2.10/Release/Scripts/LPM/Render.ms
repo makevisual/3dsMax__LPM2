@@ -1635,27 +1635,27 @@ struct LPM_RenderAPI
 
 				-- Common props Prescript Adjustment pass
 
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-					psCP=LPM_fun.firstChildByType  theAdjustmentPass "commonProps"
-
-					if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active) then
-					(
-						global LPMData = #(thePass,theShot)
-						usePreRendScript = true
-						preRendScript = psCp.preScript
-					)
-
-					if(psCP!=undefined) and (psCp.usePostScript) and (psCP.active)  then
-					(
-						global LPMData = #(thePass,theShot)
-						usePostRendScript = true
-						postRendScript  = psCp.postScript
-					)
-
-					LPM_Render.execScriptNodes theAdjustmentPass #preRender
-				)
+--				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
+--				(
+--					theAdjustmentPass = thePass.AdjustmentFor
+--					psCP=LPM_fun.firstChildByType  theAdjustmentPass "commonProps"
+--
+--					if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active) then
+--					(
+--						global LPMData = #(thePass,theShot)
+--						usePreRendScript = true
+--						preRendScript = psCp.preScript
+--					)
+--
+--					if(psCP!=undefined) and (psCp.usePostScript) and (psCP.active)  then
+--					(
+--						global LPMData = #(thePass,theShot)
+--						usePostRendScript = true
+--						postRendScript  = psCp.postScript
+--					)
+--
+--					LPM_Render.execScriptNodes theAdjustmentPass #preRender
+--				)
 
 				-- Common props  Prescript
 				psCP=LPM_fun.firstChildByType  thePass "commonProps"
@@ -1739,12 +1739,16 @@ struct LPM_RenderAPI
 
 				------------- DISPATCH START -------------
 				-- Render dispatch is an API added by Aaron Dabelow to make it easier to implement additional render engines and render
-				-- engine versions.  This pare collects the pass, and they type of render action requested, and then calles the dispatch
+				-- engine versions.  This pare collects the pass, and the type of render action requested, and then calls the dispatch
 				-- the dispatch identifies the current renderer, and then loads the appropriate dispatch plugin to execuate the code.
 
 				LPM_RenderDispatchThePass 	= thePass
 				LPM_RenderDispatchAction 	= #preRender
 				if isPreviewMode == true then ( LPM_RenderDispatchAction = #PreviewRender )
+
+
+				-- TODO: finish other implementations here
+				
 
 				-- cameraOverscan Hook --
 				-- TODO: finish the camera hooks
@@ -1764,6 +1768,15 @@ struct LPM_RenderAPI
 						filein (LPM_Dir+"operator_cameraOverscan.ms")
 					)
 				)
+
+
+
+
+
+
+
+
+
 
 				-- render dispatch --
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments

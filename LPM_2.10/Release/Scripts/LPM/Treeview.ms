@@ -349,7 +349,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- add each of the nodes to a list to clone
 		curNodes = #()
 		for jt in (LPM_Fun.getAllChildren theNode.tag.value) do (append curNodes jt)
-		print curNodes
 		-- Clone the nodes
 		maxOps.cloneNodes curNodes cloneType:#copy newNodes:&nnl #nodialog
 	)

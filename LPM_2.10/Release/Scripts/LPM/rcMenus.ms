@@ -2674,7 +2674,6 @@ rcMenu rc_MainMenu
 
 		nukeScriptDir = getOpenFileName \
 		types:"Nuke Scripts(*.nk)"
-		print nukeScriptDir
 		if nukeScriptDir != undefined then
 		(
 			try
@@ -3360,7 +3359,6 @@ rcMenu rc_PassMenu
 		gc light:true delayed:false
 		thePass=LPM_treeview_rollout.tv.selectedNode.tag.value
 		fname= LPM_Fun.getPreviewFile thePass
-		print fName
 		theBM=undefined
 		if((getfiles fname).count != 0) then
 		(

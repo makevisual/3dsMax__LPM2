@@ -171,7 +171,6 @@ struct LPM_modifyObjectOperator
 			)
 			on deleteMe picked do
 			(
-				print this
 				LPM_Operators.fnDeleteOperatorByNode this.INode
 			)
 		)

@@ -100,7 +100,7 @@ struct LPM_operatorAPI
 	fn fnLoadOperators = 
 	(
 		operatorFiles = getFiles ((getdir #MAXROOT)+"macroscripts\\LPM\\operators\\*.ms")
-		print operatorFiles
+
 		for op in operatorFiles do
 		(
 			filein op

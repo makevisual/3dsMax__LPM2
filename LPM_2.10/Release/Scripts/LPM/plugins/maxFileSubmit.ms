@@ -83,7 +83,6 @@ struct LPM_MaxFileSubmitAPI
                             catch
                             (
                             )
-                            print "Save as previus Max version error!!!"
                             
                             saveMaxFile theFileName useNewFile:false quiet:true 
                         )
@@ -120,7 +119,6 @@ struct LPM_MaxFileSubmitAPI
 
                         if(LPM_Root.runBatch) then
                         (
-                            print theCommand
                             doscommand  ("\"" +batFileName+ "\"")
                         )
                     

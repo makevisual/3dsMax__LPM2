@@ -2,6 +2,9 @@
 -- Included the depreciated function for any possible future use
 -- 11/05/2024 Aaron Dabelow theonlyaaron@gmail.com
 
+---------- CLASSES ----------
+-- Object to hold all the restore data
+
 struct Vray7_RestoreDataStr
 (
     -- Scene specific properties
@@ -21,6 +24,9 @@ struct Vray7_RestoreDataStr
 
     -- Vray7 Render Element Override
     vrayVFBElementStates    = undefined,
+
+    -- Vray7 Render Elements Active
+    renderElements_active   = undefined,
 
     -- Vray7 Render Override
     qualityType             = undefined,
@@ -52,41 +58,48 @@ struct Vray7_RestoreDataStr
     dmc_check               = undefined,
     dmcThresh               = undefined,
     dmcMult                 = undefined
- )
+)
 
+---------- GLOBAL SWITCHES ----------
+---------- Prerender Global
+
+-- For  using vray 7, do these actions
 function Vray7_Globals_Override_PreRender =
 (
-    -- Fetch the global variable and assign the current state to it
-    Vray7_RestoreData = LPM_RenderDispatchRestoreData
+    -- Disable the interactive renderer if it is running.
+    vrayStopIPR()
 
-    Vray7_RestoreData.output_on           = renderers.current.output_on
+    -- Fetch the global variable and assign the current state to it
+    Vray7_RestoreData                      = LPM_RenderDispatchRestoreData
+    Vray7_RestoreData.output_on            = renderers.current.output_on
 
     -- stores the vray vfb output path, if one is not set, then and empty string is stored instead
     if renderers.current.output_rawFileName == undefined
     then ( Vray7_RestoreData.output_rawFileName  = "" )
     else ( Vray7_RestoreData.output_rawFileName  = renderers.current.output_rawFileName )
 
-    Vray7_RestoreData.output_saveRawFile  = renderers.current.output_saveRawFile
-    Vray7_RestoreData.output_splitgbuffer = renderers.current.output_splitgbuffer
-    Vray7_RestoreData.output_genpreview   = renderers.current.output_genpreview
-    Vray7_RestoreData.output_useram       = renderers.current.output_useram
-    Vray7_RestoreData.rendShowVFB         = rendShowVFB
-    Vray7_RestoreData.rendSaveFile        = rendSaveFile
-    Vray7_RestoreData.rendUseActiveView   = rendUseActiveView
-    Vray7_RestoreData.regionDimensions    = (vfbControl #getregion )
+    -- stores various other output and frame buffer settings
+    Vray7_RestoreData.output_saveRawFile        = renderers.current.output_saveRawFile
+    Vray7_RestoreData.output_splitgbuffer       = renderers.current.output_splitgbuffer
+    Vray7_RestoreData.output_genpreview         = renderers.current.output_genpreview
+    Vray7_RestoreData.output_useram             = renderers.current.output_useram
+    Vray7_RestoreData.rendShowVFB               = rendShowVFB
+    Vray7_RestoreData.rendSaveFile              = rendSaveFile
+    Vray7_RestoreData.rendUseActiveView         = rendUseActiveView
+    Vray7_RestoreData.regionDimensions          = (vfbControl #getregion )
+
+    -- Active render elements empty for now, they are populated in the render elements prerender function
+    Vray7_RestoreData.renderElements_active     = #() -- active render elements
 
     -- Scene properties 
     Vray7_RestoreData.matEditor_open    = MatEditor.isOpen() 
-
-    -- SMTD Settings
-    SMTDSettings.LimitGroupsToUse
 
     -- Fetch, parse and make the output directory
     thePath=getFilenamePath rendOutputFilename
     theFile=getFilenameFile rendOutputFilename
     theType=getFilenameType rendOutputFilename
 
-    -- Makes the directory
+    -- Makes the output directory
     makeDir thePath
 
     -- Set the properties to their desired values
@@ -108,8 +121,19 @@ function Vray7_Globals_Override_PreRender =
     if renderers.current.imageSampler_type == 3
     then( renderers.current.output_useram = true )
     else( renderers.current.output_useram = false )
+
+    ---- Auto assign the correct deadline limit if deadline has been initialized ----
+    if SMTDSettings.LimitGroupsToUse != undefined 
+    then(
+        append SMTDSettings.LimitGroupsToUse "v-ray 7"                                  -- adds "v-ray 7" to the list of limits
+        SMTDSettings.LimitGroupsToUse = (makeUniqueArray SMTDSettings.LimitGroupsToUse) -- Removes any duplicates from the list
+    )else()
+
+    -- print("SHOW Vray7_RestoreData")
+    -- show(Vray7_RestoreData)
 )
 
+---------- Postrender Global
 function Vray7_Globals_Override_PostRender =
 (
     -- Get the restore data from global variable
@@ -130,18 +154,29 @@ function Vray7_Globals_Override_PostRender =
     if Vray7_RestoreData.matEditor_open then (MatEditor.Open())
 )
 
-function Vray7_Globals_Override_Preview_PreRender =
-(
-    --Builds an empty struct and and marks the RestorePoint flag as false
-    Vray7_RestoreData = LPM_RenderDispatchRestoreData
-)
+---------- RENDER ELEMENTS OPERATOR ----------
+---------- Prerender Render Elements
 
 function Vray7_RE_Override_PreRender =
 (
     print "= Vray7 Vray7_RE_Override_PreRender ="
 
-    -- Disable the interactive renderer if it is running.
-    vrayStopIPR()
+    -- localize this variable
+    Vray7_RestoreData = LPM_RenderDispatchRestoreData
+
+    -- print("LPM_RenderDispatchThePass")
+    -- print("     " + ( LPM_RenderDispatchThePass ) as string )
+
+    -- print("The Render Elements Node")
+    -- vray6RenderElementsNode = LPM_Fun.firstChildByType LPM_RenderDispatchThePass "vray6RenderElements"
+    -- print("     " + ( vray6RenderElementsNode ) as string )
+    -- print("     " + ( vray6RenderElementsNode.activeElement ) as string )
+
+
+
+
+
+
 
     -- object for holding render element states
     struct elementObjStr
@@ -160,8 +195,6 @@ function Vray7_RE_Override_PreRender =
     (
         -- Try Catch added for non v-ray supported render elements, or vrayAlpha render element
         try(
-            curEnabled = false
-
             curElement = ( re.GetRenderElement i )
             elementObj = elementObjStr()
 
@@ -173,27 +206,27 @@ function Vray7_RE_Override_PreRender =
         )catch()
     )
 
+    print("EXISTING ELEMENTS")
+    print("     "+ existingElements as string)
 
-    ---- Auto assign the correct deadline limit ----
-    
-    try(
-        -- make a new empty list
-        newList = #()
 
-        -- loop through existing SMTD Settings limits ( set by user / submitter )
-        for limit in SMTDSettings.LimitGroupsToUse do 
-            
-            -- add to the new empty list, if it is not v-ray 6 - effectivly removing that limit from the list 
-            if limit != "v-ray 6" then append newlist limit 
 
-        -- add v-ray 7 to the limit list, and remove any duplicates
-        append newlist "v-ray 7"
-        makeUniqueArray newList
 
-        -- set the SMTD Settings limit to the newly filtered list 
-        SMTDSettings.LimitGroupsToUse = newlist
-    )
-    catch( print"SMTD Settings have not been imported!")
+    -- TODO: Why is this object not accessible?
+    -- Store the existing elements and their enable state toe be turned back on later
+
+    print("is Vray7_RestoreData available here?")
+    print(Vray7_RestoreData as string)
+
+
+
+
+    -- TODO: Turn These on
+    -- vray6RenderElementsNode.activeElement
+
+
+
+
 
     -- Store the collected data for later restoration
     LPM_RenderDispatchRestoreData.vrayVFBElementStates = existingElements
@@ -234,6 +267,7 @@ function Vray7_RE_Override_PreRender =
     )
 )
 
+---------- Postrender Render Elements
 function Vray7_RE_Override_PostRender =
 (
     -- print "= Vray7 Vray7_RE_Override_PostRender ="
@@ -248,32 +282,11 @@ function Vray7_RE_Override_PostRender =
     )
 )
 
-function Vray7_Override_PreRender =
+
+---------- UTILITIES ----------
+-- Add additional metadata to the .exr files through the option RE render element for vray
+function Vray7_OptionRE_CustomMetadata = 
 (
-
-)
-
-function Vray7_OptionRE_PreRender = 
-(
-
-    -- function for getting render element by name
-    -- function getRenderElementByName arg_name = (
-    --     
-    --     -- Get the render element manager
-    --     re                  = maxOps.GetCurRenderElementMgr()   
-    --     existingElements    = #()
-    --     
-    --     -- loop through the elemnts looking for the right one
-    --     for i in 0 to ( re.NumRenderElements() - 1 ) do         
-    --     (
-    --         curElement                  = ( re.GetRenderElement i )
-    --         
-    --         -- return the element if its name matches the arg_name
-    --         if curElement.elementName   == arg_name then( return curElement )
-    --     )
-    -- )
-
-    -- function for applying metadata to all optionRE render elements in the scene
     function applyExrMetadataToAllOptionRes arg_string = (
 
         -- Get the render element manager
@@ -295,7 +308,6 @@ function Vray7_OptionRE_PreRender =
         )
     )
 
-
     newStr = ""
 
     try( newStr += ( "MAKE3dsMaxMetadata_maxFileName = "                     + ( maxFileName as string ) )                                      )catch()
@@ -310,22 +322,16 @@ function Vray7_OptionRE_PreRender =
     try( newStr += ( "; MAKE3dsMaxMetadata_cameraFocalLenthMM = "            + ( LPM_Root.renderCamera.focal_length_mm as string ) )            )catch()
     try( newStr += ( "; MAKE3dsMaxMetadata_cameraShutterLenthFrames = "      + ( LPM_Root.renderCamera.shutter_length_frames as string ) )      )catch()
     try( newStr += ( "; MAKE3dsMaxMetadata_cameraShutterOffsetFrames = "     + ( LPM_Root.renderCamera.shutter_offset_frames as string ) )      )catch()
-    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_imageSampler_shadingRate = "+ ( renderers.current.imageSampler_shadingRate as string ) )      )catch()
-    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_baseSubdivs = "    + ( renderers.current.twoLevel_baseSubdivs as string ) )      )catch()
-    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_fineSubdivs = "    + ( renderers.current.twoLevel_fineSubdivs as string ) )      )catch()
-    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_threshold = "      + ( renderers.current.twoLevel_threshold as string ) )      )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_imageSampler_shadingRate = "+ ( renderers.current.imageSampler_shadingRate as string ) )       )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_baseSubdivs = "    + ( renderers.current.twoLevel_baseSubdivs as string ) )           )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_fineSubdivs = "    + ( renderers.current.twoLevel_fineSubdivs as string ) )           )catch()
+    try( newStr += ( "; MAKE3dsMaxMetadata_V-Ray_twoLevel_threshold = "      + ( renderers.current.twoLevel_threshold as string ) )             )catch()
 
     -- apply the metadata string to all option RE render elements
     applyExrMetadataToAllOptionRes newStr
-
-
 )
 
-function Vray7_Override_PostRender =
-(
-
-)
-
+-- Call all the prerender actions
 function curPrerenderAction =
 (
     print "== Vray7 PreRenderAction =="
@@ -334,30 +340,18 @@ function curPrerenderAction =
     LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
 
     -- call each of the prerender functions
-    Vray7_Globals_Override_PreRender()
-    Vray7_RE_Override_PreRender()
-    Vray7_OptionRE_PreRender()
-    Vray7_Override_PreRender()
+    Vray7_Globals_Override_PreRender()  -- For all global actions
+    Vray7_RE_Override_PreRender()       -- For all Render Elements Operator
+    Vray7_OptionRE_CustomMetadata       -- Add additional metadata to the .exr files through the option RE render element for vray
 )
 
-function curPreviewPrerenderAction =
-(
-    print "== Vray7 Preview PreRenderAction =="
-
-    -- Construct object for storing pre-render state for use for restoring later
-    LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
-    Vray7_RE_Override_PreRender()
-
-    -- call each of the prerender functions
-    Vray7_Globals_Override_Preview_PreRender()
-)
-
+-- Call all the post render actions
 function curPostRenderAction =
 (
+    print "== Vray7 PostRenderAction =="
+
     --Calls Data from the global to check the restorepoint flag
     Vray7_RestoreData = LPM_RenderDispatchRestoreData
-
-    -- print "== Vray7 PostRenderAction =="
 
     --Only runs the Post render action if Settings were altered in the prerender based on the restorepoint flag
     if LPM_RenderDispatchAction != #PreviewRender then
@@ -368,11 +362,13 @@ function curPostRenderAction =
 
      Vray7_RE_Override_PostRender()
     -- call each of the postrender functions
-
 )
 
--- print " Vray 5.1.3 sucsusfully called from RenderDispatch "
 
+---------- PROGRAM FLOW ---------- 
+-- These are the 3 Different ways that override can becalled, and it sends the correct function.
 if LPM_RenderDispatchAction == #preRender then curPrerenderAction()
+if LPM_RenderDispatchAction == #PreviewRender then curPrerenderAction()
 if LPM_RenderDispatchAction == #postRender then curPostRenderAction()
-if LPM_RenderDispatchAction == #PreviewRender then curPreviewPrerenderAction()
+
+-- print " Vray 5.1.3 sucsusfully called from RenderDispatch "

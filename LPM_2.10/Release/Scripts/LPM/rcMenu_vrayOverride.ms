@@ -179,7 +179,6 @@ rollout vrayPropsRoll "test Vray Overrides 1.1" width:370
 		LPM_treeview_rollout.tv.enabled=false
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
 		theNode=LPM_treeview_rollout.tv.selectedNode
-		print theNode
 		
 		qualityType.state = cp.qualityType
 		

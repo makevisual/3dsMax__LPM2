@@ -134,8 +134,6 @@ function Vray6_Globals_Override_Preview_PreRender =
 
 function Vray6_RE_Override_PreRender =
 (
-    print "= Vray6 Vray6_RE_Override_PreRender ="
-
     -- object for holding render element states
     struct elementObjStr
     (
@@ -212,7 +210,6 @@ function Vray6_RE_Override_PreRender =
         (
             -- try -- Try Catch for elements that do not have a .vrayVFB property, like vryaAlpha, that cannot render int the frame buffer
             (
-                print (curElement)
                 -- turn the render element off
                 curElement = ( re.GetRenderElement i )
                 curElement.vrayVFB = false
@@ -254,7 +251,6 @@ function Vray6_Override_PostRender =
 
 function curPrerenderAction =
 (
-    print "== Vray6 PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray6_RestoreDataStr()
@@ -268,7 +264,6 @@ function curPrerenderAction =
 
 function curPreviewPrerenderAction =
 (
-    print "== Vray6 Preview PreRenderAction =="
 
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray6_RestoreDataStr()

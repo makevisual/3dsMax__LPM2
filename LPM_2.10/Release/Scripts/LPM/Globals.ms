@@ -1,3 +1,6 @@
+-- Dear whoever reads this, I inherited this pile of globals, and wish it was not this way.
+-- I added a couple of my own, to be able to pass things between areas of the program out of shame, and confusion.
+
 global LPM_renderAPI
 global LPM_NetworkPlugins=#()
 global LPM_Fun

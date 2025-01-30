@@ -60,7 +60,6 @@ Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com
 					renderTypes=for it in RendererClass.classes  where (it!= RLF_Network_Renderer) and (it!=Missing_Renderer) collect it
 					renderPicker.items=for it in renderTypes collect (it as string)
 
-					print renderPicker.items 
 				)
 			)
 			createDialog LPM_rendererPicker pos:(LPM_Fun.GetRoPos LPM_rendererPicker.width)
