@@ -1,36 +1,3 @@
-/*
-Lukas Lepicovsky
-L Pass Manager
-lukashi@gmail.com
-www.lukashi.com
-
-
-    Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
-
-
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-
-
-
-*/
-
-
 rootCA = attributes root
 attribID:#(0x73921019, 0x018210301)
 version:2
@@ -127,10 +94,6 @@ attribID:#(0x83813919, 0x02155421)
 		UseCustomPath type:#boolean default:false
 		CustomPath type:#string default:"$Shot\\$APass$Pass$Element\\$APass$Pass$Element_"
 
-
-		isAdjustment type:#boolean default:false
-		AdjustmentFor type:#node
-
 		VRayRaw type:#boolean default:false
 		VRayRawFileType type:#integer default:1
 		VRayRawFull type:#boolean default:false
@@ -140,7 +103,6 @@ attribID:#(0x83813919, 0x02155421)
 		PostConvertCompression type:#integer default:3
 		PostConvertHalfFoat type:#boolean default:false
 		PostConvertDatawindow type:#boolean default:false
-
 	)
 )
 
@@ -208,29 +170,6 @@ attribID:#(0x21912344, 0x01013380)
 	)
 )
 
-VRayGICA = attributes VRayGI
-attribID:#(0x24de5872, 0x3b5a78e9)
-(
-	parameters main
-	(
-		type type:#string
-		active type:#boolean default:true
-		WriteMode type:#boolean default:true
-		InputPass type:#node
-
-		IrMapOn type:#boolean default:false
-		IrmapMode type:#integer default:1
-		IrmapUseCamera type:#boolean default:false
-
-		LightCacheOn type:#boolean default:false
-		LightCacheMode type:#integer default:1
-		LightCacheUseCamera type:#boolean default:false
-
-		DontRenderFinal type:#boolean default:true
-	)
-)
-
-
 -- Dabelow
 deadlinePropsCA = attributes deadlineProps
 attribID:#(0x73e22a56, 0x439f0d00)
@@ -239,8 +178,6 @@ attribID:#(0x73e22a56, 0x439f0d00)
 	(
 		type type:#string
 		active type:#boolean default:true
--- 		initialized type:#boolean -- ??????????? Do I need this????????????
-
 		priorityOn type:#boolean default:false
 		priorityOffsetOn type:#boolean default:false
 		priorityOffset type:#integer default:0
@@ -453,34 +390,6 @@ attribID:#(0x31571798, 0x239ee7fe)
 		dmc_check type:#boolean
 			dmcThresh type:#float
 			dmcMult type:#float
-
-	)
-)
-
-
-AutoMaskCA = attributes AutoMask
-attribID:#(0x52ce8e55, 0x3829ed6b)
-(
-	parameters main
-	(
-		type type:#string
-		active type:#boolean default:true
-
-		layersOn type:#boolean default:false
-		layersRGB type:#boolean default:false
-		layers type:#stringTab tabSizeVariable:true
-
-		ObjectIDsOn type:#boolean default:false
-		ObjectIDsRGB type:#boolean default:true
-		ObjectIDs  type:#string default:"1,3,5-10"
-
-		MaterialIDsOn type:#boolean default:false
-		MaterialIDsRGB type:#boolean default:true
-		MaterialIDs  type:#string default:"1,3,5-10"
-
-		nodesOn type:#boolean default:false
-		nodesRGB type:#boolean default:false
-		nodes type:#nodeTab tabSizeVariable:true
 
 	)
 )
@@ -872,14 +781,6 @@ attribID:#(0x426c7db3, 0x343c98d9)
 	)
 )
 
-
-
-
-
-
-
-
-
 ModifierOverCA = attributes ModifierOver
 attribID:#(0x46a023af, 0x761d5f73)
 (
@@ -894,8 +795,6 @@ attribID:#(0x46a023af, 0x761d5f73)
 
 	)
 )
-
-
 
 /*EXAMPLE
 x=point()
@@ -922,4 +821,3 @@ x.getValue "d1" 0
 x.getValue "e1" 0
 x.getValue "f1" 0
 x.getValue "g1" 0*/
-

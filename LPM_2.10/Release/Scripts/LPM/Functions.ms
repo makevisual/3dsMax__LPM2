@@ -76,10 +76,8 @@ fn destroyAllDialogs=
 		try(destroyDialog objectSetProps)catch()
 		try(destroyDialog lightSetProps) catch()
 		try(destroyDialog photoStudio_Ro) catch()
-		try(destroyDialog LPMVrayGI)catch()
-		try(destroyDialog AutoMaskRoll)catch()
-		try(destroyDialog deadlinePropsRoll)catch()	-- Dabelow
-		try(destroyDialog SMTDLPMInterface)catch()	-- Dabelow
+		try(destroyDialog deadlinePropsRoll)catch()				-- Dabelow
+		try(destroyDialog SMTDLPMInterface)catch()				-- Dabelow
 		try(destroyDialog vray5PropsRoll)catch()				-- Dabelow vray5
 		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
 		try(destroyDialog vray6PropsRoll)catch()				-- Dabelow vray6
@@ -127,36 +125,23 @@ fn setIcon theNode=
 	(
 		case theNode.tag.value.type of
 		(
-			"pass":
-			(
-				if theNode.tag.value.isAdjustment then
-				(
-					LPM_Fun.setImageIndex theNode theNode.tag.value.active 35 36
-				)
-				else
-				(
-					LPM_Fun.setImageIndex theNode theNode.tag.value.active 1 11
-				)
-
-			)
+			"pass":(LPM_Fun.setImageIndex theNode theNode.tag.value.active 1 11)
 			"objectSet":(
-								case (theNode.tag.value.intP[1]) of
-								(
-									1: LPM_Fun.setImageIndex theNode true 2 2
-									2: LPM_Fun.setImageIndex theNode true 12 12
-									3: LPM_Fun.setImageIndex theNode true 13 13
-								)
-
-							)
+				case (theNode.tag.value.intP[1]) of
+				(
+					1: LPM_Fun.setImageIndex theNode true 2 2
+					2: LPM_Fun.setImageIndex theNode true 12 12
+					3: LPM_Fun.setImageIndex theNode true 13 13
+				)
+			)
 			"lightSet":(
-								case theNode.tag.value.pEnable of
-								(
-									1: LPM_Fun.setImageIndex theNode true 3 3
-									2: LPM_Fun.setImageIndex theNode true 14 14
-									3: LPM_Fun.setImageIndex theNode true 15 15
-								)
-
-							)
+				case theNode.tag.value.pEnable of
+				(
+					1: LPM_Fun.setImageIndex theNode true 3 3
+					2: LPM_Fun.setImageIndex theNode true 14 14
+					3: LPM_Fun.setImageIndex theNode true 15 15
+				)
+			)
 			"wildCard": LPM_Fun.setImageIndex theNode true 6 6
 			"namedSet": LPM_Fun.setImageIndex theNode true 5 5
 			"layer": LPM_Fun.setImageIndex theNode true 4 4
@@ -167,45 +152,34 @@ fn setIcon theNode=
 			"vrayProps": LPM_Fun.setImageIndex theNode theNode.tag.value.active 44 45
 			"envProps": LPM_Fun.setImageIndex theNode theNode.tag.value.active 9 23
 			"root": LPM_Fun.setImageIndex theNode true 0 0
-
 			"generic":LPM_Fun.setImageIndex theNode theNode.tag.value.active 0 0
-
 			"shotRoot":LPM_Fun.setImageIndex theNode true 18 18
 			"shot":LPM_Fun.setImageIndex theNode theNode.tag.value.active 16 17
 			"ShotPass":LPM_Fun.setImageIndex theNode theNode.tag.value.active 1 11
 			"xrefObj":LPM_Fun.setImageIndex theNode theNode.tag.value.active 37 38
 			"xrefScene":LPM_Fun.setImageIndex theNode theNode.tag.value.active 19 39
 			"xrefLeaf":(
-								case theNode.tag.value.leaf[2] of
-								(
-									true: LPM_Fun.setImageIndex theNode true 20 20
-									false: LPM_Fun.setImageIndex theNode true 21 21
-								)
-							)
+				case theNode.tag.value.leaf[2] of
+				(
+					true: LPM_Fun.setImageIndex theNode true 20 20
+					false: LPM_Fun.setImageIndex theNode true 21 21
+				)
+			)
 			"photoStudio":LPM_Fun.setImageIndex theNode theNode.tag.value.active 25 26
 			"script":LPM_Fun.setImageIndex theNode theNode.tag.value.active 29 30
 			"passGroup":LPM_Fun.setImageIndex theNode theNode.tag.value.active 27 28
 			"ModifierOver":LPM_Fun.setImageIndex theNode theNode.tag.value.active 32 33
-			"VRayGI":LPM_Fun.setImageIndex theNode theNode.tag.value.active 40 41
-			"AutoMask":LPM_Fun.setImageIndex theNode theNode.tag.value.active 42 43
-			
-			--- This needs to be updated to the correct index for the icons / bitmaps .bmp to be correct
-
 			"Deadline":LPM_Fun.setImageIndex theNode theNode.tag.value.active 46 47 			-- Dabelow
-
 			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 	-- Dabelow vray5
 			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 				-- Dabelow vray5
-
 			"cameraOverscan":LPM_Fun.setImageIndex theNode theNode.tag.value.active 52 53  		-- Dabelow cameraOverscan
 			"nukeExport":LPM_Fun.setImageIndex theNode theNode.tag.value.active 54 55  			-- Dabelow nukeExport
 			"aeExport":LPM_Fun.setImageIndex theNode theNode.tag.value.active 56 57  			-- Dabelow aeExport
-
 			"vray6RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 58 59 	-- Dabelow vray6
 			"vray6":LPM_Fun.setImageIndex theNode theNode.tag.value.active 60 61 				-- Dabelow vray6
-
 			"vrayRenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 62 63 	-- Dabelow vrayRenderElements 
-			
 		)
+
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
 ),
 
@@ -244,8 +218,6 @@ fn passByNode theNode =
 			"photoStudio":theNode.parent.tag.value
 			"script":theNode.parent.tag.value
 			"ModifierOver":theNode.parent.tag.value
-			"VRayGI":theNode.parent.tag.value
-			"AutoMask":theNode.parent.tag.value
 			"Deadline":theNode.parent.tag.value 				-- Dabelow
 			"vray5":theNode.parent.tag.value 					-- Dabelow vray5
 			"vray5RenderElements":theNode.parent.tag.value 		-- Dabelow vray5
@@ -286,12 +258,9 @@ fn getAllChildren node=
 
 fn getObjectSetArrays thePass type &objNodes &objSetArray=
 (
-
 	i=0
 	objNodes=#()
 	objSetArray=#()
-
-	--collect object nodes array
 
 	for objSet in thePass.children where objSet.type==type do
 	(
@@ -306,11 +275,11 @@ fn getObjectSetArrays thePass type &objNodes &objSetArray=
 	--wildcard
 		for j=1 to objSet.wildCard.count do
 		(
-			try(
-					if(objSet.wildCard[j]!="") then
-						join tmpCollection (execute ("$"+objSet.wildCard[j]))
-					)
-					catch (messageBox ("wildCard Error"+getcurrentException()))
+		try(
+			if(objSet.wildCard[j]!="") then
+			join tmpCollection (execute ("$"+objSet.wildCard[j]))
+		)
+		catch (messageBox ("wildCard Error"+getcurrentException()))
 		)
 
 	-- Mats
@@ -382,8 +351,6 @@ fn saveRenderPreset =
 	(
 		Default_Scanline_Renderer: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32,33,34}
 		mental_ray_renderer: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32,33,34}
-	-- 		V_Ray_Adv_3_00_08: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32,33,34}
-	-- 		V_Ray_Adv_3_00_08: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32}
 		Default: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32}
 	)
 
@@ -420,7 +387,6 @@ fn optimizedLoadRenderPreset file =
 	for j in 1 to mods.count do
 	(
 		theMod = mods[j]
-		--theMod[1].enabled = false
 	)
 
 	------------------
@@ -430,10 +396,6 @@ fn optimizedLoadRenderPreset file =
 	for j in 1 to mods.count do
 	(
 		theMod = mods[j]
-		--theMod[1].enabled = theMod[2]
-		--theMod[1].enabledInViews = theMod[3]
-		--theMod[1].enabledInRenders = theMod[4]
-
 	)
 
 	enablerefmsgs()
@@ -467,8 +429,6 @@ fn saveRenderPresetNew =
 	(
 		Default_Scanline_Renderer: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32,33,34}
 		mental_ray_renderer: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32,33,34}
-	-- 		V_Ray_Adv_3_00_08: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32,33,34}
-	-- 		V_Ray_Adv_3_00_08: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32}
 		Default: renderpresets.Save 0 ((getdir #temp) +"\\temp.rps") #{32}
 	)
 
@@ -580,8 +540,6 @@ fn createNode pName type=
 		"passGroup":custAttributes.add theNode LPM_passGroupCA
 		"empty":custAttributes.add theNode LPM_emptyCA
 		"ModifierOver":custAttributes.add theNode ModifierOverCA
-		"VRayGI":custAttributes.add theNode VRayGICA
-		"AutoMask":custAttributes.add theNode AutoMaskCA
 		"Deadline":custAttributes.add theNode deadlinePropsCA 							-- Dabelow
 		"vray5":custAttributes.add theNode vray5PropsCA 								-- Dabelow vray5
 		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA 	-- Dabelow vray5
@@ -591,7 +549,6 @@ fn createNode pName type=
 		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
 		"nukeExport":custAttributes.add theNode nukeExportPropsCA 						-- Dabelow nukeExport
 		"aeExport":custAttributes.add theNode aeExportPropsCA 							-- Dabelow aeExport
-
 	)
 
 	pName="LPM_"+pName
@@ -656,18 +613,6 @@ fn createShot LPM_Root=
 		theProps.parent=shot
 		theProps.autoUpdateName=true
 		theProps.name=LPM_Fun.generateCommonPropName theProps
-
-		-- theProps=LPM_Fun.createCameraOverscanProps "Camera Overscan"
-		-- theProps.parent=shot
-		-- theProps.name=LPM_Fun.generateCameraOverscanName theProps
-
-		-- theProps=LPM_Fun.createNukeExportProps "Nuke Export"
-		-- theProps.parent=shot
-		-- theProps.name=LPM_Fun.generateNukeExportName theProps
-
-		-- theProps=LPM_Fun.createAeExportProps "AE Export"
-		-- theProps.parent=shot
-		-- theProps.name=LPM_Fun.generateAeExportName theProps
 
 		shot
 
@@ -750,7 +695,6 @@ fn loadVraySettings cp isPreviewMode=
 
 	if (cp.GI_check) then
 	(
-
 		r.environment_gi_on = cp.giSkylightOn
 		r.environment_gi_color = cp.giSkylightCol
 		r.environment_gi_color_multiplier = cp.giSkylightMult
@@ -783,7 +727,6 @@ fn loadVraySettings cp isPreviewMode=
 		r.dmc_earlyTermination_threshold = cp.dmcThresh
 		r.dmc_subdivs_mult = cp.dmcMult
 	)
-
 ),
 
 fn loadDeadlineSettings cp isPreviewMode= -- dabelow
@@ -1246,21 +1189,12 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 		CurDateArr[4] = "0" + CurDateArr[4]
 	)
 
-	----------------------------------   Date Token   --------------------------------------------------
-
+	-- Date Token
 	CurDate = CurDateArr[4] + "." + CurDateArr[2] + "." + CurDateArr[1]
 	pathString = replaceByString pathString "$Date" CurDate
 
-	----------------------------------   Date Token End  ----------------------------------------------
-
-	----------------------------------   Date Token   --------------------------------------------------
-
-
 	CurRDate = CurDateArr[1] + "." + CurDateArr[2] + "." + CurDateArr[4]
 	pathString = replaceByString pathString "$RDate" CurRDate
-
-	----------------------------------   Date Token End  ----------------------------------------------
-
 
 	if(maxFileName=="") then
 	(
@@ -1271,9 +1205,7 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 	(
 		pathString=replaceByString pathString "$Max" (substring maxFileName 1 (maxFileName.count - 4))
 
-
-		----------------------------------   Version Token   ----------------------------------------------
-
+		--   Version Token
 		NumbersArr = #("0","1","2","3","4","5","6","7","8","9")
 
 		CurrentfileName = maxFileName
@@ -1298,8 +1230,6 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 				pathString=replaceByString pathString "$Ver" ""
 			)
 		)
-
-		----------------------------------   Version Token  end ----------------------------------------------
 	)
 	if(theShot==undefined) then
 		pathString=replaceByString pathString "$Shot" ""
@@ -1312,22 +1242,7 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 		pathString+=ElementName
 	)
 	pathString = replaceByString pathString "$Element" elementName
-
-	if thePass.isAdjustment then
-	(
-		if thePass.AdjustmentFor != undefined then
-		(
-			pathString=replaceByString pathString "$APass" (LPM_Fun.getname thePass.AdjustmentFor.name)
-		)
-		else
-		(
-			pathString=replaceByString pathString "$APass" ""
-		)
-	)
-	else
-	(
-		pathString=replaceByString pathString "$APass" ""
-	)
+	pathString=replaceByString pathString "$APass" ""
 
 	if(previewMode) then
 		pathString="(Root)\\"+pathString
@@ -1347,8 +1262,8 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 			pathString += "_"
 		)
 	)
-	--gets rid of extraneous blackslashes
 
+	--gets rid of extraneous blackslashes
 	isUNC=false
 	if(pathString[1]=="\\" and pathString[2]=="\\") then
 		isUNC=true
@@ -1361,8 +1276,7 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 	pathString+=theArray[theArray.count]
 	if(isUNC) then pathString="\\\\"+pathString
 
-
-	--filetype----------------------------------------------------
+	--filetype
 	if(LPM_Root.fileType==undefined) then LPM_Root.fileType="exr"
 	theFileType=LPM_Root.fileType
 	cp=LPM_Fun.firstChildByType thePass "commonProps"
@@ -1469,13 +1383,6 @@ fn generatePassName thePass=
 (
 	tmpName = LPM_Fun.getName thePass.name
 
-	try( -- forgive me for the try catch -- Dabelow cameraOverscan
-		if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-		(
-			tmpName = "["+(LPM_Fun.getName (thePass.AdjustmentFor.name)) + "]" + tmpName
-		)
-	)catch()
-
 	tmpName
 ),
 
@@ -1517,7 +1424,6 @@ fn generateVray5PropName cp=
 (
 	theName = ""
 
-
 	if (cp.qualityType == 1) then
 	(
 		theName = "[Final/Prev] "
@@ -1528,8 +1434,7 @@ fn generateVray5PropName cp=
 	(
 		theName = "[Prev] "
 	)
-
-	theName += "Vray5 Override "
+		theName += "Vray5 Override "
 
 	if (cp.global_switches_check) then
 	(
@@ -1562,7 +1467,6 @@ fn generateVray5PropName cp=
 -- Dabelow vray6
 fn generateVray6RenderElementsName cp=
 (
-	--theName = ( cp.type + " Override" )
 	theName = ( "VRay6 Render Elements Override" )
 	theName
 ),
@@ -1663,7 +1567,6 @@ fn generateVrayPropName cp=
 (
 	theName = ""
 
-
 	if (cp.qualityType == 1) then
 	(
 		theName = "[Final/Prev] "
@@ -1735,138 +1638,6 @@ fn generateCommonPropName cp=
 	)
 	if(theName=="") then
 		theName="Common (Auto-Name)"
-	theName
-),
-
-fn GetVRayGIPath VRayGIobj =
-(
-	VRayGIPath = ""
-
-
-	if VRayGIobj.WriteMode then
-	(
-		thePass = VRayGIobj.parent
-		if thePass != undefined then
-		(
-			VRayGIPath = getfilenamepath (getPassPath LPM_Root thePass)
-			VRayGIPath += "GI\\"
-		)
-
-	)
-	else
-	(
-		thePass = VRayGIobj.InputPass
-		if thePass != undefined then
-		(
-			InputPassVRayGIObj = LPM_Fun.firstChildByType thePass "VRayGI"
-
-			if (InputPassVRayGIObj != undefined) then
-			(
-				VRayGIPath = getfilenamepath (getPassPath LPM_Root thePass)
-				VRayGIPath += "GI\\"
-			)
-		)
-
-	)
-
-	VRayGIPath
-),
-
-fn GetVRayGIFilesPath VRayGIobj =
-(
-	VRayGIIrMapFileName =""
-	VRayGILCFileName = ""
-
-	TmpPath = GetVRayGIPath VRayGIobj
-
-
-	if TmpPath != "" then
-	(
-		VRayGIIrMapFileName = TmpPath + "IrMap_.vrmap"
-		VRayGILCFileName = TmpPath + "LC_.vrlmap"
-	)
-
-	#(VRayGIIrMapFileName,VRayGILCFileName)
-),
-
-fn CheckVRayGIExist VRayGIobj =
-(
-	VRayGIIrMapExist = false
-	VRayGILCExist = false
-	TmpPath = GetVRayGIPath VRayGIobj
-
-	if TmpPath != "" then
-	(
-		TmpIrMapfiles = getFiles (TmpPath + "*.vrmap")
-		TmpLCfiles = getFiles (TmpPath + "*.vrlmap")
-
-		if TmpIrMapfiles.count != 0 then
-		(
-			VRayGIIrMapExist = true
-		)
-
-		if TmpLCfiles.count != 0 then
-		(
-			VRayGILCExist = true
-		)
-	)
-
-	#(VRayGIIrMapExist,VRayGILCExist)
-),
-
-fn generateVRayGIName VRayGIobj =
-(
-	IrmapModesArr = #("Single)", "Incremental)", "Animation: prerass)")
-	LCModesArr = #("Single)", "Fly-through)")
-
-	theName="V-Ray GI "
-
-	if VRayGIobj.WriteMode then
-	(
-		theName += "Write "
-
-		if VRayGIobj.IrMapOn then
-		(
-			theName += "(Ir map: " + IrmapModesArr[VRayGIobj.IrmapMode] + " "
-		)
-
-		if VRayGIobj.LightCacheOn then
-		(
-			theName += "(LC: " + LCModesArr[VRayGIobj.LightCacheMode]
-		)
-	)
-	else
-	(
-		theName += "Read "
-
-		TmpVRayGIExist = CheckVRayGIExist VRayGIobj
-
-		if VRayGIobj.IrMapOn then
-		(
-			if TmpVRayGIExist[1] then
-			(
-				theName += "(Ir map: FOUND) "
-			)
-			else
-			(
-				theName += "(Ir map: NOT FOUND) "
-			)
-
-		)
-
-		if VRayGIobj.LightCacheOn then
-		(
-			if TmpVRayGIExist[2] then
-			(
-				theName += "(LC: FOUND)"
-			)
-			else
-			(
-				theName += "(LC: NOT FOUND)"
-			)
-		)
-	)
-
 	theName
 ),
 
@@ -2279,70 +2050,6 @@ fn launchNetworkRender=
 (
 	filein (LPM_Dir+@"plugins\Deadline10.0.ms")
 	LPM_DeadlineAPI.submit()
-
-	
---	ProjRenderPathTest = CheckProjRenderPath()
---
---	if ProjRenderPathTest[1] then
---	(
---		ProjRenderPath = getProjRenderPath()
---		if ProjRenderPath != LPM_Root.rootDir then
---		(
---			if (queryBox "Saving directory is not correct. Continue?") then
---			(
---				if(maxfilepath=="") then
---				(
---					messagebox "Please save the max file before a net render"
---					return false
---				)
---
---				theNetworkType=LPM_Fun.getIni "Settings" "Network Type" string "Backburner"
---				plug=0
---				for it in LPM_NetworkPlugins where it.type==theNetworkType do
---					plug=it
---				if(plug==0) then
---				(
---					messagebox ("Could not find network submission plugin:"+theNetworkType)
---					return false
---				)
---
---				result=plug.submit()
---				if(result!=#SUCCESS) then
---				(
---					messagebox result
---				)
---			)
---		)
---		else
---		(
---				if(maxfilepath=="") then
---				(
---					messagebox "Please save the max file before a net render"
---					return false
---				)
---
---				theNetworkType=LPM_Fun.getIni "Settings" "Network Type" string "Backburner"
---				plug=0
---				for it in LPM_NetworkPlugins where it.type==theNetworkType do
---				plug=it
---				if(plug==0) then
---				(
---					messagebox ("Could not find network submission plugin:"+theNetworkType)
---					return false
---				)
---
---				result=plug.submit()
---				if(result!=#SUCCESS) then
---				(
---					messagebox result
---				)
---		)
---	)
---	else
---	(
---		messageBox ProjRenderPathTest[2]
---	)
-
 ),
 
 /*
@@ -2359,16 +2066,7 @@ fn renderSubmit mode netRenderSettings:undefined=
 	for i=1 to renderCollect.count where flag do
 	(
 		LPM_Fun.renderBarProgress=(100*(i-1))/renderCollect.count
-
-			if mode==#hwPreview then
-			(
-				LPM_hardwareRender renderCollect[i][1] theShot:renderCollect[i][2]
-			)
-			else
-			(
-				LPM_renderPass renderCollect[i][1] mode theShot:renderCollect[i][2] netRenderSettings:netRenderSettings
-			)
-
+		LPM_renderPass renderCollect[i][1] mode theShot:renderCollect[i][2] netRenderSettings:netRenderSettings
 		if(keyboard.escPressed) then flag=false
 	)
 ),
@@ -2459,8 +2157,7 @@ fn localRenderSubmit=
 	)
 ),
 
---PhotoStudio--------------------------------------------------------------------
------------------------------------------------------------------------------------
+--PhotoStudio
 fn createPhotoStudio theName=
 (
 	prop=LPM_Fun.createNode theName "photoStudio"

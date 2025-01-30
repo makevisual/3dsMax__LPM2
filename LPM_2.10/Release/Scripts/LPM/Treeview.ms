@@ -1,30 +1,4 @@
-/*
-Lukas Lepicovsky
-L Pass Manager
-lukashi@gmail.com
-www.lukashi.com
 
-
-    Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-
-	Modified by aaron dabelow ( http://aarondabelow.com/ ) for MAKE  ( http://makevisual.com/ )  2015 - 2024
-
-*/
 callbacks.removeScripts id:#closeLPM
 
 LPM_Callback="LPM_Fun.destroyAllDialogs()"
@@ -254,15 +228,15 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "ModifyObject"
 		getIconFromBitmap "ModifyObjectOff"
 		getIconFromBitmap "Node_group"
-		getIconFromBitmap "AdjPass"
-		getIconFromBitmap "AdjPassOff"
+		getIconFromBitmap "missing"
+		getIconFromBitmap "missing"
 		getIconFromBitmap "xrefObjProps"
 		getIconFromBitmap "xrefObjPropsOff"
 		getIconFromBitmap "xrefPropsOff"
-		getIconFromBitmap "VrayGI"
-		getIconFromBitmap "VrayGIOff"
-		getIconFromBitmap "Automask"
-		getIconFromBitmap "AutomaskOff"
+		getIconFromBitmap "missing"
+		getIconFromBitmap "missing"
+		getIconFromBitmap "missing"
+		getIconFromBitmap "missing"
 		getIconFromBitmap "vray"
 		getIconFromBitmap "vrayOff"
 		getIconFromBitmap "Deadline"
@@ -355,9 +329,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	fn makeItalic theNode=
 	(
-		-- print theNode --TODO: This was causing issues with the vray6 Render elements override
 		try(
-		
 			obj=theNode.tag.value
 			if(isValidNode obj) then
 		(
@@ -380,7 +352,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"leafXref": nodeName = ((getFilenameFile theNode.leaf[1])+(getFilenameType theNode.leaf[1]))
 			"commonProps": nodeName = (LPM_Fun.generateCommonPropName theNode)
 			"vrayProps": nodeName = (LPM_Fun.generateVrayPropName theNode)
-			"VRayGI": nodeName = (LPM_Fun.generateVRayGIName theNode)
 			"passRoot": nodeName = (	if(proMode==false) then "Passes (Maximum of 3)" else "Passes" )
 			"shotRoot": nodeName = (	if(proMode==false) then "Shots (Maximum of 2)" else "Shots" )
 
@@ -631,24 +602,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			makeItalic newModifierOver
 		)
 
-		for VRayGI in pmPass.children where VRayGI.type=="VRayGI" do
-		(
-			newVRayGI=createTVnode newPass VRayGI nodeType:"VRayGI"
-
-			newVRayGI.ForeColor = FontColor
-			newVRayGI.BackColor = BackColor
-			makeItalic newVRayGI
-		)
-
-		for AutoMask in pmPass.children where AutoMask.type=="AutoMask" do
-		(
-			newAutoMask=createTVnode newPass AutoMask nodeType:"AutoMask"
-
-			newAutoMask.ForeColor = FontColor
-			newAutoMask.BackColor = BackColor
-			makeItalic newAutoMask
-		)
-
  		-- Dabelow
 		for Deadline in pmPass.children where Deadline.type=="Deadline" do
 		(
@@ -845,7 +798,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 				newPG.expand()
 		)
 
-
 		for pmPass in LPM_Root.children where pmPass.type=="pass" do
 		(
 			count+=1
@@ -919,9 +871,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			if(isvalidnode thePass) then
 			(
 				lMan=layerManager
-
-
-				if (thePass.hideMode >1)and(not thePass.isAdjustment) then
+				if (thePass.hideMode >1) then
 				(
 
 					for i=0 to (lMan.count-1) do
@@ -944,21 +894,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					(
 						it.ishidden = val
 
-						try
-						(
-
-							it.enabled=(not val)
-						)
-						catch()
-						try
-						(
-
-							it.on=(not val)
-						)
-						catch()
+						try(it.enabled=(not val))catch()
+						try(it.on=(not val))catch()
 					)
 				)
-
 
 				--collect object nodes array
 				objNodes=#()
@@ -1171,22 +1110,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 	)
 
-	fn hideByActivePass=
+	fn hideByActivePass =
 	(
-		if(isvalidnode LPM_activePass) then
-		(
-			if LPM_activePass.isAdjustment and (isvalidnode LPM_activePass.AdjustmentFor) then
-			(
-				hideByPass  LPM_activePass.AdjustmentFor
-			)
-			hideByPass  LPM_activePass
-		)
+		if(isvalidnode LPM_activePass) then(hideByPass  LPM_activePass)
 	)
 
-
-
-
-	fn updateCameraDDL=
+	fn updateCameraDDL =
 	(
 		--camera
 		cameraList=#(("Active Viewport:"+(substring (viewport.getType() as string) 6 -1)))
@@ -1265,16 +1194,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	fn AddModifierOverride =
 	(
 		createdialog ModifierOverRollout pos:(LPM_Fun.getRoPos  ModifierOverRollout.width)
-	)
-
-	fn EditVrayGI =
-	(
-		createDialog LPMVrayGI pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
-	)
-
-	fn EditAutoMask =
-	(
-		CreateDialog AutoMaskRoll style:#(#style_titlebar,#style_border, #style_sysmenu) pos:(LPM_Fun.getRoPos  250)
 	)
 
 	--Dabelow
@@ -1955,18 +1874,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							delete theNode
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
-						"VRayGI":
-						(
-							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-							delete theNode
-							LPM_treeview_rollout.tv.selectedNode.remove()
-						)
-						"AutoMask":
-						(
-							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-							delete theNode
-							LPM_treeview_rollout.tv.selectedNode.remove()
-						)
 						-- Dabelow
 						"Deadline":
 						(
@@ -2310,17 +2217,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						hitNode.tag.value.active= not hitNode.tag.value.active
 						LPM_Fun.setIcon hitNode
 					)
-					"VRayGI":
-					(
-						hitNode.tag.value.active= not hitNode.tag.value.active
-						LPM_Fun.setIcon hitNode
-					)
-					"AutoMask":
-					(
-						hitNode.tag.value.active= not hitNode.tag.value.active
-						LPM_Fun.setIcon hitNode
-					)
-
 					-- Dabelow
 					"Deadline":
 					(
@@ -2599,9 +2495,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							op.fnPerformAction #rightClick
 					)
 					"ModifierOver":popUpMenu rc_ModifierOverMenu
-					"VRayGI":popUpMenu rc_LPMVrayGIMenu
-					"AutoMask":popUpMenu rc_AutoMaskMenu
-
 					"Deadline":popUpMenu rc_deadlinePropsMenu 							-- Dabelow
 					"vray5":popUpMenu rc_vray5PropsMenu 								-- Dabelow Vray5
 					"vray5RenderElements":popUpMenu rc_vray5RenderElementsPropsMenu 	-- Dabelow Vray5RenderElements
@@ -2674,9 +2567,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							op.fnPerformAction #edit
 					)
 					"ModifierOver":(AddModifierOverride())
-					"VRayGI":(EditVrayGI())
-					"AutoMask":(EditAutoMask())
-
 					"Deadline":(EditDeadline()) 							-- Dabelow
 					"vray5RenderElements":(EditVray5RenderElements()) 		-- Dabelow Vray5
 					"vray5":(EditVray5()) 									-- Dabelow Vray5
@@ -2700,7 +2590,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		 -- Dabelow Vray5 / cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
 		it=arg.item.tag.value.type
-		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="VRayGI") or (it=="AutoMask") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
+		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
 		tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 	 )
 
@@ -2774,27 +2664,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					if (keyboard.shiftpressed) then
 					(
 						thePass=dropNode.tag.value
-						theAdjustmentPass=dragNode.tag.value
-
-						if (theAdjustmentPass.isAdjustment) and (theAdjustmentPass.AdjustmentFor == thePass) then
-						(
-							theAdjustmentPass.isAdjustment = false
-							theAdjustmentPass.AdjustmentFor = undefined
-						)
-						else
-						(
-							theAdjustmentPass.isAdjustment = true
-							try
-							(
-								theAdjustmentPass.AdjustmentFor = thePass
-							)
-							catch
-							(
-								theAdjustmentPass.AdjustmentFor = undefined
-								messagebox "It's dependency loop!" title:"Warning!"
-							)
-						)
-
 						LPM_treeview_rollout.updateTV()
 					)
 					else
@@ -2851,7 +2720,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theType=dragNode.tag.value.type
 
 					-- Dabelow vray5 / cameraOverscan / nukeExport / aeExport / Dabelow vray6
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="VRayGI") or (theType=="AutoMask") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray5") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray5") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it
@@ -3053,7 +2922,6 @@ if(not (isvalidNode LPM_Root)) then
 else ( freshOpen = false )
 
 if(LPM_Root.pathString==undefined) then
-	--LPM_Root.pathString=LPM_Fun.getIni "LPM Render" "Path" string "$Shot\\$APass$Pass\\$APass$Pass_"
 	LPM_Root.pathString=LPM_Fun.getIni "LPM Render" "Path" string "$Shot\\$APass$Pass\\$APass$Pass"
 
 if(	(LPM_Fun.FirstChildByType LPM_Root "shotRoot")==undefined) then

@@ -1,35 +1,3 @@
-/*
-Lukas Lepicovsky
-L Pass Manager
-lukashi@gmail.com
-www.lukashi.com
-
-
-    Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
-
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015da
-
-
-
-
-*/
-
 struct LPM_RenderAPI
 (
 
@@ -539,307 +507,6 @@ struct LPM_RenderAPI
 		)
 	),
 
-	fn SetVrayGI VRayGIobj =
-	(
-		TmpGetVRayGIFilesPath = LPM_Fun.GetVRayGIFilesPath VRayGIobj
-
-		vr=renderers.current
-
-		if TmpGetVRayGIFilesPath[1] != "" then
-		(
-			if VRayGIobj.WriteMode then
-			(
-				makeDir (getFilenamePath TmpGetVRayGIFilesPath[1]) all:true
-
-				if VRayGIobj.IrMapOn then
-				(
-					vr.gi_on = true
-
-					vr.adv_irradmap_mode = case VRayGIobj.IrmapMode of
-					(
-						1: 0
-						2: 1
-						3: 6
-					)
-
-					vr.adv_irradmap_saveFileName = vr.adv_irradmap_autoSaveFileName = TmpGetVRayGIFilesPath[1]
-					vr.adv_irradmap_autoSave = true
-					vr.gi_irradmap_multipleViews = VRayGIobj.IrmapUseCamera
-				)
-
-				if VRayGIobj.LightCacheOn then
-				(
-					vr.gi_on = true
-
-					vr.lightcache_mode = case VRayGIobj.LightCacheMode of
-					(
-						1: 0
-						2: 1
-					)
-
-					vr.lightcache_autoSave = true
-					vr.lightcache_saveFileName = vr.lightcache_autosaveFileName = TmpGetVRayGIFilesPath[2]
-					vr.lightcache_multipleViews = VRayGIobj.LightCacheUseCamera
-				)
-
-				vr.options_dontRenderImage = VRayGIobj.DontRenderFinal
-			)
-
-			else
-			(
-				TmpCheckVRayGIExist = LPM_Fun.CheckVRayGIExist VRayGIobj
-
-				InputPassVRayGIObj = LPM_Fun.firstChildByType VRayGIobj.InputPass "VRayGI"
-
-				if (InputPassVRayGIObj != undefined) then
-				(
-					if VRayGIobj.IrMapOn then
-					(
-						if TmpCheckVRayGIExist[1] then
-						(
-							vr.gi_on = true
-
-							vr.adv_irradmap_mode = case InputPassVRayGIObj.IrmapMode of
-							(
-								1: 2
-								2: 2
-								3: 7
-							)
-							vr.adv_irradmap_autoSave = false
-							vr.adv_irradmap_loadFileName = TmpGetVRayGIFilesPath[1]
-							vr.gi_irradmap_multipleViews = VRayGIobj.IrmapUseCamera
-						)
-						else
-						(
-							try
-							(
-								LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
-								LPM_renderProgress_Ro.warning.color=color 135 6 6
-							)
-							catch()
-
-							print "Warning: V-Ray Global Illumination Irradiance map files NOT FOUND!!!"
-						)
-					)
-
-					if VRayGIobj.LightCacheOn then
-					(
-						if TmpCheckVRayGIExist[2] then
-						(
-							vr.gi_on = true
-
-							vr.lightcache_mode = 2
-
-							vr.lightcache_autoSave = false
-							vr.lightcache_loadFileName =  TmpGetVRayGIFilesPath[2]
-							vr.lightcache_multipleViews = VRayGIobj.LightCacheUseCamera
-						)
-						else
-						(
-							try
-							(
-								LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
-								LPM_renderProgress_Ro.warning.color=color 135 6 6
-							)
-							catch()
-
-							print "Warning: V-Ray Global Illumination Light cache files NOT FOUND!!!"
-						)
-					)
-				)
-				else
-				(
-					try
-					(
-						LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
-						LPM_renderProgress_Ro.warning.color=color 135 6 6
-					)
-					catch()
-
-					print "Warning: V-Ray Global Illumination files NOT FOUND!!!"
-				)
-			)
-		)
-		else
-		(
-			try
-			(
-				LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
-				LPM_renderProgress_Ro.warning.color=color 135 6 6
-			)
-			catch()
-
-			print "Warning: V-Ray Global Illumination files NOT FOUND!!!"
-		)
-	),
-
-	fn SetAutomask AutoMaskobj =
-	(
-		if AutoMaskobj.layersOn then
-		(
-			LMan=LayerManager
-
-			TmpAutoMasObjLayers = AutoMaskobj.layers as Array
-			TmpAutoMaskLayers = #()
-
-			for i = 1 to TmpAutoMasObjLayers.count do
-			(
-				TmpLayer=LMan.getLayerfromName TmpAutoMasObjLayers[i]
-
-				if(TmpLayer != undefined) then
-				(
-					append TmpAutoMaskLayers TmpAutoMasObjLayers[i]
-				)
-			)
-
-			if AutoMaskobj.layersRGB then
-			(
-				TmpLoopsCount = TmpAutoMaskLayers.count/3
-				TmpLoopsCountFloat = (TmpAutoMaskLayers.count/3.)
-
-				if (TmpLoopsCountFloat- TmpLoopsCount)>0  then
-				(
-					TmpLoopsCount += 1
-				)
-
-				for j=1 to (TmpLoopsCount) do
-				(
-					TmpLayerNodes=#()
-					TmpLayerNodes2=#()
-					TmpLayerNodes3=#()
-
-					theLayer = undefined
-					theLayer2 = undefined
-					theLayer3 = undefined
-
-					try( theLayer=LMan.getLayerfromName TmpAutoMaskLayers[(j-1)*3 + 1] )catch()
-					try( theLayer2=LMan.getLayerfromName TmpAutoMaskLayers[(j-1)*3 + 2] )catch()
-					try( theLayer3=LMan.getLayerfromName TmpAutoMaskLayers[(j-1)*3 + 3]	)catch()
-
-					if(theLayer != undefined) then ( theLayer.nodes &TmpLayerNodes )
-					if(theLayer2 != undefined) then ( theLayer2.nodes &TmpLayerNodes2 )
-					if(theLayer3 != undefined) then	( theLayer3.nodes &TmpLayerNodes3 )
-
-					TmpMaskName = "am_" + (substring theLayer.name 1 10)
-
-					try( TmpMaskName += "_" + (substring theLayer2.name 1 10) )catch()
-					try( TmpMaskName += "_" + (substring theLayer3.name 1 10) )catch()
-
-					LPM_Fun.CreateRGBmask (TmpLayerNodes as Array) (TmpLayerNodes2 as Array) (TmpLayerNodes3 as Array) TmpMaskName
-				)
-			)
-
-			else
-			(
-				for j=1 to TmpAutoMaskLayers.count do
-				(
-					TmpLayerNodes=#()
-
-					theLayer=LMan.getLayerfromName TmpAutoMaskLayers[j]
-
-					if(theLayer != undefined) then( theLayer.nodes &TmpLayerNodes )
-					if TmpLayerNodes.count != 0 then ( LPM_Fun.CreateBWmask (TmpLayerNodes as Array) ("am_" + theLayer.name) )
-				)
-			)
-		)
-
-		if AutoMaskobj.ObjectIDsOn then
-		(
-			if AutoMaskobj.ObjectIDsRGB then
-			(
-				LPM_Fun.CreateIDRGBmask (LPM_Fun.NumbersFromString AutoMaskobj.ObjectIDs)
-			)
-			else
-			(
-				LPM_Fun.CreateIDBWmask (LPM_Fun.NumbersFromString AutoMaskobj.ObjectIDs)
-			)
-		)
-
-		if AutoMaskobj.MaterialIDsOn then
-		(
-			if AutoMaskobj.MaterialIDsRGB then
-			(
-				LPM_Fun.CreateIDRGBmask (LPM_Fun.NumbersFromString AutoMaskobj.MaterialIDs) isMatID:true
-			)
-			else
-			(
-				LPM_Fun.CreateIDBWmask (LPM_Fun.NumbersFromString AutoMaskobj.MaterialIDs) isMatID:true
-			)
-		)
-
-		if AutoMaskobj.nodesOn then
-		(
-
-			TmpAutoMaskObjNodes = AutoMaskobj.nodes as Array
-			TmpAutoMaskNodes = #()
-
-			for i = 1 to TmpAutoMaskObjNodes.count do
-			(
-				if(isvalidnode TmpAutoMaskObjNodes[i]) then
-				(
-					append TmpAutoMaskNodes TmpAutoMaskObjNodes[i]
-				)
-			)
-
-			if AutoMaskobj.nodesRGB then
-			(
-				TmpLoopsCount = TmpAutoMaskNodes.count/3
-				TmpLoopsCountFloat = TmpAutoMaskNodes.count/3.
-
-				if (TmpLoopsCountFloat - TmpLoopsCount) >0  then
-				(
-					TmpLoopsCount += 1
-				)
-
-
-				for j=1 to (TmpLoopsCount) do
-				(
-					TmpAutoMaskNode1 = #()
-					TmpAutoMaskNode2 = #()
-					TmpAutoMaskNode3 = #()
-
-					TmpMaskName = "am_"
-
-					if(isvalidnode TmpAutoMaskNodes[(j-1)*3 + 1]) then
-					(
-						TmpAutoMaskNode1 = #(TmpAutoMaskNodes[(j-1)*3 + 1])
-					)
-
-					if(isvalidnode TmpAutoMaskNodes[(j-1)*3 + 2]) then
-					(
-						TmpAutoMaskNode2 = #(TmpAutoMaskNodes[(j-1)*3 + 2])
-					)
-
-					if(isvalidnode TmpAutoMaskNodes[(j-1)*3 + 3]) then
-					(
-						TmpAutoMaskNode3 = #(TmpAutoMaskNodes[(j-1)*3 + 3])
-					)
-
-					if (TmpAutoMaskNode1 != #()) or (TmpAutoMaskNode2 != #()) or (TmpAutoMaskNode3 != #()) then
-					(
-						try( TmpMaskName += (substring (TmpAutoMaskNode1[1].name) 1 10) )catch()
-						try( TmpMaskName += "_" + (substring (TmpAutoMaskNode2[1].name) 1 10) )catch()
-						try( TmpMaskName += "_" + (substring (TmpAutoMaskNode3[1].name) 1 10) )catch()
-
-						LPM_Fun.CreateRGBmask TmpAutoMaskNode1 TmpAutoMaskNode2 TmpAutoMaskNode3 TmpMaskName
-					)
-				)
-			)
-
-			else
-			(
-				for j=1 to TmpAutoMaskNodes.count do
-				(
-
-					if(isvalidnode TmpAutoMaskNodes[j]) then
-					(
-						LPM_Fun.CreateBWmask #(TmpAutoMaskNodes[j]) ("am_" + TmpAutoMaskNodes[j].name)
-					)
-				)
-			)
-		)
-	),
-
 	----------------------
 	--BACKUP INFORMATION
 	----------------------
@@ -870,8 +537,6 @@ struct LPM_RenderAPI
 	SkipExistingImagesBack,
 	ModifierBack,
 	AdjModifierBack,
-	VRayGIBack,
-	AdjVRayGIBack,
 
 	fn fnPreRenderAction thePass theShot isPreviewMode:false=
 	(
@@ -881,13 +546,6 @@ struct LPM_RenderAPI
 		(
 			with animate off
 			(
-				-- Pre LPM scripts
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-					LPM_Render.execScriptNodes theAdjustmentPass #preLPM
-				)
-
 				LPM_Render.execScriptNodes thePass #preLPM
 				preProcTime=timeStamp()
 
@@ -938,11 +596,11 @@ struct LPM_RenderAPI
 					viewport.setCamera LPM_Root.renderCamera
 
 				-- common properties Adjustment pass
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-					cp = (setCommonProps theAdjustmentPass)
-				)
+--				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
+--				(
+--					theAdjustmentPass = thePass.AdjustmentFor
+--					cp = (setCommonProps theAdjustmentPass)
+--				)
 
 				-- Set common properties
 				rendSaveFile=true
@@ -968,37 +626,6 @@ struct LPM_RenderAPI
 				--Save current renderer settings
 				AdjpreRenderSettings=undefined
 				AdjpreRenderSettingsNew=undefined
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-					theMainRenderProps=for it in thePass.children where ((it.type=="renderProps") and (it.initialized) and (it.active)) collect it
-					theRenderProps=for it in theAdjustmentPass.children where ((it.type=="renderProps") and (it.initialized) and (it.active)) collect it
-
-					if( theRenderProps[1]!=undefined) and ( theMainRenderProps[1] == undefined) then
-					(
-						if theRenderProps[1].propsAlternate != "" then
-						(
-							AdjpreRenderSettingsNew=LPM_Fun.saveRenderPresetNew()
-							AdjpreRenderSettings = 0
-						)
-						else
-						(
-							AdjpreRenderSettings=LPM_Fun.saveRenderPreset()
-						)
-
-						try
-						(
-							LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate
-						)
-						catch
-						(
-							LPM_Fun.loadRenderPreset theRenderProps[1].props
-						)
-					)
-
-					theRenderProps = undefined
-				)
 
 				--Save current renderer settings
 				preRenderSettings=undefined
@@ -1094,48 +721,13 @@ struct LPM_RenderAPI
 
 				-- xrefObjects Backup
 				xrefObjBackArray=#()
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
+				xrefObjProps=LPM_Fun.firstChildByType thePass "xrefObj"
+				if(isvalidnode xrefObjProps)and(xrefObjProps.active) then
 				(
-					xrefObjProps=LPM_Fun.firstChildByType thePass.AdjustmentFor "xrefObj"
-
-					if(isvalidnode xrefObjProps)and(xrefObjProps.active) then
-					(
-						--backup the settings
-						for i=1 to objXRefMgr.recordCount do
-						(xrefObjBackArray[i] = (objXRefMgr.GetRecord i).enabled)
-					)
+					--backup the settings
+					for i=1 to objXRefMgr.recordCount do
+					(xrefObjBackArray[i] = (objXRefMgr.GetRecord i).enabled)
 				)
-				else
-				(
-					xrefObjProps=LPM_Fun.firstChildByType thePass "xrefObj"
-
-					if(isvalidnode xrefObjProps)and(xrefObjProps.active) then
-					(
-						--backup the settings
-						for i=1 to objXRefMgr.recordCount do
-						(xrefObjBackArray[i] = (objXRefMgr.GetRecord i).enabled)
-					)
-				)
-
-				-- Adjustment pass xrefObjects
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					xrefObjProps=LPM_Fun.firstChildByType thePass.AdjustmentFor "xrefObj"
-					if(isvalidnode xrefObjProps)and(xrefObjProps.active) then
-					(
-						--set the obj
-						for i=1 to objXRefMgr.recordCount do
-						(
-							theXref=(objXRefMgr.GetRecord i)
-							if((findItem xrefObjProps.fileNames theXref.srcFileName)!=0) then
-								theXref.enabled=true
-							else
-								theXref.enabled=false
-						)
-					)
-				)
-
 				-- xrefObjects
 				xrefObjProps=LPM_Fun.firstChildByType thePass "xrefObj"
 				if(isvalidnode xrefObjProps)and(xrefObjProps.active) then
@@ -1186,86 +778,7 @@ struct LPM_RenderAPI
 					tmp
 				)
 
-				-- All objects and lights Adjustment pass
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-					--   Adjustment All
-					if(theAdjustmentPass.hideMode>1) then
-					(
-						val=true
-						if(theAdjustmentPass.hideMode==3) then val=false
-
-						for it in objects where ((superclassof it)!=light) do
-						(
-							it.ishidden = val
-						)
-						for it in lights where ((superclassof it)==light) do
-						(
-							try
-							(
-								it.enabled=(not val)
-								it.ishidden = val
-							)
-							catch()
-							try
-							(
-								it.on=(not val)
-								it.ishidden = val
-							)
-							catch()
-						)
-					)
-
-					-- Adjustment objects
-					objNodes=#()
-					objSetArray=#()
-					LPM_Fun.getObjectSetArrays theAdjustmentPass "objectSet" &objNodes &objSetArray
-
-					hitNodes=#()
-					for k=1 to objNodes.count do
-					(
-						i=objNodes.count+1-k
-						for it in objNodes[i] where ((finditem hitNodes it)  ==0) do
-						(
-							append hitNodes it
-							setPropInv it #ishidden objSetArray[i].intP[1]
-							setProp it #castshadows objSetArray[i].intP[2]
-							setProp it #receiveshadows objSetArray[i].intP[3]
-							setProp it #primaryVisibility objSetArray[i].intP[4]
-							setProp it #secondaryVisibility objSetArray[i].intP[5]
-							setProp it #motionBlurOn  objSetArray[i].intP[6]
-							setProp it #applyAtmospherics objSetArray[i].intP[7]
-							setProp it #renderOccluded objSetArray[i].intP[8]
-
-							try
-							(
-								setProp it #renderable objSetArray[i].intP[10]
-							)
-							catch
-							(
-								setProp it #renderable objSetArray[i].intP[1]
-							)
-
-							--user props
-							if(objSetArray[i].intP[9]==2) then(setUserPropBuffer it (objSetArray[i].userProp))
-							if objSetArray[i].pMatEnable then(it.material=objSetArray[i].pMaterial)
-						)
-					)
-
-					-- Adjustment lights
-					lightNodes=#()
-					lightSetArray=#()
-					LPM_Fun.getObjectSetArrays theAdjustmentPass "lightSet" &lightNodes &lightSetArray
-					hitNodes=#()
-					LightSetsApply lightNodes hitNodes lightSetArray
-				)
-
-				-- All objects and lights
-
-				-- Change to the default mode of the pass
-				if(thePass.hideMode>1) and (not thePass.isAdjustment) then
+				if(thePass.hideMode>1) then
 				(
 					val=true
 					if(thePass.hideMode==3) then val=false
@@ -1413,35 +926,6 @@ struct LPM_RenderAPI
 
 				-- Modifiers Override Adjustment pass
 				AdjModifierBack = #()
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-					ModifierOverNodes=for child in theAdjustmentPass.children where child.type=="ModifierOver" and(child.active==true) do
-					(
-						myObject = child.activeNode
-
-						if(isvalidnode myObject) then
-						(
-							tmp_ModArr = #()
-							for modi in myObject.modifiers do
-							(
-								append tmp_ModArr modi.enabled
-
-							)
-							append AdjModifierBack tmp_ModArr
-
-							for modi in myObject.modifiers do
-							(
-								if (findItem child.activeModifiers modi.name !=0) then
-									modi.enabled=true
-								else
-									modi.enabled=false
-							)
-						)
-					)
-				)
 
 				-- Modifiers Override
 				ModifierBack = #()
@@ -1633,30 +1117,6 @@ struct LPM_RenderAPI
 					)
 				)
 
-				-- Common props Prescript Adjustment pass
-
---				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
---				(
---					theAdjustmentPass = thePass.AdjustmentFor
---					psCP=LPM_fun.firstChildByType  theAdjustmentPass "commonProps"
---
---					if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active) then
---					(
---						global LPMData = #(thePass,theShot)
---						usePreRendScript = true
---						preRendScript = psCp.preScript
---					)
---
---					if(psCP!=undefined) and (psCp.usePostScript) and (psCP.active)  then
---					(
---						global LPMData = #(thePass,theShot)
---						usePostRendScript = true
---						postRendScript  = psCp.postScript
---					)
---
---					LPM_Render.execScriptNodes theAdjustmentPass #preRender
---				)
-
 				-- Common props  Prescript
 				psCP=LPM_fun.firstChildByType  thePass "commonProps"
 				if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active) then
@@ -1695,30 +1155,13 @@ struct LPM_RenderAPI
 				-- xrefScene backup
 				xrefBackArray=#()
 
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
+				xrefSceneProps = LPM_Fun.firstChildByType thePass "xrefScene"
+				if(isvalidnode xrefSceneProps)and(xrefSceneProps.active) then
 				(
-					xrefSceneProps = LPM_Fun.firstChildByType thePass.AdjustmentFor "xrefScene"
-
-					if(isvalidnode xrefSceneProps)and(xrefSceneProps.active) then
+					--backup the settings
+					for i=1 to xrefs.getXRefFileCount() do
 					(
-						--backup the settings
-						for i=1 to xrefs.getXRefFileCount() do
-						(
-							xrefBackArray[i] = (xrefs.getXRefFile i).disabled
-						)
-					)
-				)
-				else
-				(
-					xrefSceneProps = LPM_Fun.firstChildByType thePass "xrefScene"
-
-					if(isvalidnode xrefSceneProps)and(xrefSceneProps.active) then
-					(
-						--backup the settings
-						for i=1 to xrefs.getXRefFileCount() do
-						(
-							xrefBackArray[i] = (xrefs.getXRefFile i).disabled
-						)
+						xrefBackArray[i] = (xrefs.getXRefFile i).disabled
 					)
 				)
 
@@ -1737,6 +1180,11 @@ struct LPM_RenderAPI
 					)
 				)
 
+
+
+
+
+
 				------------- DISPATCH START -------------
 				-- Render dispatch is an API added by Aaron Dabelow to make it easier to implement additional render engines and render
 				-- engine versions.  This pare collects the pass, and the type of render action requested, and then calls the dispatch
@@ -1748,6 +1196,7 @@ struct LPM_RenderAPI
 
 
 				-- TODO: finish other implementations here
+				-- TODO: Actually each of these may be better handled in the renderer specific functions
 				
 
 				-- cameraOverscan Hook --
@@ -1776,9 +1225,6 @@ struct LPM_RenderAPI
 
 
 
-
-
-				-- render dispatch --
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
 				filein (LPM_Dir+"renderer_dispatch.ms")
 
@@ -1792,9 +1238,6 @@ struct LPM_RenderAPI
 		)
 	),
 
-
-	-- TODO: Continue Refactor from this location
-	
 	-- RESTORE
 	fn fnPostRenderAction thePass theShot=
 	(
@@ -1809,20 +1252,7 @@ struct LPM_RenderAPI
 		(
 			with animate off
 			(
-				--  postRender script
 				LPM_Render.execScriptNodes thePass #postRender
-
-
-
-				-------------------------------------------------------------------------------------------------------------------------  postRender script Adjustment pass  -----------------------------------------------------------------------
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-					LPM_Render.execScriptNodes theAdjustmentPass #postRender
-				)
-
 
 				---------------------------------------------------------------------------------------------------     Common props  Postcript   ----------------------------------------------------------------------------------------
 
@@ -1830,7 +1260,6 @@ struct LPM_RenderAPI
 				if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active) then
 				(
 					global LPMData = #(thePass,theShot)
-					--try(fileIn psCp.preScript)catch(getcurrentException())
 					usePreRendScript = commonSettings[29]
 					preRendScript  = commonSettings[30]
 				)
@@ -1840,7 +1269,6 @@ struct LPM_RenderAPI
 					if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active)  then
 					(
 						global LPMData = #(thePass,theShot)
-						--try(fileIn psCp.preScript)catch(getcurrentException())
 						usePreRendScript = commonSettings[29]
 						preRendScript  = commonSettings[30]
 
@@ -1849,7 +1277,6 @@ struct LPM_RenderAPI
 				if(psCP!=undefined) and (psCp.usePostScript) and (psCP.active)  then
 				(
 					global LPMData = #(thePass,theShot)
-					--try(fileIn psCp.postScript)catch(getcurrentException())
 					usePostRendScript = commonSettings[31]
 					postRendScript  = commonSettings[32]
 				)
@@ -1859,16 +1286,13 @@ struct LPM_RenderAPI
 					if(psCP!=undefined) and (psCp.usePostScript) and (psCP.active)  then
 					(
 						global LPMData = #(thePass,theShot)
-						--try(fileIn psCp.postScript)catch(getcurrentException())
 						usePostRendScript = commonSettings[31]
 						postRendScript  = commonSettings[32]
 					)
 				)
 
-
 				--restore objects sets
 				-------------------------------------------------------------------------------------------------
-
 				ts_properties = timestamp()
 
 				disablerefmsgs()
@@ -1905,153 +1329,35 @@ struct LPM_RenderAPI
 					theNode.boxmode = off
 				)
 
- 				-- redrawviews()
- 				-- print "WTF"
 				te_properties = timestamp()
 
 				--restore light sets
-				-------------------------------------------------------------------------------------------------
-
 				for it in lightBackup do
 				(
 					theNode=it[1]
-					try
-					(
-						theNode.on=it[2]
-						--theNode.isHidden=not(it[2])
-					)
-					catch()
-
-					try
-					(
-						theNode.isHidden = it[20]
-					)
-					catch()
-
-					try
-					(
-						theNode.enabled = it[21]
-					)
-					catch()
-
-
-					-----------    vray part
-
-					try
-					(
-						theNode.baseObject.multiplier=it[3]
-					)
-					catch()
-
-					try
-					(
-						theNode.color=it[4]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.castShadows=it[5]
-					)
-
-					catch()
-
-					try
-					(
-						theNode.baseObject.affect_diffuse=it[6]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.affect_specualr=it[7]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.affect_reflections=it[8]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.texmap_on=it[18]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.texmap=it[9]
-					)
-					catch()
-
-
+					try(theNode.on=it[2])catch()
+					try(theNode.isHidden = it[20])catch()
+					try(theNode.enabled = it[21])catch()
+					try(theNode.baseObject.multiplier=it[3])catch()
+					try(theNode.color=it[4])catch()
+					try(theNode.baseObject.castShadows=it[5])catch()
+					try(theNode.baseObject.affect_diffuse=it[6])catch()
+					try(theNode.baseObject.affect_specualr=it[7])catch()
+					try(theNode.baseObject.affect_reflections=it[8])catch()
+					try(theNode.baseObject.texmap_on=it[18])catch()
+					try(theNode.baseObject.texmap=it[9])catch()
 					-----------    corona part
-
-
-					try
-					(
-						theNode.baseObject.intensity=it[10]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.castsShadows=it[13]
-					)
-
-					catch()
-
-					try
-					(
-						theNode.baseObject.visibleDirectly=it[11]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.visibleRefl=it[12]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.colorMode=it[19]
-					)
-					catch()
-
-
+					try(theNode.baseObject.intensity=it[10])catch()
+					try(theNode.baseObject.castsShadows=it[13])catch()
+					try(theNode.baseObject.visibleDirectly=it[11])catch()
+					try(theNode.baseObject.visibleRefl=it[12])catch()
+					try(theNode.baseObject.colorMode=it[19])catch()
 					-----------    default part
-
-					try
-					(
-						theNode.baseObject.affectDiffuse=it[14]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.affectSpecular=it[15]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.projectorMap=it[16]
-					)
-					catch()
-
-					try
-					(
-						theNode.baseObject.projector=it[17]
-					)
-					catch()
-
+					try(theNode.baseObject.affectDiffuse=it[14])catch()
+					try(theNode.baseObject.affectSpecular=it[15])catch()
+					try(theNode.baseObject.projectorMap=it[16])catch()
+					try(theNode.baseObject.projector=it[17])catch()
 				)
-
-
-
 
 				--Generic Nodes
 				genericNodes=for child in thePass.children where child.type=="generic" do
@@ -2068,102 +1374,24 @@ struct LPM_RenderAPI
 					theNode.applyAtmospherics=it[2]
 				)
 
-
-
-				------------------------------------------------------------------------------------------------------   AutoMask restore ---------------------------------------------------------------------------------
-
-				try
-				(
-					AutoMaskobj = LPM_Fun.firstChildByType thePass "AutoMask"
-
-
-					theAdjustmentPass = undefined
-					AdjAutoMaskobj = undefined
-
-					if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-					(
-						theAdjustmentPass = thePass.AdjustmentFor
-						AdjAutoMaskobj = LPM_Fun.firstChildByType theAdjustmentPass "AutoMask"
-					)
-
-					if ((isvalidnode AutoMaskobj)and(AutoMaskobj.active)) or ((isvalidnode AdjAutoMaskobj)and(AdjAutoMaskobj.active)) then
-					(
-						vr=renderers.current
-						theRenderer=(classof vr) as string
-
-						if (findString theRenderer "V_Ray" !=undefined) or (findString theRenderer "Corona" !=undefined) then
-						(
-							REManager = maxOps.GetCurRenderElementMgr()
-							REcount = REManager.NumRenderElements()
-
-							if elementBackup.count < REcount then
-							(
-								TmpDelta = (REcount - elementBackup.count)
-
-								for i = 1 to TmpDelta do
-								(
-									j = TmpDelta - i + 1
-									tmpEle = REManager.GetRenderElement (elementBackup.count + j - 1)
-									REManager.RemoveRenderElement tmpEle
-								)
-
-							)
-						)
-
-					)
-				)
-				catch
-				(
-
-				)
-
-
 				--exposure restore
-				-------------------------------------------------------------------------------------------------
 				SceneExposureControl.exposureControl=exposureBackup
-
-
 
 				re = maxOps.GetCurRenderElementMgr()
 				for i=1 to re.NumRenderElements() do
 				(
 					theEle=re.GetRenderElement (i-1)
 
-					try
-					(
-						theEle.enabled=elementBackup[i][1]
-					)
-					catch()
-					try
-					(
-
-						theEle.vrayVFB=elementVrayBackup[i]
-					)
-					catch()
-					/*
-					if(hasProperty theEle #vrayVFB) then
-						theEle.vrayVFB=elementBackup[i][1]
-					else
-						theEle.enabled=elementBackup[i][1]
-					if(elementBackUp[i][2]!=undefined) then
-						re.SetRenderElementFilename (i-1) elementBackup[i][2]
-					 */
+					try(theEle.enabled=elementBackup[i][1])catch()
+					try(theEle.vrayVFB=elementVrayBackup[i])catch()
 				)
 
-
-
-
-
-				-------------------------------------------------------------------------------------------------------------------------  Modifiers Override -----------------------------------------------------------------------
-
-
+				--  Modifiers Override
 				tmp_Mod_obj_counter = 0
 
 				ModifierOverNodes=for child in thePass.children where child.type=="ModifierOver" and(child.active==true) do
 				(
-
 					myObject = child.activeNode
-
 
 					if(isvalidnode myObject) then
 					(
@@ -2176,235 +1404,10 @@ struct LPM_RenderAPI
 							modi.enabled = ModifierBack[tmp_Mod_obj_counter][tmp_Mod_counter]
 						)
 					)
-
-
-
 				)
-
-
-
-				-------------------------------------------------------------------------------------------------------------------------  Modifiers Override Adjustment pass  -----------------------------------------------------------------------
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-					tmp_Mod_obj_counter = 0
-
-					ModifierOverNodes=for child in theAdjustmentPass.children where child.type=="ModifierOver" and(child.active==true) do
-					(
-
-						myObject = child.activeNode
-
-
-						if(isvalidnode myObject) then
-						(
-							tmp_Mod_obj_counter += 1
-
-							tmp_Mod_counter = 0
-							for modi in myObject.modifiers do
-							(
-								tmp_Mod_counter += 1
-								modi.enabled = AdjModifierBack[tmp_Mod_obj_counter][tmp_Mod_counter]
-							)
-						)
-
-					)
-
-				)
-
-
-
-
-				----------------------------------------------------------------------------------------------- V-Ray Global Illumination Restore -------------------------------------------------------------------------------------------
-
-
-
-				try
-				(
-					VRayGIObj=LPM_Fun.firstChildByType thePass "VRayGI"
-
-					if(isvalidnode VRayGIObj)and(VRayGIObj.active) then
-					(
-						vr=renderers.current
-						theRenderer=(classof vr) as string
-
-
-						if (findString theRenderer "V_Ray" !=undefined) then
-						(
-							vr.gi_on = VRayGIBack[1]
-							vr.adv_irradmap_mode = VRayGIBack[2]
-							try
-							(
-								vr.adv_irradmap_loadFileName = VRayGIBack[3]
-							)
-							catch
-							(
-								vr.adv_irradmap_loadFileName = ""
-							)
-
-							try
-							(
-								vr.adv_irradmap_saveFileName = VRayGIBack[4]
-							)
-							catch
-							(
-								vr.adv_irradmap_saveFileName = ""
-							)
-
-							vr.adv_irradmap_autoSave = VRayGIBack[5]
-
-							try
-							(
-								vr.adv_irradmap_autoSaveFileName = VRayGIBack[6]
-							)
-							catch
-							(
-								vr.adv_irradmap_autoSaveFileName = ""
-							)
-
-							vr.gi_irradmap_multipleViews = VRayGIBack[7]
-
-							vr.lightcache_mode = VRayGIBack[8]
-
-							try
-							(
-								vr.lightcache_loadFileName = VRayGIBack[9]
-							)
-							catch
-							(
-								vr.lightcache_loadFileName = ""
-							)
-
-							try
-							(
-								vr.lightcache_saveFileName = VRayGIBack[10]
-							)
-							catch
-							(
-								vr.lightcache_saveFileName = ""
-							)
-							try
-							(
-								vr.lightcache_autosaveFileName = VRayGIBack[14]
-							)
-							catch
-							(
-								vr.lightcache_autosaveFileName = ""
-							)
-
-							vr.lightcache_autoSave = VRayGIBack[11]
-							vr.lightcache_multipleViews = VRayGIBack[12]
-
-							vr.options_dontRenderImage = VRayGIBack[13]
-						)
-					)
-				)
-				catch
-				(
-				)
-
-
-
-				---------------------------------------------------------------------------------------------------     V-Ray Global Illumination Adjustment pass Restore -----------------------------------------------------------------
-
-				try
-				(
-					if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-					(
-						theAdjustmentPass = thePass.AdjustmentFor
-
-						AbjVRayGIObj=LPM_Fun.firstChildByType theAdjustmentPass "VRayGI"
-
-						if(isvalidnode AbjVRayGIObj)and(AbjVRayGIObj.active) then
-						(
-							vr=renderers.current
-							theRenderer=(classof vr) as string
-
-							if (findString theRenderer "V_Ray" !=undefined) then
-							(
-								if AdjVRayGIBack.count >1 then
-								(
-									vr.gi_on = AdjVRayGIBack[1]
-									vr.adv_irradmap_mode = AdjVRayGIBack[2]
-									try
-									(
-										vr.adv_irradmap_loadFileName = AdjVRayGIBack[3]
-									)
-									catch
-									(
-										vr.adv_irradmap_loadFileName = ""
-									)
-
-									try
-									(
-										vr.adv_irradmap_saveFileName = AdjVRayGIBack[4]
-									)
-									catch
-									(
-										vr.adv_irradmap_saveFileName = ""
-									)
-
-									vr.adv_irradmap_autoSave = AdjVRayGIBack[5]
-									try
-									(
-										vr.adv_irradmap_autoSaveFileName = AdjVRayGIBack[6]
-									)
-									catch
-									(
-										vr.adv_irradmap_autoSaveFileName = ""
-									)
-
-									vr.gi_irradmap_multipleViews = AdjVRayGIBack[7]
-
-									vr.lightcache_mode = AdjVRayGIBack[8]
-									try
-									(
-										vr.lightcache_loadFileName = AdjVRayGIBack[9]
-									)
-									catch
-									(
-										vr.lightcache_loadFileName = ""
-									)
-
-									try
-									(
-										vr.lightcache_saveFileName = AdjVRayGIBack[10]
-									)
-									catch
-									(
-										vr.lightcache_saveFileName = ""
-									)
-
-									try
-									(
-										vr.lightcache_autosaveFileName = AdjVRayGIBack[14]
-									)
-									catch
-									(
-										vr.lightcache_autosaveFileName = ""
-									)
-
-
-									vr.lightcache_autoSave = AdjVRayGIBack[11]
-									vr.lightcache_multipleViews = AdjVRayGIBack[12]
-
-									vr.options_dontRenderImage = AdjVRayGIBack[13]
-								)
-
-							)
-						)
-					)
-				)
-				catch
-				(
-				)
-
-
 
 				--DistributedRender Restore
 				-------------------------------------------------------------------------------------------------
-
 				try
 				(
 					if LPM_Root.DistributedRender then
@@ -2420,8 +1423,6 @@ struct LPM_RenderAPI
 							useRend=1
 						if(findstring theRenderer "Corona"!=undefined) then
 							useRend=2
-
-
 
 						case useRend of
 						(
@@ -2443,40 +1444,16 @@ struct LPM_RenderAPI
 						)
 					)
 				)
-				catch
-				(
+				catch()
 
-				)
+				--     HideRFW  SkipExistingImages restore
+				try( if SkipExistingImagesBack != 0 then ( skipRenderedFrames = SkipExistingImagesBack ) )catch()
 
-				---------------------------------------------------------------------------------------------------     HideRFW  SkipExistingImages restore  -----------------------------------------------------------------
-
-
-				try
-				(
-				--	if HideRFWBack != 0 then
-				--	(
-				--		rendShowVFB = HideRFWBack
-				--	)
-
-					if SkipExistingImagesBack != 0 then
-					(
-						skipRenderedFrames = SkipExistingImagesBack
-					)
-				)
-				catch
-				(
-				)
-
-
-
-				-------------------------------------------------------------------------------------------------------------------------  envProps Override restore -----------------------------------------------------------------------
-
-
+				--  envProps Override restore
 				ep=LPM_Fun.firstChildByType thePass "envProps"
 				if(ep!=undefined) and (ep.initialized) and (ep.active) then
 				(
 					--effect Restore
-					-------------------------------------------------------------------------------------------------
 					if(ep.effectOverride) then
 					(
 						for i=1 to numEffects do
@@ -2487,7 +1464,6 @@ struct LPM_RenderAPI
 					)
 
 					--Atm Restore
-					-------------------------------------------------------------------------------------------------
 					if(ep.atmOverride) then
 					(
 						for i=1 to numAtmospherics  do
@@ -2495,7 +1471,6 @@ struct LPM_RenderAPI
 							theAtm=getAtmospheric i
 							setActive theAtm atmBackup[i]
 						)
-
 					)
 					if(ep.backgroundOverride) then
 					(
@@ -2506,60 +1481,9 @@ struct LPM_RenderAPI
 						lightLevel=envBackup[5]
 						ambientColor=envBackup[6]
 					)
-
 				)
 
-
-
-				-------------------------------------------------------------------------------------------------------------------------  envProps Override Adjustment pass restore -----------------------------------------------------------------------
-
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-					ep = undefined
-					ep=LPM_Fun.firstChildByType theAdjustmentPass "envProps"
-					if(ep!=undefined) and (ep.initialized) and (ep.active) then
-					(
-						--effect Restore
-						-------------------------------------------------------------------------------------------------
-						if(ep.effectOverride) then
-						(
-							for i=1 to numEffects do
-							(
-								theEffect=getEffect i
-								setActive theEffect AdjeffectBackup[i]
-							)
-						)
-
-						--Atm Restore
-						-------------------------------------------------------------------------------------------------
-						if(ep.atmOverride) then
-						(
-							for i=1 to numAtmospherics  do
-							(
-								theAtm=getAtmospheric i
-								setActive theAtm AdjatmBackup[i]
-							)
-
-						)
-						if(ep.backgroundOverride) then
-						(
-							backgroundColor=AdjenvBackup[1]
-							useEnvironmentMap=AdjenvBackup[2]
-							environmentMap=AdjenvBackup[3]
-							lightTintColor=AdjenvBackup[4]
-							lightLevel=AdjenvBackup[5]
-							ambientColor=AdjenvBackup[6]
-						)
-
-					)
-				)
-
-
-
-				--------------------------------------------------------------------------------------------------------------------------- xref scenes restore
+				-- xref scenes restore
 				if xrefBackArray != #() then--(isvalidnode xrefSceneProps) then
 				(
 					--backup the settings
@@ -2569,10 +1493,7 @@ struct LPM_RenderAPI
 					)
 				)
 
-				----------------------------------------------------------------------------------------------   xrefObjects   ----------------------------------------------------------------------------------------------
-
-				--xrefObjProps=LPM_Fun.firstChildByType thePass "xrefObj"
-
+				--   xrefObjects
 				if xrefObjBackArray != #() then--(isvalidnode xrefObjProps) then
 				(
 					--backup the settings
@@ -2580,105 +1501,25 @@ struct LPM_RenderAPI
 					(
 						 (objXRefMgr.GetRecord i).enabled=xrefObjBackArray[i]
 					)
-
 				)
 
-
-
-
-				-------------------------------------------------------------------------------------------------------------------------  RenderSettings Override restore -----------------------------------------------------------------------
+				-- RenderSettings Override restore
 
 				ts_rpreset = timestamp()
-
 				if(preRenderSettingsNew!=undefined) then
 				(
 					try
 					(
 						vr = renderers.current
-						
 						theRenderer=(classof vr) as string
-
 					)
-					catch
-					(
-					)
-
-
+					catch()
 					LPM_Fun.loadRenderPresetNew preRenderSettingsNew
-
 				)
 
-				if(preRenderSettings!=undefined)and(preRenderSettings!=0) then
-				(
-
-					LPM_Fun.loadRenderPreset preRenderSettings
-
-				)
-
-
-
-
-
-				-------------------------------------------------------------------------------------------------------------------------  RenderSettings Override Adjustment pass restore -----------------------------------------------------------------------
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-
-					if(AdjpreRenderSettingsNew!=undefined) then
-					(
-						-- try
-						-- (
-						-- 	vr = renderers.current
-							--cls=r.classid
-							--if (cls[1]==1941615238 and cls[2]==2012806412) then r.showLastVFB()
-
-
-							-- theRenderer=(classof vr) as string
-
-
-							-- if ((findString theRenderer "V_Ray") != undefined) then
-							-- (
-							-- 	if vr.output_on  then
-							-- 	(
-							-- 		vr.showLastVFB()
-							-- 	)
-							-- )
-						-- )
-						-- catch
-						-- (
-						-- )
-
-
-						LPM_Fun.loadRenderPresetNew AdjpreRenderSettingsNew
-
-					)
-
-					if(AdjpreRenderSettings!=undefined)and(AdjpreRenderSettings!=0) then
-					(
-
-						LPM_Fun.loadRenderPreset AdjpreRenderSettings
-
-					)
-				)
+				if(preRenderSettings!=undefined)and(preRenderSettings!=0) then(LPM_Fun.loadRenderPreset preRenderSettings)
 
 				te_rpreset = timestamp()
-
-
-			--	try
-			--	(
-			--		if vrfrbufBackup != 0 then
-			--		(
-			--			vr=renderers.current
-			--			vr.output_on = vrfrbufBackup
-			--		)
-			--
-			--	)
-			--	catch
-			--	(
-			--
-			--	)
 
 				--restore common settings
 				-------------------------------------------------------------------------------------------------
@@ -2717,25 +1558,12 @@ struct LPM_RenderAPI
 				else
 					viewport.setType viewportTypeBack
 
-
-				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
-				(
-					theAdjustmentPass = thePass.AdjustmentFor
-
-					LPM_Render.execScriptNodes theAdjustmentPass #postLPM
-				)
-
 				LPM_Render.execScriptNodes thePass #postLPM
 
-				try
-				(
+				try(
 					LPM_Root.PostRenderFrameScript = false
 					LPM_Root.PostRenderFrameScriptText = ""
-				)
-				catch
-				(
-				)
-
+				)catch()
 
 				LPM_Root.PostConvertVrimg2exr = LPM_Fun.getIni "Settings" "PostConvertVrimg2exr" string "C:\\Program Files\\Chaos Group\\V-Ray\\3dsmax 2014 for x64\\tools\\vrimg2exr.exe"
 
@@ -2743,10 +1571,9 @@ struct LPM_RenderAPI
 				LPM_Root.PostConvertCompression = 3
 				LPM_Root.PostConvertHalfFoat = false
 				LPM_Root.PostConvertDatawindow = false
-
 			)
-
 		)
+
 		-- TODO: test this
 		-- Sends job to renderer dispatch to restore renderer specific last minuet adjustments
 
@@ -2759,11 +1586,7 @@ struct LPM_RenderAPI
 			filein (LPM_Dir+"operator_cameraOverscan.ms")
 		)
 
-
 		filein (LPM_Dir+"renderer_dispatch.ms")
-
-
-		-- print "===== DOES THIS HAPPEN? =========="
 
 		propString = "object properties: " + ((te_properties-ts_properties)/1000.0) as string + "s"
 		presetString = "renderer properties: " + ((te_rpreset-ts_rpreset)/1000.0) as string + "s"
@@ -2773,215 +1596,7 @@ struct LPM_RenderAPI
 	)
 )
 
-fn LPM_hardwareRender thePass theShot:undefined=
-(
-	--create the floater
-	LPM_Fun.init_LPM_renderProgress_Ro thePass theShot
-	LPM_treeview_rollout.hideByPass thePass
-
-
-	thePath=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot RendPreviewMode:false elementName:""
-
-	theFileName = (getFilenameFile thePath)
-
-	thePath = getFilenamePath thePath
-	thePath = substring thePath 1 (thePath.count-1)
-
-	theType=LPM_Fun.uppercase(LPM_Root.fileType)
-
-	_renderHeight=renderHeight
-	_renderWidth=renderWidth
-	_rendTimeType=rendTimeType
-	_rendNThFrame=rendNThFrame
-	_rendStart=rendStart
-	_rendEnd=rendEnd
-	_rendFileNumberBase=rendFileNumberBase
-	_rendPickupFrames=rendPickupFrames
-
-	flagContinue=true
-
-	if(isvalidNode LPM_Root.renderCamera) then
-		viewport.setCamera LPM_Root.renderCamera
-
-	--for the pass
-	cp=LPM_Fun.firstChildByType thePass "commonProps"
-	if(cp!=undefined) and (cp.initialized) then
-	(
-		if(cp.timeOutputTgl) then
-		(
-			_rendTimeType=cp._rendTimeType
-			_rendNThFrame=cp._rendNThFrame
-			_rendStart=cp._rendStart
-			_rendEnd=cp._rendEnd
-			_rendFileNumberBase=cp._rendFileNumberBase
-			_rendPickupFrames=cp._rendPickupFrames
-		)
-		if(cp.outputSizeTgl) then
-		(
-			_renderHeight=cp._renderHeight
-			_renderWidth=cp._renderWidth
-		)
-		if(cp.cameraTgl) then
-		(
-			try(viewport.setCamera cp._Camera)catch()
-		)
-	)
-
-	--for the shot
-	if(theShot!=undefined) then
-	(
-		cp=LPM_Fun.firstChildByType theShot "commonProps"
-		if(cp!=undefined) and (cp.initialized) then
-		(
-			if(cp.timeOutputTgl) then
-			(
-				_rendTimeType=cp._rendTimeType
-				_rendNThFrame=cp._rendNThFrame
-				_rendStart=cp._rendStart
-				_rendEnd=cp._rendEnd
-				_rendFileNumberBase=cp._rendFileNumberBase
-				_rendPickupFrames=cp._rendPickupFrames
-			)
-			if(cp.outputSizeTgl) then
-			(
-				_renderHeight=cp._renderHeight
-				_renderWidth=cp._renderWidth
-			)
-			if(cp.cameraTgl) then
-			(
-				try(viewport.setCamera cp._Camera)catch()
-			)
-		)
-	)
-	
-	timesArray=#()
-	case _rendTimeType of
-	(
-		1:
-		(
-			timesArray[1]=sliderTime
-		)
-		2:
-		(
-			timesArray=for i=animationRange.start to animationRange.end  by _rendNThFrame collect i
-		)
-		3:
-		(
-			timesArray=for i=_rendStart to _rendEnd by _rendNthFrame collect i
-		)
-		4:
-		(
-			tmpArray=LPM_Fun.stringToFrames _rendPickupFrames
-			if(tmpArray==undefined) then
-				flagContinue=false
-			else
-			(
-
-				for it in tmpArray do
-				(
-					if(it.count ==1) then
-						append timesArray (it[1] as time)
-					else
-						timesArray=timesArray + (for i=it[1] to it[2] collect (i as time))
-				)
-			)
-		)
-	)
-
-	if(flagContinue==false) then
-		Messagebox ((LPM_Fun.getname thePass.name) + " has an incorrectly formatted frame sequence")
-	else
-	(
-		sliderTimeBack = sliderTime
-		safeFrameBack=displaySafeFrames
-		animationRangeBack = animationRange
-		displaySafeFrames=false
-		startTime=amin timesArray
-		endTime= amax timesArray
-		if(startTime < endTime) then
-			animationRange= (interval startTime endTime)
-
-
-		movieMode=false
-		theType=LPM_Fun.upperCase theType
-		if(theType=="MOV") or (theType=="AVI") then
-			movieMode=true
-
-		flag=true
-		if(theShot!=undefined) then
-			progressStart ("S:" +(LPM_fun.getName theShot.name) + " P: "+(LPM_fun.getName thePass.name))
-		else
-			progressStart ("P: "+(LPM_fun.getName thePass.name))
-
-		try
-		(
-			createPreview outputAVI:true percentSize:100 rndLevel:#smoothhighlights start:startTime end:endTime
-		)
-		catch
-		(
-			createPreview()
-		)
-
-		CurCamName = ""
-
-		if(theShot!=undefined) then
-		(
-			try
-			(
-				CurCamName = LPM_Fun.getName theShot.name
-			)
-			catch()
-			CurCamName += "_"
-		)
-
-		TmpOneFolder = LPM_Fun.getIni "Settings" "OnePreviewFolder" booleanClass false
-
-		if TmpOneFolder then
-		(
-			thePath = ""
-			thePath = copy LPM_Root.rootdir
-		)
-
-		local fileToCopy = (getdir #preview) + "\\_scene.avi"
-		local fileToSave =  ( thePath) + "\\previews\\" + theFileName + CurCamName + "001.avi"
-
-
-		for i = 1 to 1000 while (doesfileexist fileToSave) do
-		(
-			TmpI_AsStr = i as string
-			tmp_numb = case TmpI_AsStr.count of
-			(
-				1:
-				(
-					"00"+TmpI_AsStr
-				)
-				2:
-				(
-					"0"+TmpI_AsStr
-				)
-				default:
-				(
-					TmpI_AsStr
-				)
-			)
-			fileToSave =  (thePath) + "\\previews\\" + theFileName + CurCamName + tmp_numb +".avi"
-		)
-
-
-
-		makedir (getFilenamePath fileToSave)
-		copyFile fileToCopy fileToSave
-		progressEnd()
-		gc light:true
-
-		displaySafeFrames=safeFrameBack
-		animationRange = animationRangeBack
-		sliderTime = sliderTimeBack
-	)
-	try (destroydialog LPM_renderProgress_Ro ) catch()
-)
 LPM_Render=LPM_RenderAPI()
-
 
 fn LPM_renderPass thePass renderType theShot:undefined=
 (
@@ -2991,8 +1606,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 	)
 	else
 	(
-		--renderscenedialog.close()
-
 		RndDialogOpened = false
 		if renderSceneDialog.isopen() then
 		(
@@ -3000,10 +1613,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			renderSceneDialog.close()
 		)
 
-
-
 		TmpPassName = LPM_Fun.generatePassName thePass
-
 
 		-- let's use getLocalTime if available (since 2008 or with AVG)
 		if ( classOf getLocalTime == MAXScriptFunction ) then
@@ -3081,9 +1691,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			secs=mod secs 60
 		)
 
-
-
-
 		if(isvalidnode theShot) then
 		(
 			if (hours > 0) then
@@ -3117,7 +1724,5 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		(
 			renderSceneDialog.open()
 		)
-
 	)
 )
-

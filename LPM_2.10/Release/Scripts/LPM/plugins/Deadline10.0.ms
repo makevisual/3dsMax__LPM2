@@ -1200,10 +1200,10 @@ struct LPM_DeadlineAPI
 
 						TmpPassName = (LPM_Fun.getName TmpPass.name)
 
-						if TmpPass.isAdjustment and (TmpPass.AdjustmentFor != undefined) then
-						(
-							TmpPassName = "["+(LPM_Fun.getName (TmpPass.AdjustmentFor.name)) + "]" + TmpPassName
-						)
+--						if TmpPass.isAdjustment and (TmpPass.AdjustmentFor != undefined) then
+--						(
+--							TmpPassName = "["+(LPM_Fun.getName (TmpPass.AdjustmentFor.name)) + "]" + TmpPassName
+--						)
 
 						if (theShot==undefined) then
 						(
