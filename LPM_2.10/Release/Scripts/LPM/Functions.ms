@@ -66,26 +66,19 @@ fn destroyAllDialogs=
 		try(destroyDialog LPM_netRenderRo) catch()
 		try(destroyDialog LPM_progressRO)catch()
 		try(destroyDialog wildCardRO) catch()
-		try(destroyDialog atmRollout) catch()
+		try(destroyDialog LPM_atmRollout) catch()
 		try(destroyDialog ModifierOverRollout)catch()
-		try(destroyDialog SelectLayarRoll)catch()
-		try(destroyDialog commonRollout) catch()
+		try(destroyDialog LPM_commonRollout) catch()
 		try(destroyDialog AboutRo) catch()
 		try(destroyDialog savePresetRo) catch()
 		try(destroyDialog pickPasses_RO) catch()
-		try(destroyDialog objectSetProps)catch()
+		try(destroyDialog LPM_objectSetProps)catch()
 		try(destroyDialog lightSetProps) catch()
 		try(destroyDialog photoStudio_Ro) catch()
 		try(destroyDialog deadlinePropsRoll)catch()				-- Dabelow
 		try(destroyDialog SMTDLPMInterface)catch()				-- Dabelow
-		try(destroyDialog vray5PropsRoll)catch()				-- Dabelow vray5
-		try(destroyDialog vray5RenderElementsPropsRoll)catch()	-- Dabelow vray5
-		try(destroyDialog vray6PropsRoll)catch()				-- Dabelow vray6
-		try(destroyDialog vray6RenderElementsPropsRoll)catch()	-- Dabelow vray6
-
 		try(destroyDialog vrayPropsRoll)catch()					-- Dabelow vrayRenderElements
 		try(destroyDialog vrayRenderElementsPropsRoll)catch()	-- Dabelow vrayRenderElements
-
 		try(destroyDialog cameraOverscanPropsRoll)catch()		-- Dabelow cameraOverscan
 		try(destroyDialog nukeExportPropsRoll)catch()			-- Dabelow nukeExport
 		try(destroyDialog aeExportPropsRoll)catch()				-- Dabelow aeExport
@@ -170,8 +163,6 @@ fn setIcon theNode=
 			"passGroup":LPM_Fun.setImageIndex theNode theNode.tag.value.active 27 28
 			"ModifierOver":LPM_Fun.setImageIndex theNode theNode.tag.value.active 32 33
 			"Deadline":LPM_Fun.setImageIndex theNode theNode.tag.value.active 46 47 			-- Dabelow
-			"vray5RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 48 49 	-- Dabelow vray5
-			"vray5":LPM_Fun.setImageIndex theNode theNode.tag.value.active 50 51 				-- Dabelow vray5
 			"cameraOverscan":LPM_Fun.setImageIndex theNode theNode.tag.value.active 52 53  		-- Dabelow cameraOverscan
 			"nukeExport":LPM_Fun.setImageIndex theNode theNode.tag.value.active 54 55  			-- Dabelow nukeExport
 			"aeExport":LPM_Fun.setImageIndex theNode theNode.tag.value.active 56 57  			-- Dabelow aeExport
@@ -219,8 +210,6 @@ fn passByNode theNode =
 			"script":theNode.parent.tag.value
 			"ModifierOver":theNode.parent.tag.value
 			"Deadline":theNode.parent.tag.value 				-- Dabelow
-			"vray5":theNode.parent.tag.value 					-- Dabelow vray5
-			"vray5RenderElements":theNode.parent.tag.value 		-- Dabelow vray5
 			"vray6":theNode.parent.tag.value 					-- Dabelow vray6
 			"vray6RenderElements":theNode.parent.tag.value 		-- Dabelow vray6
 			"vrayRenderElements":theNode.parent.tag.value 		-- Dabelow vrayrenderelements
@@ -541,8 +530,6 @@ fn createNode pName type=
 		"empty":custAttributes.add theNode LPM_emptyCA
 		"ModifierOver":custAttributes.add theNode ModifierOverCA
 		"Deadline":custAttributes.add theNode deadlinePropsCA 							-- Dabelow
-		"vray5":custAttributes.add theNode vray5PropsCA 								-- Dabelow vray5
-		"vray5RenderElements":custAttributes.add theNode vray5RenderElementsPropsCA 	-- Dabelow vray5
 		"vray6":custAttributes.add theNode vray6PropsCA 								-- Dabelow vray6
 		"vray6RenderElements":custAttributes.add theNode vray6RenderElementsPropsCA 	-- Dabelow vray6
 		"vrayRenderElements":custAttributes.add theNode vrayRenderElementsPropsCA 		-- Dabelow vrayrenderelements
@@ -774,79 +761,6 @@ fn createDeadlineProps theName=
 
 	cp
 ),
-
--- vray5RenderElements
--- dabelow vray5
-fn loadVray5RenderElementsSettings cp isPreviewMode=
-(
-	if isPreviewMode then ( return false )
-
-	LPM_SMTDSettings.active 	 		= cp.active
-	LPM_SMTDSettings.elementOverride 	= cp.elementOverride
-	LPM_SMTDSettings.activeElement 		= cp.activeElement
-),
-
--- createVray5RenderElementsProps
--- Dabelow vray5
-fn createVray5RenderElementsProps theName=
-(
-	cp=LPM_Fun.createNode theName "vray5RenderElements"
-
-	cp.active = true
-	cp.elementOverride = true
-	cp.activeElement = #()
-
-	cp
-),
-
--- vray5 Override
--- Dabelow vray5
-fn createVray5Props theName=
-(
-	cp=LPM_Fun.createNode theName "vray5"
-
-	cp.qualityType = 1
-
-	cp.global_switches_check = false
-		cp.displacement = true
-		cp.reflrefr = true
-
-	cp.anti_aliasing_check = false
-		cp.AAmin = 1
-		cp.AAmax = 4
-
-	cp.GI_illum_check = false
-		cp.giOn = false
-
-	cp.GI_check = false
-		cp.giSkylightOn = false
-		cp.giSkylightMap = undefined
-		cp.giSkylightCol = (color 205 230 255)
-		cp.giSkylightMult = 1
-		cp.giSkylightMapCheck = true
-
-		cp.giRefOn = false
-		cp.giRefMult = 1
-		cp.giRefMap = undefined
-		cp.giRefCol = (color 0 0 0)
-		cp.giRefMapCheck = true
-
-	cp.moblur_check = false
-		cp.moblurOn = false
-		cp.moblurSubdivs = 6
-
-	cp.prog_check = false
-		cp.progMaxSubdiv = 100
-		cp.progTime = 1
-
-	cp.dmc_check = false
-		cp.dmcThresh = .01
-		cp.dmcMult = 1
-
-	cp.initialized=true
-	cp
-),
-
 
 -- vray6RenderElements
 -- dabelow vray6
@@ -1406,59 +1320,6 @@ fn generateDeadlineName cp=
 	if (cp.submitLimitsOn) then
 	(
 		theName += "[Limit] "
-	)
-
-	theName
-),
-
--- Dabelow vray5
-fn generateVray5RenderElementsName cp=
-(
-	--theName = ( cp.type + " Override" )
-	theName = ( "VRay5 Render Elements Override" )
-	theName
-),
-
--- Dabelow vray5
-fn generateVray5PropName cp=
-(
-	theName = ""
-
-	if (cp.qualityType == 1) then
-	(
-		theName = "[Final/Prev] "
-	)else if (cp.qualityType == 2) then
-	(
-		theName = "[Final] "
-	)else if (cp.qualityType == 3) then
-	(
-		theName = "[Prev] "
-	)
-		theName += "Vray5 Override "
-
-	if (cp.global_switches_check) then
-	(
-		theName += "[Globals] "
-	)
-	if (cp.anti_aliasing_check) then
-	(
-		theName += "[AA] "
-	)
-	if (cp.GI_check) then
-	(
-		theName += "[GI] "
-	)
-	if (cp.moblur_check) then
-	(
-		theName += "[Moblur] "
-	)
-	if (cp.prog_check) then
-	(
-		theName += "[Prog] "
-	)
-	if (cp.dmc_check) then
-	(
-		theName += "[DMC] "
 	)
 
 	theName
@@ -2300,8 +2161,8 @@ fn InitListView theListView theColumnName theColumnWidth=
 	theListView.HeaderStyle = (dotNetClass "System.Windows.Forms.ColumnHeaderStyle").none
 	show theListView.TopItem-- = dotNetObject "System.Windows.Forms.ListViewItem" "gfgf"
 
-	theListView.ForeColor = FontColor
-	theListView.BackColor = BackColor
+	theListView.ForeColor = LPM_FontColor
+	theListView.BackColor = LPM_BackColor
 
 	theListView.columns.add theColumnName (theColumnWidth - 30)
 

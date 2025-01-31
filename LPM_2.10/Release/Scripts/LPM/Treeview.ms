@@ -40,7 +40,7 @@ ilTv = dotNetObject "System.Windows.Forms.ImageList"
 ilTv.imageSize = dotNetObject "System.Drawing.Size" 16 15
 
 BackColor = undefined
-FontColor = undefined
+LPM_FontColor = undefined
 
 fn CheckUIColor =
 (
@@ -55,7 +55,7 @@ fn CheckUIColor =
 
 fn getIconFromBitmap iconFileName =
 (
-	theFileName = iconPath + iconFileName +".bmp"
+	theFileName = LPM_iconPath + iconFileName +".bmp"
 	img = dotNetClass "System.Drawing.Image" --create an image
 	ilTv.images.add (img.fromFile theFileName) --add to the list
 )
@@ -67,24 +67,12 @@ fn dotNetColor clr =
 
 fn InitColorUI =
 (
-	BackColor = dotNetColor (color 225 225 225)
-	FontColor = dotNetColor (color 0 0 0)
-
-	if (CheckUIColor() == "Dark") then
-	(
-		BackColor = dotNetColor (color 85 85 85)
-		FontColor = dotNetColor (color 200 200 200)
-		iconPath += "IconsDark/"
-	)
-	else
-	(
-		iconPath += "IconsLight/"
-	)
+	BackColor = dotNetColor (color 85 85 85)
+	LPM_FontColor = dotNetColor (color 200 200 200)
+	LPM_iconPath += "IconsDark/"
 )
 
 InitColorUI()
-
-filein (LPM_Dir+"LPM_Pass_select.ms")
 
 try
 (
@@ -108,7 +96,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	local proMode=false
 	local stopper
-	local doubleClick=false
+	local LPM_doubleClick=false
 	local rNode=undefined
 	local DragNode, DropNode
 	local m=dotNetClass "System.Windows.Forms.DragDropEffects" -- Drag and drop effects
@@ -121,11 +109,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	struct leafType (type, leaf, index, active)
 
 	edittext 		passDDL pos:[-3,2] width:50 height:30 readonly:true
-	checkbutton 	chkbtn_HideRFW "" height:10 width:15 pos:[120,22] tooltip:"Hide Rendered Frame Window" visible:LPM_ShowSkipButton  images:#(iconPath+"HideFrameWindow_btn.bmp",undefined,1,1,1,1,1,true)
-	checkbutton 	chkbtn_SkipExistingImages "" height:10 width:15 pos:[135,22] tooltip:"Skip Existing Images" visible:LPM_ShowSkipButton  images:#(iconPath+"Skip_existing_btn.bmp",undefined,1,1,1,1,1,true)
-	button 			colorButton "tgl" pos:[100,2] images:#(iconPath+"colorOn.bmp",undefined,1,1,1,1,1) tooltip:"Click to color pass, shift click to restore" visible:false----------------------------------------- INVISIBLE
-	checkbutton 	hideButton "rdr" pos:[180,2] images:#(iconPath+"eyeOpen.bmp",undefined,1,1,1,1,1) tooltip:"Hide by category floater." visible:false----------------------------------------------------
-	button 			quickScriptsButton "QS" pos:[180,25] tooltip:"Quick Scripts" height:30 width:30 images:#(iconPath+"Quick_Scripts.bmp",undefined,1,1,1,1,1,true)
+	checkbutton 	chkbtn_HideRFW "" height:10 width:15 pos:[120,22] tooltip:"Hide Rendered Frame Window" visible:LPM_ShowSkipButton  images:#(LPM_iconPath+"HideFrameWindow_btn.bmp",undefined,1,1,1,1,1,true)
+	checkbutton 	chkbtn_SkipExistingImages "" height:10 width:15 pos:[135,22] tooltip:"Skip Existing Images" visible:LPM_ShowSkipButton  images:#(LPM_iconPath+"Skip_existing_btn.bmp",undefined,1,1,1,1,1,true)
+	button 			colorButton "tgl" pos:[100,2] images:#(LPM_iconPath+"colorOn.bmp",undefined,1,1,1,1,1) tooltip:"Click to color pass, shift click to restore" visible:false----------------------------------------- INVISIBLE
+	checkbutton 	hideButton "rdr" pos:[180,2] images:#(LPM_iconPath+"eyeOpen.bmp",undefined,1,1,1,1,1) tooltip:"Hide by category floater." visible:false----------------------------------------------------
+	button 			quickScriptsButton "QS" pos:[180,25] tooltip:"Quick Scripts" height:30 width:30 images:#(LPM_iconPath+"Quick_Scripts.bmp",undefined,1,1,1,1,1,true)
  	dropDownList 	previewSizeDDL "" pos:[160,32] items:#("10","25","50","75","100","150","200") width:45 -- visible:false-----------------------------------------------------------------------------------------------
 	dropDownList 	previewTypeDDL pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp") -- visible:false--------------------------------------------------------------------------------------
  	dropDownList 	cameraDDL "" pos:[0,32] width:100 items:#("-----------------------") -- visible:false----------------------------------------------------------------------------------------------------------------
@@ -187,10 +175,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- In the tv init function
 		tmpcol = ((colorMan.getColor #timeSliderBg)*255) as color
 		OutputPathDDL.BackColor = dotNetColor tmpcol
-		OutputPathDDL.ForeColor = FontColor
+		OutputPathDDL.ForeColor = LPM_FontColor
 		OutputPathDDL.ReadOnly = true
 		editBox.BackColor = dotNetColor (color 245 245 245)
-		tv.BackColor = BackColor
+		tv.BackColor = LPM_BackColor
 		tv.AllowDrop = true -- allow DragandDrop for the Treeview
 
 		getIconFromBitmap "Root"
@@ -244,11 +232,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		-- NOTE -- All additional icons should be added to the end of the list, because icons are called by index
 		-- Addition of new items will offset following icons
+		-- If you want to remove an icon, replace it with "missing" because icons are integer
+		-- based and if the index changes, the icons will be incorrect
 
-		getIconFromBitmap "vray5RenderElements" 			--Dabelow vray5
-		getIconFromBitmap "vray5RenderElementsOff" 			--Dabelow vray5
-		getIconFromBitmap "vray5" 							--Dabelow vray5
-		getIconFromBitmap "vray5Off" 						--Dabelow vray5
+		getIconFromBitmap "missing" 						--Dabelow vray5
+		getIconFromBitmap "missing" 						--Dabelow vray5
+		getIconFromBitmap "missing" 						--Dabelow vray5
+		getIconFromBitmap "missing" 						--Dabelow vray5
 
 		getIconFromBitmap "CameraOverscan" 					--Dabelow cameraOverscan
 		getIconFromBitmap "CameraOverscanOff" 				--Dabelow cameraOverscan
@@ -257,10 +247,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "AfterEffectsExportOperator" 		--Dabelow aeExport
 		getIconFromBitmap "AfterEffectsExportOperatorOff" 	--Dabelow aeExport
 
-		getIconFromBitmap "vray6RenderElements" 			--Dabelow vray6
-		getIconFromBitmap "vray6RenderElementsOff" 			--Dabelow vray6
-		getIconFromBitmap "vray6" 							--Dabelow vray6
-		getIconFromBitmap "vray6Off" 						--Dabelow vray6
+		getIconFromBitmap "missing" 			 			--Dabelow vray6
+		getIconFromBitmap "missing" 						--Dabelow vray6
+		getIconFromBitmap "missing" 						--Dabelow vray6
+		getIconFromBitmap "missing" 						--Dabelow vray6
 
 		getIconFromBitmap "vrayRenderElements" 				--Dabelow vrayRebderElements
 		getIconFromBitmap "vrayRenderElementsOff" 			--Dabelow vrayRebderElements
@@ -273,17 +263,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		if isvalidnode(LPM_ActivePass) then
 		(
 			passDDL.text = LPM_Fun.generatePassName LPM_ActivePass
-			try
-			(
-				LPMPassSelectRoll.UpdateLPMPassSelectRoll()
-			)
-			catch()
-
-			try
-			(
-				LPM_Root.LastActivePass = LPM_Fun.generatePassName LPM_ActivePass
-			)
-			catch()
+			try(LPM_Root.LastActivePass = LPM_Fun.generatePassName LPM_ActivePass)catch()
 		)
 		else
 			passDDL.text="No Pass Active"
@@ -291,15 +271,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		if maxfilepath != "" then
 		(
 			ProjRenderPath = getProjRenderPath()
-			if ProjRenderPath != "" then
-			(
-				OutputPathDDL.text=LPM_Root.rootDir=getProjRenderPath()
-			)
-			else
-			(
-				OutputPathDDL.text=LPM_Root.rootDir
-			)
-
+			if ProjRenderPath != "" then(OutputPathDDL.text=LPM_Root.rootDir=getProjRenderPath())
+			else(OutputPathDDL.text=LPM_Root.rootDir)
 		)
 		else
 		(
@@ -356,8 +329,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"shotRoot": nodeName = (	if(proMode==false) then "Shots (Maximum of 2)" else "Shots" )
 
 			"Deadline": 			nodeName = (LPM_Fun.generateDeadlineName theNode) 				-- Dabelow
-			"vray5RenderElements": 	nodeName = (LPM_Fun.generateVray5RenderElementsName theNode) 	-- Dabelow Vray5
-			"vray5": 				nodeName = (LPM_Fun.generateVray5PropName theNode) 				-- Dabelow Vray5
 			"vray6RenderElements": 	nodeName = (LPM_Fun.generateVray6RenderElementsName theNode) 	-- Dabelow Vray6
 			"vray6": 				nodeName = (LPM_Fun.generateVray6PropName theNode) 				-- Dabelow Vray6
 			"vrayRenderElements": 	nodeName = (LPM_Fun.generateVrayRenderElementsName theNode) 	-- Dabelow VrayRenderElements
@@ -370,7 +341,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		newNode = nodeRoot.Nodes.Add nodeName
 		newNode.tag=dotNetMXSValue theNode
- 		newNode.BackColor = BackColor
+ 		newNode.BackColor = LPM_BackColor
  		newNode.ForeColor = FrontColor
 
 		LPM_Fun.setIcon newNode
@@ -381,8 +352,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	(
 		newPass = createTVnode nodeParent objPass
 
-		newPass.ForeColor = FontColor
-		newPass.BackColor = BackColor
+		newPass.ForeColor = LPM_FontColor
+		newPass.BackColor = LPM_BackColor
 		newPass.nodefont = dotnetobject "system.drawing.font" (dotnetobject "system.drawing.fontfamily" "tahoma") 8.5  (dotNetClass "system.drawing.fontStyle").bold
 		thePass = newPass.tag.value
 		newPass.text =  LPM_Fun.generatePassName thePass
@@ -394,8 +365,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	(
 		tmp_PassGroupTv = createTVnode tvRoot pg
 
-		tmp_PassGroupTv.ForeColor = FontColor
-		tmp_PassGroupTv.BackColor = BackColor
+		tmp_PassGroupTv.ForeColor = LPM_FontColor
+		tmp_PassGroupTv.BackColor = LPM_BackColor
 		tmp_PassGroupTv
 	)
 
@@ -411,35 +382,35 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			obj=allObjSet[1+allObjSet.count-i]
 			newObj = createTVnode newPass obj
 			makeItalic newObj
-			newObj.ForeColor = FontColor
-			newObj.BackColor = BackColor
+			newObj.ForeColor = LPM_FontColor
+			newObj.BackColor = LPM_BackColor
 			for i=1 to obj.wildCard.count do
 			(
 				newNode = createTVnode newObj (leafType "wildCard" obj.wildCard[i] i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			for i=1 to obj.namedSet.count do
 			(
 				newNode = createTVnode newObj (leafType "namedSet" obj.namedSet[i] i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			for i in obj.layers do
 			(
 				newNode = createTVnode newObj (leafType "layer" i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			for i in obj.mats do
 			(
 				newNode = createTVnode newObj (leafType "mat" i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 
 			for i in obj.nodes do
@@ -448,8 +419,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 				(
 					newNode = createTVnode newObj (leafType "object" i) nodeType:"leafObject"
 
-					newNode.ForeColor = FontColor
-					newNode.BackColor = BackColor
+					newNode.ForeColor = LPM_FontColor
+					newNode.BackColor = LPM_BackColor
 				)
 			)
 			if(obj.expanded) then
@@ -463,8 +434,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			obj=allLightSets[1+allLightSets.count-i]
 			newObj = createTVnode newPass obj
 
-			newObj.ForeColor = FontColor
-			newObj.BackColor = BackColor
+			newObj.ForeColor = LPM_FontColor
+			newObj.BackColor = LPM_BackColor
 
 			makeItalic newObj
 
@@ -472,22 +443,22 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			(
 				newNode = createTVnode newObj (leafType "wildCard" obj.wildCard[i] i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			for i=1 to obj.namedSet.count do
 			(
 				newNode = createTVnode newObj (leafType "namedSet" obj.namedSet[i] i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			for i in obj.layers do
 			(
 				newNode = createTVnode newObj (leafType "layer" i) nodeType:"leaf"
 
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			for i in obj.nodes do
 			(
@@ -495,8 +466,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 				(
 					newNode = createTVnode newObj (leafType "object" i) nodeType:"leafObject"
 
-					newNode.ForeColor = FontColor
-					newNode.BackColor = BackColor
+					newNode.ForeColor = LPM_FontColor
+					newNode.BackColor = LPM_BackColor
 				)
 			)
 			if(obj.expanded) then
@@ -508,8 +479,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newCP = createTVnode newPass commonProps nodeType:"commonProps"
 
-			newCP.ForeColor = FontColor
-			newCP.BackColor = BackColor
+			newCP.ForeColor = LPM_FontColor
+			newCP.BackColor = LPM_BackColor
 			makeItalic newCP
 		)
 
@@ -518,8 +489,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newRP = createTVnode newPass renderProps
 
-			newRP.ForeColor = FontColor
-			newRP.BackColor = BackColor
+			newRP.ForeColor = LPM_FontColor
+			newRP.BackColor = LPM_BackColor
 			makeItalic newRP
 		)
 
@@ -528,8 +499,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newVP = createTVnode newPass vrayProps nodeType:"vrayProps"
 
-			newVP.ForeColor = FontColor
-			newVP.BackColor = BackColor
+			newVP.ForeColor = LPM_FontColor
+			newVP.BackColor = LPM_BackColor
 
 			makeItalic newVP
 		)
@@ -539,8 +510,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newEnv = createTVnode newPass envProps
 
-			newEnv.ForeColor = FontColor
-			newEnv.BackColor = BackColor
+			newEnv.ForeColor = LPM_FontColor
+			newEnv.BackColor = LPM_BackColor
 			makeItalic newEnv
 		)
 
@@ -549,8 +520,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newPS = createTVnode newPass photoStudioProps
 
-			newPS.ForeColor = FontColor
-			newPS.BackColor = BackColor
+			newPS.ForeColor = LPM_FontColor
+			newPS.BackColor = LPM_BackColor
 			makeItalic newPS
 		)
 
@@ -559,8 +530,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newXR = createTVnode newPass xrefObjProps
 
-			newXR.ForeColor = FontColor
-			newXR.BackColor = BackColor
+			newXR.ForeColor = LPM_FontColor
+			newXR.BackColor = LPM_BackColor
 			makeItalic newXR
 		)
 
@@ -569,8 +540,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newXR = createTVnode newPass xrefSceneProps
 
-			newXR.ForeColor = FontColor
-			newXR.BackColor = BackColor
+			newXR.ForeColor = LPM_FontColor
+			newXR.BackColor = LPM_BackColor
 
 			makeItalic newXR
 		)
@@ -579,8 +550,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			nScript = createTVnode newPass script
 
-			nScript.ForeColor = FontColor
-			nScript.BackColor = BackColor
+			nScript.ForeColor = LPM_FontColor
+			nScript.BackColor = LPM_BackColor
 			makeItalic nScript
 		)
 
@@ -588,8 +559,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			opTVNode=createTVnode newPass op
 
-			opTVNode.ForeColor = FontColor
-			opTVNode.BackColor = BackColor
+			opTVNode.ForeColor = LPM_FontColor
+			opTVNode.BackColor = LPM_BackColor
 			--makeItalic opTVNode
 		)
 
@@ -597,8 +568,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newModifierOver=createTVnode newPass Modif
 
-			newModifierOver.ForeColor = FontColor
-			newModifierOver.BackColor = BackColor
+			newModifierOver.ForeColor = LPM_FontColor
+			newModifierOver.BackColor = LPM_BackColor
 			makeItalic newModifierOver
 		)
 
@@ -607,29 +578,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newDeadline=createTVnode newPass Deadline nodeType:"Deadline"
 
-			newDeadline.ForeColor = FontColor
-			newDeadline.BackColor = BackColor
+			newDeadline.ForeColor = LPM_FontColor
+			newDeadline.BackColor = LPM_BackColor
 			makeItalic newDeadline
-		)
-
- 		-- Dabelow vray5
-		for vray5RenderElements in pmPass.children where vray5RenderElements.type=="vray5RenderElements" do
-		(
-			newVray5RenderElements=createTVnode newPass vray5RenderElements nodeType:"vray5RenderElements"
-
-			newVray5RenderElements.ForeColor = FontColor
-			newVray5RenderElements.BackColor = BackColor
-			makeItalic newVray5RenderElements
-		)
-
- 		-- Dabelow vray5
-		for vray5 in pmPass.children where vray5.type=="vray5" do
-		(
-			newVray5=createTVnode newPass vray5 nodeType:"vray5"
-
-			newVray5.ForeColor = FontColor
-			newVray5.BackColor = BackColor
-			makeItalic newVray5
 		)
 
  		-- Dabelow vray6
@@ -637,8 +588,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newVray6RenderElements=createTVnode newPass vray6RenderElements nodeType:"vray6RenderElements"
 
-			newVray6RenderElements.ForeColor = FontColor
-			newVray6RenderElements.BackColor = BackColor
+			newVray6RenderElements.ForeColor = LPM_FontColor
+			newVray6RenderElements.BackColor = LPM_BackColor
 			makeItalic newVray6RenderElements
 		)
 
@@ -647,8 +598,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newVrayRenderElements=createTVnode newPass vrayRenderElements nodeType:"vrayRenderElements"
 
-			newVrayRenderElements.ForeColor = FontColor
-			newVrayRenderElements.BackColor = BackColor
+			newVrayRenderElements.ForeColor = LPM_FontColor
+			newVrayRenderElements.BackColor = LPM_BackColor
 			makeItalic newVrayRenderElements
 		)
 
@@ -656,8 +607,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		for vray6 in pmPass.children where vray6.type=="vray6" do
 		(
 			newVray6=createTVnode newPass vray6 nodeType:"vray6"
-			newVray6.ForeColor = FontColor
-			newVray6.BackColor = BackColor
+			newVray6.ForeColor = LPM_FontColor
+			newVray6.BackColor = LPM_BackColor
 			makeItalic newVray6
 		)
 
@@ -671,8 +622,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	(
 		newShot = createTVnode shotRootTV shotNode
 
-		newShot.ForeColor = FontColor
-		newShot.BackColor = BackColor
+		newShot.ForeColor = LPM_FontColor
+		newShot.BackColor = LPM_BackColor
 		newShot.nodefont = dotnetobject "system.drawing.font" (dotnetobject "system.drawing.fontfamily" "tahoma") 8.5  (dotNetClass "system.drawing.fontStyle").bold
 		newShot
 	)
@@ -687,8 +638,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newCP = createTVnode newShot commonProps nodeType:"commonProps"
 
-			newCP.ForeColor = FontColor
-			newCP.BackColor = BackColor
+			newCP.ForeColor = LPM_FontColor
+			newCP.BackColor = LPM_BackColor
 			makeItalic newCP
 		)
 
@@ -698,8 +649,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newCP = createTVnode newShot cameraOverscan nodeType:"cameraOverscan"
 
-			newCP.ForeColor = FontColor
-			newCP.BackColor = BackColor
+			newCP.ForeColor = LPM_FontColor
+			newCP.BackColor = LPM_BackColor
 			makeItalic newCP
 		)
 
@@ -709,8 +660,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newCP = createTVnode newShot nukeExport nodeType:"nukeExport"
 
-			newCP.ForeColor = FontColor
-			newCP.BackColor = BackColor
+			newCP.ForeColor = LPM_FontColor
+			newCP.BackColor = LPM_BackColor
 			makeItalic newCP
 		)
 
@@ -720,8 +671,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newCP = createTVnode newShot aeExport nodeType:"aeExport"
 
-			newCP.ForeColor = FontColor
-			newCP.BackColor = BackColor
+			newCP.ForeColor = LPM_FontColor
+			newCP.BackColor = LPM_BackColor
 			makeItalic newCP
 		)
 
@@ -730,8 +681,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newPS = createTVnode newPass photoStudioProps
 
-			newPS.ForeColor = FontColor
-			newPS.BackColor = BackColor
+			newPS.ForeColor = LPM_FontColor
+			newPS.BackColor = LPM_BackColor
 			makeItalic newPS
 		)
 
@@ -750,8 +701,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 				newNode = createTVnode newShot (leafType "ShotPass" (pmShot.passes[i]) i ni[i]) nodeType:"leafObject"
 
 				newNode.text = LPM_Fun.generatePassName pmShot.passes[i]
-				newNode.ForeColor = FontColor
-				newNode.BackColor = BackColor
+				newNode.ForeColor = LPM_FontColor
+				newNode.BackColor = LPM_BackColor
 			)
 			pmShot.passes=np
 			pmShot.passesOn=ni
@@ -760,8 +711,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			pmAllpasses = createTVnode newShot (leafType "ShotPassAll" "All Active Passes") nodeType:"leaf"
 
-			pmAllpasses.ForeColor = FontColor
-			pmAllpasses.BackColor = BackColor
+			pmAllpasses.ForeColor = LPM_FontColor
+			pmAllpasses.BackColor = LPM_BackColor
 		)
 
 		if(pmShot.expanded) then
@@ -775,8 +726,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		tv.beginUpdate()
 
 		tvRoot = createTVnode tv LPM_Root nodeType:"passRoot"
-		tvRoot.ForeColor = FontColor
-		tvRoot.BackColor = BackColor
+		tvRoot.ForeColor = LPM_FontColor
+		tvRoot.BackColor = LPM_BackColor
 
 		--add the passes
 		count=0
@@ -805,8 +756,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			(
 				newPass = createPassTv pmPass tvRoot
 
-				newPass.ForeColor = FontColor
-				newPass.BackColor = BackColor
+				newPass.ForeColor = LPM_FontColor
+				newPass.BackColor = LPM_BackColor
 				addPassTv newPass
 			)
 		)
@@ -815,8 +766,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		shotRootTV = createTVnode tv (LPM_Fun.firstChildByType LPM_Root "shotRoot") nodeType:"shotRoot"
 
-		shotRootTV.ForeColor = FontColor
-		shotRootTV.BackColor = BackColor
+		shotRootTV.ForeColor = LPM_FontColor
+		shotRootTV.BackColor = LPM_BackColor
 
 		--add the shots
 
@@ -1200,18 +1151,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	fn EditDeadline =
 	(
 		createDialog LPMDeadline pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
-	)
-
-	--Dabelow Vray5RenderElements
-	fn EditVray5RenderElements =
-	(
-		createDialog vray5RenderElementsPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
-	)
-
-	--Dabelow Vray5
-	fn EditVray5 =
-	(
-		createDialog vray5PropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)
 
 	--Dabelow Vray6RenderElements
@@ -1678,7 +1617,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	on tv drawNode arg do
 	(
 		img = dotNetClass "System.Drawing.Image"--create an image
-		img2=img.fromFile (iconPath + "Root.Bmp")
+		img2=img.fromFile (LPM_iconPath + "Root.Bmp")
 
 		theColor=(dotNetClass "System.Drawing.Brushes").Blue
 		theFont=dotnetobject "system.drawing.font" (dotnetobject "system.drawing.fontfamily" "tahoma") 8.5  (dotNetClass "system.drawing.fontStyle").bold
@@ -1876,20 +1815,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						)
 						-- Dabelow
 						"Deadline":
-						(
-							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-							delete theNode
-							LPM_treeview_rollout.tv.selectedNode.remove()
-						)
-						-- Dabelow VRay5
-						"vray5RenderElements":
-						(
-							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-							delete theNode
-							LPM_treeview_rollout.tv.selectedNode.remove()
-						)
-						-- Dabelow VRay5
-						"vray5":
 						(
 							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 							delete theNode
@@ -2223,21 +2148,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						hitNode.tag.value.active= not hitNode.tag.value.active
 						LPM_Fun.setIcon hitNode
 					)
-
-					-- Dabelow Vray5
-					"vray5RenderElements":
-					(
-						hitNode.tag.value.active= not hitNode.tag.value.active
-						LPM_Fun.setIcon hitNode
-					)
-
-					-- Dabelow Vray5
-					"vray5":
-					(
-						hitNode.tag.value.active= not hitNode.tag.value.active
-						LPM_Fun.setIcon hitNode
-					)
-
 					-- Dabelow Vray6
 					"vray6RenderElements":
 					(
@@ -2496,8 +2406,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					)
 					"ModifierOver":popUpMenu rc_ModifierOverMenu
 					"Deadline":popUpMenu rc_deadlinePropsMenu 							-- Dabelow
-					"vray5":popUpMenu rc_vray5PropsMenu 								-- Dabelow Vray5
-					"vray5RenderElements":popUpMenu rc_vray5RenderElementsPropsMenu 	-- Dabelow Vray5RenderElements
 					"vray6":popUpMenu rc_vray6PropsMenu 								-- Dabelow Vray6
 					"vray6RenderElements":popUpMenu rc_vray6RenderElementsPropsMenu 	-- Dabelow Vray6RenderElements
 					"vrayRenderElements":popUpMenu rc_vrayRenderElementsPropsMenu 		-- Dabelow VrayRenderElements
@@ -2516,12 +2424,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on tv NodeMouseDoubleClick arg do
 	(
-		doubleClick = true
+		LPM_doubleClick = true
 	)
 
 	on tv MouseDoubleClick arg do
 	(
-		doubleClick = true
+		LPM_doubleClick = true
 		hitNode = tv.GetNodeAt arg.Location
 		if (hitNode != undefined) then
 		(
@@ -2532,7 +2440,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"root":popUpMenu rc_RootMenu
 					"pass":
 					(
-						doubleClick = true
+						LPM_doubleClick = true
 
 						filein (LPM_Dir + "passSettingsRO.ms")
 					)
@@ -2542,13 +2450,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					)
 
 					"vrayProps":popUpMenu  rc_vrayPropsMenu
-					"objectSet": (createDialog objectSetProps 194 403 pos:(LPM_Fun.getRoPos 194))
+					"objectSet": (createDialog LPM_objectSetProps 194 403 pos:(LPM_Fun.getRoPos 194))
 					"lightSet": (createDialog lightSetProps pos:(LPM_Fun.getRoPos 194))
 					"object":popUpMenu rc_objectMenu
 					"light":popUpMenu rc_objectMenu
 					"layer":popUpMenu rc_layerMenu
-					"envProps": createdialog atmRollout pos:(LPM_Fun.getRoPos  atmRollout.width)
-					"commonProps": createDialog commonRollout pos:(LPM_Fun.getRoPos  commonRollout.width)
+					"envProps": createdialog LPM_atmRollout pos:(LPM_Fun.getRoPos  LPM_atmRollout.width)
+					"commonProps": createDialog LPM_commonRollout pos:(LPM_Fun.getRoPos  LPM_commonRollout.width)
 					"wildCard":(createDialog wildCardRO pos:(LPM_Fun.getRoPos  wildCardRO.width))
 					"namedSet":popUpMenu rc_namedSetMenu
 					"shotRoot":popUpMenu rc_shotRootMenu
@@ -2568,8 +2476,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					)
 					"ModifierOver":(AddModifierOverride())
 					"Deadline":(EditDeadline()) 							-- Dabelow
-					"vray5RenderElements":(EditVray5RenderElements()) 		-- Dabelow Vray5
-					"vray5":(EditVray5()) 									-- Dabelow Vray5
 					"vray6RenderElements":(EditVray6RenderElements()) 		-- Dabelow Vray6
 					"vray6":(EditVray6()) 									-- Dabelow Vray6
 					"vrayRenderElements":(EditVrayRenderElements()) 		-- Dabelow VrayRenderElements
@@ -2580,7 +2486,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			)
 		)
 
-		doubleClick = true
+		LPM_doubleClick = true
 	)
 
 	-- DRAG AND DROP
@@ -2588,9 +2494,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	 (
 		 dragnode=arg.item
 
-		 -- Dabelow Vray5 / cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
+		 -- Dabelow cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
 		it=arg.item.tag.value.type
-		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray5RenderElements") or (it=="vray6RenderElements") or (it=="vray5") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
+		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray6RenderElements") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
 		tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 	 )
 
@@ -2719,8 +2625,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theNode=dragNode.tag.value
 					theType=dragNode.tag.value.type
 
-					-- Dabelow vray5 / cameraOverscan / nukeExport / aeExport / Dabelow vray6
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="Deadline") or (theType=="vray5RenderElements") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray5") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
+					-- Dabelow / cameraOverscan / nukeExport / aeExport / Dabelow vray6
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="Deadline") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it
@@ -2836,7 +2742,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		if OutputPathDDL.readonly then
 		(
 			OutputPathDDL.readonly = false
-			OutputPathDDL.BackColor = BackColor
+			OutputPathDDL.BackColor = LPM_BackColor
 		)
 	)
 
@@ -2857,7 +2763,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 				if OutputPathDDL.readonly then
 				(
 					OutputPathDDL.readonly = false
-					OutputPathDDL.BackColor = BackColor
+					OutputPathDDL.BackColor = LPM_BackColor
 				)
 				else
 				(

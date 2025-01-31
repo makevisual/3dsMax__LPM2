@@ -1,10 +1,6 @@
 filein "rcMenu_vrayOverride.ms"
 filein "rcMenu_deadlineOverride.ms" 					-- Dabelow
 filein "rcMenu_Utilities.ms" 							-- Dabelow
-filein "rcMenu_vray5RenderElementsOverride.ms" 			-- Dabelow vray5
-filein "rcMenu_vray5Override.ms" 						-- Dabelow vray5
-filein "rcMenu_vray6RenderElementsOverride.ms" 			-- Dabelow vray6
-filein "rcMenu_vray6Override.ms" 						-- Dabelow vray6
 filein "rcMenu_vrayRenderElementsOverride.ms" 			-- Dabelow vrayRenderElements
 filein "rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
 filein "rcMenu_nukeExport.ms"							-- Dabelow nukeExport
@@ -208,9 +204,9 @@ filein "rcMenu_aeExport.ms"								-- Dabelow aeExport
 
 
 
--------------------------------------------------------------------------------------------------------   objectSetProps   -------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------   LPM_objectSetProps   -------------------------------------------------------------------------------------------------------
 
-rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.selectedNode.tag.value.name))
+rollout LPM_objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.selectedNode.tag.value.name))
 (
 
 	GroupBox grp5 "Render Control" pos:[3,3] width:190 height:325
@@ -367,7 +363,7 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 
 	)
 
-	on objectSetProps open do
+	on LPM_objectSetProps open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 
@@ -443,7 +439,7 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 		)
 	)
 
-	on objectSetProps close do
+	on LPM_objectSetProps close do
 	(
 		theObjectSet=LPM_treeview_rollout.tv.selectedNode.tag.value
 		theObjectSet.intP=#(pRenderable.selection,pCastShadows.selection,pReceiveShadows.selection,\
@@ -880,9 +876,9 @@ rollout XrefObjRollout "Xref Object Override" width:400 height:300
 )
 
 
--------------------------------------------------------------------------------------------------------   atmRollout   -------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------   LPM_atmRollout   -------------------------------------------------------------------------------------------------------
 
-rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
+rollout LPM_atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 (
 	local elementArray=#()
 	local atmArray=#()
@@ -929,7 +925,7 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 
 	local theNode
 
-	on atmRollout open do
+	on LPM_atmRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 
@@ -1180,7 +1176,7 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 		--clearAtm.enabled=state
 	)
 
-	on atmRollout close do
+	on LPM_atmRollout close do
 	(
 		--element
 		theNode.elementOverride=elementOverride.checked
@@ -1212,8 +1208,8 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 	)
 )
 
--------------------------------------------------------------------------------------------------------   commonRollout   -------------------------------------------------------------------------------------------------------
-rollout commonRollout "Common Properties" width:370 height:530
+-------------------------------------------------------------------------------------------------------   LPM_commonRollout   -------------------------------------------------------------------------------------------------------
+rollout LPM_commonRollout "Common Properties" width:370 height:530
 (
 	GroupBox grp1 "Time Output" pos:[24,4] width:335 height:111 enabled:false
 	GroupBox grp2 "Output Size" pos:[24,112] width:336 height:88 enabled:false
@@ -1487,7 +1483,7 @@ rollout commonRollout "Common Properties" width:370 height:530
 	)
 
 
-	on commonRollout open do
+	on LPM_commonRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -1549,7 +1545,7 @@ rollout commonRollout "Common Properties" width:370 height:530
 		disableFinalOutput.checked=cp.disableFinalOutput
 		toggleState()
 	)
-	on commonRollout close do
+	on LPM_commonRollout close do
 	(
 		try(
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -1726,35 +1722,6 @@ rollout layerPicker "Pick Layers" height:420 width:200
 	)
 )
 
--------------------------------------------------------------------------------------------------------   AboutRO   -------------------------------------------------------------------------------------------------------
-
-rollout AboutRO "About LPM 1.09" width:265 height:180
-(
-	button bmp1 "" pos:[6,8] width:250 height:100 images:#(iconPath  + "lpm.jpg", undefined, 1, 1, 1, 1, 1)
-	HyperLink lbl1 "www.Lukashi.com" address:"http://www.lukashi.com" pos:[73,145] width:113 height:15
-	label lbl2 "Lukashi@Gmail.com" pos:[74,161] width:113 height:15
-	label lbl3 "L Pass Manager by Lukas Lepicovsky" pos:[37,112] width:186 height:15
-	label lbl4 "Copyright 2008, All rights reserved." pos:[46,129] width:186 height:16
-	on bmp1 pressed do
-	(
-		shellLaunch "http://www.lukashi.com/LPM.php" ""
-	)
-)
-
-rollout AboutNewRO "About LPM 2.0" width:313 height:250
-(
-	button bmp1 "" pos:[6,8] width:300 height:100 images:#(iconPath  + "lpm_2.0.jpg", undefined, 1, 1, 1, 1, 1)
-	HyperLink lbl5 "in Altspace. 2015" pos:[160,113] width:186 height:15 address:"http://altspace.com/"
-	HyperLink lbl6 "Made by grover_gol" pos:[60,113] width:186 height:15 address:"http://grovergol.com/"
-	label lbl6fd "Great thanks for ideas, testing and other help:" pos:[50,170] width:256 height:15
-	editText edt1 "" pos:[6,191] width:300 height:51 editable:false text:"Tiufyakov Kirill, Muzalev Vladimir, Ilya Rutkovsky,\nEvgeny Kashin, gzibon, weaponer, ertaro,\nDmitry Grigorev, Filipp Gorbachev"
-
-	on bmp1 pressed do
-	(
-		shellLaunch "http://www.grovergol.com/?page_id=338" ""
-	)
-)
-
 -------------------------------------------------------------------------------------------------------   Right Click Menues   ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------------------------------   MainMenu   -------------------------------------------------------------------------------------------------------
 
@@ -1813,16 +1780,6 @@ rcMenu rc_MainMenu
 	on helpMenuNew picked do
 	(
 		shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" ""
-	)
-
-	on aboutMenu picked do
-	(
-		createDialog AboutRo pos:(LPM_Fun.getRoPos AboutRo.width)
-	)
-
-	on aboutMenuNew picked do
-	(
-		createDialog AboutNewRo pos:(LPM_Fun.getRoPos AboutRo.width)
 	)
 
 	on renderDialog picked do
@@ -2475,27 +2432,7 @@ rcMenu rc_PassMenu
 
 	)
 
-	-- Dabelow vray5
-	on vray5RenderElementsPropsAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		theSet=LPM_Fun.createVray5RenderElementsProps "vray5RenderElements"
-		theSet.parent=thePass
-		LPM_treeview_rollout.addPassTV thePassNode
-	)
-
-	-- Dabelow vray5
-	on vray5PropsAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		theSet=LPM_Fun.createVray5Props "vray5"
-		theSet.parent=thePass
-		LPM_treeview_rollout.addPassTV thePassNode
-	)
-
-		-- Dabelow vray6
+	-- Dabelow vray6
 	on vray6RenderElementsPropsAdd picked do
 	(
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
@@ -2789,7 +2726,7 @@ rcMenu rc_commonPropsMenu
 	)
 	on editProps picked do
 	(
-		createDialog commonRollout pos:(LPM_Fun.getRoPos  commonRollout.width)
+		createDialog LPM_commonRollout pos:(LPM_Fun.getRoPos  LPM_commonRollout.width)
 	)
 	on grabtime picked do
 	(
@@ -3104,7 +3041,7 @@ rcMenu rc_ObjectSetMenu
 	on editSet picked do
 	(
 		if(LPM_treeview_rollout.tv.selectedNode.tag.value.type=="objectSet")then
-			createDialog objectSetProps 194 403 pos:(LPM_Fun.getRoPos  194)
+			createDialog LPM_objectSetProps 194 403 pos:(LPM_Fun.getRoPos  194)
 		else
 			createDialog lightSetProps  pos:(LPM_Fun.getRoPos  194)
 
@@ -3508,7 +3445,7 @@ rcMenu rc_atmPropsMenu
 
 	on addByName picked do
 	(
-		createdialog atmRollout pos:(LPM_Fun.getRoPos  atmRollout.width)
+		createdialog LPM_atmRollout pos:(LPM_Fun.getRoPos  LPM_atmRollout.width)
 	)
 
 	on openEnvDialog picked do
