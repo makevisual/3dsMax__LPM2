@@ -532,7 +532,6 @@ struct LPM_RenderAPI
 	viewportCamBack,
 	viewportTypeBack,
 	vrfrbufBackup,
-	DistributedRenderBack,
 	HideRFWBack,
 	SkipExistingImagesBack,
 	ModifierBack,
@@ -675,49 +674,6 @@ struct LPM_RenderAPI
 					print thePass
 					LPM_Fun.loadDeadlineSettings theDeadlineProps[1] isPreviewMode
 				)
-
-				--Load photoStudio Props
-				photoStudioProps=LPM_Fun.firstChildByType thePass "photoStudio"
-				if(photoStudioProps != undefined) and (photoStudioProps.active) then
-				(
-					if classof renderers.current == mental_ray_renderer then
-					(
-						--if render settings are not backed up, then back them up
-						if(preRenderSettingsNew)==undefined then
-						(
-							preRenderSettingsNew=LPM_Fun.saveRenderPresetNew()
-						)
-
-						if(preRenderSettings)==undefined then
-						(
-							preRenderSettings=LPM_Fun.saveRenderPreset()
-						)
-
-						renderers.current.Camera_Lens_Shader=photoStudioProps.ps
-						renderers.current.Camera_Lens_Shader.gamma=fileOutGamma
-						renderers.current.Camera_Lens_Shader.cm2_factor=80000.0/pi
-						try(renderers.current.Camera_Lens_Shader.cm2_factor=SceneExposureControl.exposureControl.physical_scale/pi)
-						catch
-						(
-							print "**Warning** PhotoStudio Exposure: Exposure Control not found, defaulting to Physical Scale of 80000.0, consider using Logarithmic Exposure Control."
-							setWarning()
-						)
-
-						renderers.current.MotionBlurEnable = photoStudioProps.mb_aktiv
-						renderers.current.MotionBlurAllObjects = photoStudioProps.blur_all
-						renderers.current.Shutter =  photoStudioProps.duration
-						renderers.current.MotionBlurOffset = photoStudioProps.offset
-						renderers.current.Segments= photoStudioProps.motion_segments
-						renderers.current.TimeSamples = photoStudioProps.time_samples
-						renderers.current.RapidMotionResample = photoStudioProps.rapid_samples
-					)
-					else
-					(
-						setWarning()
-						print "**Warning** PhotoStudio Exposure requires Mental Ray"
-					)
-				)
-
 
 				-- xrefObjects Backup
 				xrefObjBackArray=#()
@@ -965,13 +921,11 @@ struct LPM_RenderAPI
 				AdjenvBackup=#()
 
 				exposureBackup=SceneExposureControl.exposureControl
-
 				vrfrbufBackup = 0
-				DistributedRenderBack = 0
 
 				--element backup
 				--Elements must always be backed up because using exposure control changes the number of elements
-				RenderElementsUpdatePaths()
+--				RenderElementsUpdatePaths()
 				re = maxOps.GetCurRenderElementMgr()
 
 				-- HideRFWBack  SkipExistingImagesBack
@@ -1405,46 +1359,6 @@ struct LPM_RenderAPI
 						)
 					)
 				)
-
-				--DistributedRender Restore
-				-------------------------------------------------------------------------------------------------
-				try
-				(
-					if LPM_Root.DistributedRender then
-					(
-						vr=renderers.current
-						LocalDistributedRender = LPM_Fun.getIni "Settings" "UseDistributedRendering" booleanClass true
-
-
-						theRenderer=(classof vr) as string
-						useRend=0
-
-						if (findString theRenderer "V_Ray" !=undefined) then
-							useRend=1
-						if(findstring theRenderer "Corona"!=undefined) then
-							useRend=2
-
-						case useRend of
-						(
-							1:
-							(
-
-								if  DistributedRenderBack != 0 then
-								(
-									vr.system_distributedRender = DistributedRenderBack
-								)
-							)
-							2:
-							(
-								if  DistributedRenderBack != 0 then
-								(
-									vr.dr_enable = DistributedRenderBack
-								)
-							)
-						)
-					)
-				)
-				catch()
 
 				--     HideRFW  SkipExistingImages restore
 				try( if SkipExistingImagesBack != 0 then ( skipRenderedFrames = SkipExistingImagesBack ) )catch()

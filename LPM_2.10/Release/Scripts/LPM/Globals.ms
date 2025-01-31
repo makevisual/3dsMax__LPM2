@@ -27,12 +27,13 @@ global LPM_oldRenderSettingsNew
 global LPM_renderer_closed
 global LPM_ObjSetPropsBuff
 global LPM_LightSetPropsBuff
-global LPM_SMTDSettings 				-- Dabelow
-global LPM_NukeAPI 						-- Dabelow
-global LPM_RenderDispatchThePass 		-- Dabelow Render Dispatch ( future renderer compatable )
-global LPM_RenderDispatchAction 		-- Dabelow Render Dispatch ( future renderer compatable )
-global LPM_RenderDispatchRestoreData 	-- Dabelow Render Dispatch ( future renderer compatable )
-global LPM_OperatorData 				-- Dabelow 
 global LPM_iconPath = LPM_Dir + "icons/"
-global LPM_BackColor 						-- Difficult to change name, also .net property collision
+global LPM_BackColor 					
 global LPM_FontColor
+
+global LPM_SMTDSettings 					-- Dabelow
+global LPM_NukeAPI 							-- Dabelow
+global LPM_RenderDispatchThePass 			-- Dabelow Render Dispatch ( future renderer compatable )
+global LPM_RenderDispatchAction 			-- Dabelow Render Dispatch ( future renderer compatable )
+global LPM_RenderDispatchRestoreData 		-- Dabelow Render Dispatch ( future renderer compatable )
+global LPM_OperatorData 					-- Dabelow 

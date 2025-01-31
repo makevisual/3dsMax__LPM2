@@ -14,16 +14,12 @@ version:2
 		expanded type:#boolean
 		renderType type:#integer default:3
 		previewSize type:#integer default:50
-
-		DistributedRender type:#boolean default:false
 		LastActivePass type:#string default:""
-
 		PostConvertVrimg2exr type:#string default:"C:\\Program Files\\Chaos Group\\V-Ray\\3dsmax 2014 for x64\\tools\\vrimg2exr.exe"
 		PostConvert type:#boolean default:false
 		PostConvertCompression type:#integer default:3
 		PostConvertHalfFoat type:#boolean default:false
 		PostConvertDatawindow type:#boolean default:false
-
 		PostRenderFrameScript type:#boolean default:false
 		PostRenderFrameScriptText type:#string default:""
 
@@ -512,55 +508,6 @@ attribID:#(0x01828340, 0x02948239)
 	)
 )
 
-photoStudio_DataCA= attributes photoStudio_Data
-attribID:#(0x2f0c0d5d, 0x2c7c0655)
-version:2
-(
-	parameters main
-	(
-		ps type:#texturemap
-		type type:#string
-		active type:#boolean default:true
-		autoUpdate type:#boolean default:true
-
-		gi_id 			type:#integer default:2
-		caustics_id 		type:#integer default:2
-		physical_id 		type:#integer default:0
-		physical_status 	type:#integer default:3
-		streaks_id 		type:#integer default:0
-		bg_lock_id   type:#boolean default:off
-		bokeh_id 		type:#integer default:0
-		rgb_bokeh_id 		type:#integer default:0
-		openexr_name 	type:#string default:"<<none>>"
-		camera_name 		type:#string default:"<<none>>"
-		physical_scale 	type:#float default:80000
-
-		fov 			type:#float default:35
-
-		--camera sliders
-		film_iso_slider 	type:#integer default:2
-		camera_shutter_slider type:#integer default:10
-		f_number_slider 	type:#integer default:5
-		bg_multiply 		type:#float default:1
-
-		--Motion blur
-		mb_aktiv 		type:#boolean default:off
-		blur_all 		type:#boolean default:on
-		duration 		type:#float default:0.5
-		offset 		type:#float default:0.25
-		motion_segments 	type:#integer default:1
-		time_samples 	type:#integer default:5
-		rapid_samples	type:#integer default:1
-
-		--open
-		rAboutOpen type:#boolean default:false
-		rPhysicOpen type:#boolean default:false
-		rGlareOpen type:#boolean default:false
-		rDOFOpen type:#boolean default:false
-		rmotionblurOpen type:#boolean default:false
-		rCameraOpen type:#boolean default:true
-	)
-)
 
 LPM_scriptCA = attributes LPM_ScriptDef
 attribID:#(0x236b7a3b, 0x4be701be)

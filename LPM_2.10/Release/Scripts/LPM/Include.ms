@@ -21,4 +21,4 @@ LPM_Root.renderType = 3 -- Force to shots
 print ("LPM Version - " + ( LPM_VersionNumber as string ) )
 
 -- look into removing photo studio
--- look into removing operators for vray5
+-- look into removing operators for vray5s

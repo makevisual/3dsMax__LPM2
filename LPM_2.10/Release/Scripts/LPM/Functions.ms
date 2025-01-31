@@ -16,45 +16,6 @@ function preFileOpenCallback_Remove =
 	callbacks.removeScripts #filePreOpen id:#lpm_filePreOpen_Callback
 ),
 
-function vrayDR_restartSlaves_check = -- dabelow
-(
-	try(
-		content = ""
-		DRSettingsFile = ( ( getdir #plugcfg ) + @"\vray_dr.cfg" )
-
-		DRSettingsFilestream = openfile DRSettingsFile mode:"r+"
-
-		while not eof DRSettingsFilestream do
-		(
-			curLine = copy (readLine DRSettingsFilestream)
-
-			if curLine == "restart_slaves 0"
-			then (
-				content += "restart_slaves 1"
-				content += "\n"
-			)
-			else (
-				content += curLine
-				content += "\n"
-			)
-		)
-		close DRSettingsFilestream
-
-		-- Delete the old and create a new file
-		HiddenDOSCommand ("del " + "\"" + DRSettingsFile + "\"" )
-		DRSettingsFilestream = createFile DRSettingsFile
-
-		format content to: DRSettingsFilestream
-		close DRSettingsFilestream
-
-		)
-		catch
-		(
-			try( close DRSettingsFilestream )
-			catch()
-		)
-),
-
 fn destroyAllDialogs=
 (
 
@@ -74,7 +35,6 @@ fn destroyAllDialogs=
 		try(destroyDialog pickPasses_RO) catch()
 		try(destroyDialog LPM_objectSetProps)catch()
 		try(destroyDialog lightSetProps) catch()
-		try(destroyDialog photoStudio_Ro) catch()
 		try(destroyDialog deadlinePropsRoll)catch()				-- Dabelow
 		try(destroyDialog SMTDLPMInterface)catch()				-- Dabelow
 		try(destroyDialog vrayPropsRoll)catch()					-- Dabelow vrayRenderElements
@@ -158,7 +118,6 @@ fn setIcon theNode=
 					false: LPM_Fun.setImageIndex theNode true 21 21
 				)
 			)
-			"photoStudio":LPM_Fun.setImageIndex theNode theNode.tag.value.active 25 26
 			"script":LPM_Fun.setImageIndex theNode theNode.tag.value.active 29 30
 			"passGroup":LPM_Fun.setImageIndex theNode theNode.tag.value.active 27 28
 			"ModifierOver":LPM_Fun.setImageIndex theNode theNode.tag.value.active 32 33
@@ -206,7 +165,6 @@ fn passByNode theNode =
 			"xrefObj":theNode.parent.tag.value
 			"xrefScene":theNode.parent.tag.value
 			"xrefLeaf":theNode.parent.parent.tag.value
-			"photoStudio":theNode.parent.tag.value
 			"script":theNode.parent.tag.value
 			"ModifierOver":theNode.parent.tag.value
 			"Deadline":theNode.parent.tag.value 				-- Dabelow
@@ -524,7 +482,6 @@ fn createNode pName type=
 		"shot":custAttributes.add theNode LPM_shotCA
 		"xrefObj":custAttributes.add theNode LPM_XrefObjCA
 		"xrefScene":custAttributes.add theNode LPM_XrefSceneCA
-		"photoStudio":custAttributes.add theNode photoStudio_DataCA
 		"script":custAttributes.add theNode LPM_ScriptCA
 		"passGroup":custAttributes.add theNode LPM_passGroupCA
 		"empty":custAttributes.add theNode LPM_emptyCA
@@ -1984,7 +1941,7 @@ fn localRenderSubmit=
 	(
 
 
-		ProjRenderPath = getProjRenderPath()
+		ProjRenderPath = LPM_Root.rootDir
 		if ProjRenderPath != LPM_Root.rootDir then
 		(
 			if (queryBox "Saving directory is not correct. Continue?") then
@@ -2016,14 +1973,6 @@ fn localRenderSubmit=
 	(
 		messageBox ProjRenderPathTest[2]
 	)
-),
-
---PhotoStudio
-fn createPhotoStudio theName=
-(
-	prop=LPM_Fun.createNode theName "photoStudio"
-	prop.ps=BO_Photostudio()
-	prop
 ),
 
 fn getPreviewFile thePass=

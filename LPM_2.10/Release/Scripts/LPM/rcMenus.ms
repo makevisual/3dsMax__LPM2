@@ -1,10 +1,10 @@
-filein "rcMenu_vrayOverride.ms"
-filein "rcMenu_deadlineOverride.ms" 					-- Dabelow
-filein "rcMenu_Utilities.ms" 							-- Dabelow
-filein "rcMenu_vrayRenderElementsOverride.ms" 			-- Dabelow vrayRenderElements
-filein "rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
-filein "rcMenu_nukeExport.ms"							-- Dabelow nukeExport
-filein "rcMenu_aeExport.ms"								-- Dabelow aeExport
+filein @"rcMenus\rcMenu_vrayOverride.ms"
+filein @"rcMenus\rcMenu_deadlineOverride.ms" 					-- Dabelow
+filein @"rcMenus\rcMenu_Utilities.ms" 							-- Dabelow
+filein @"rcMenus\rcMenu_vrayRenderElementsOverride.ms" 			-- Dabelow vrayRenderElements
+filein @"rcMenus\rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
+filein @"rcMenus\rcMenu_nukeExport.ms"							-- Dabelow nukeExport
+filein @"rcMenus\rcMenu_aeExport.ms"							-- Dabelow aeExport
 
  rollout lightSetProps ("Editing: "+ (LPM_Fun.getname LPM_treeview_rollout.tv.selectedNode.tag.value.name)) width:195 height:265
 	(
@@ -2501,53 +2501,6 @@ rcMenu rc_PassMenu
 
 	)
 
-
-	on photoStudioAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		thePass.expanded = true
-		global LPM_Photostudio_Skip_Warning
-		if((LPM_Fun.firstChildByType thePass "photoStudio")==undefined) then
-		(
-			if (not (iskindof SceneExposureControl.exposureControl Logarithmic_Exposure_Control)) and (LPM_Photostudio_Skip_Warning!=true) then
-			(
-				rollout LPM_PS_Warning "Logarithmic Exposure Control" width:412 height:152
-				(
-					label lbl1 "You are creating a PhotoStudio Override" pos:[11,9] width:282 height:18
-					label lbl2 "It is recommended that you use a Logarithmic Exposure Control with Brightness=65.0, Exterior daylight=true" pos:[11,33] width:324 height:32
-					label lbl3 "Would you like to set this up now?  Futher changes can be made in the Environment and Effects Dialog" pos:[11,66] width:321 height:32
-					button YesButton "Yes" pos:[10,103] width:86 height:24
-					button NoButton "No" pos:[106,103] width:86 height:24
-					checkbox warnAgain "Don't Warn Me Again (For this Session)" pos:[10,130] width:204 height:19
-
-					on warnAgain changed value do LPM_Photostudio_Skip_Warning=value
-					on yesButton pressed do
-					(
-						SceneExposureControl.exposureControl=Logarithmic_Exposure_Control()
-						SceneExposureControl.exposureControl.brightness = 65
-						SceneExposureControl.exposureControl.physicalScale = 80000
-						SceneExposureControl.exposureControl.exteriordaylight = on
-						destroyDialog LPM_PS_Warning
-					)
-					on noButton pressed do
-					(
-						destroyDialog LPM_PS_Warning
-					)
-
-				)
-
-				createDialog LPM_PS_Warning
-
-			)
-
-			psProps=LPM_Fun.createPhotoStudio "Photo Studio"
-			psProps.parent=thePass
-			LPM_treeview_rollout.addPassTV thePassNode
-			LPM_fun.editLabelByNode envProps LPM_treeview_rollout.tvroot
-		)
-	)
-
 	on objectSetAdd picked do
 	(
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
@@ -3292,41 +3245,6 @@ rcMenu rc_xrefScene
 		try(actionMan.executeAction 0 "40368")catch()  -- File: XRef Scenes
 	)
 
-)
-
-
--------------------------------------------------------------------------------------------------------   photoStudioMenu   -------------------------------------------------------------------------------------------------------
-
-rcMenu rc_photoStudioMenu
-(
-	menuItem	editItem "Edit..."
-	menuItem    copyAtm "Copy"
-	menuItem    remove "Delete"
-
-	on copyAtm picked do
-	(
-		LPM_treeview_rollout.copyNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-	)
-	on remove picked do
-	(
-		undo "LPM delete" on
-		(
-			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-			delete theNode
-			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
-		)
-	)
-	on editItem picked do
-	(
-		global active_PS_Prop=LPM_treeview_rollout.tv.selectedNode.tag.value
-		if(doesfileexist "$MAX/macroscripts/LPM/PhotoStudio_Ro_Pro.ms") then
-			filein "$MAX/macroscripts/LPM/PhotoStudio_Ro_Pro.ms"
-		else if(doesfileexist "$MAX/macroscripts/LPM/PhotoStudio_Ro_Demo.ms") then
-			filein "$MAX/macroscripts/LPM/PhotoStudio_Ro_Demo.ms"
-		else
-			messagebox "Photostudio Addon Not Installed" error:"Error"
-	)
 )
 
 

@@ -106,7 +106,7 @@
 			(
 				if maxfilepath != "" then
 				(
-					ProjRenderPath = getProjRenderPath()
+					ProjRenderPath = LPM_Root.rootDir
 					if ProjRenderPath != "" then
 					(
 						LPM_Root.rootdir = ProjRenderPath

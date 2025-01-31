@@ -39,7 +39,7 @@ if (LPM_Fun.getIni "Settings" "ShowSkipButton" booleanClass false) then
 ilTv = dotNetObject "System.Windows.Forms.ImageList"
 ilTv.imageSize = dotNetObject "System.Drawing.Size" 16 15
 
-BackColor = undefined
+LPM_BackColor = undefined
 LPM_FontColor = undefined
 
 fn CheckUIColor =
@@ -67,9 +67,9 @@ fn dotNetColor clr =
 
 fn InitColorUI =
 (
-	BackColor = dotNetColor (color 85 85 85)
+	LPM_BackColor = dotNetColor (color 85 85 85)
 	LPM_FontColor = dotNetColor (color 200 200 200)
-	LPM_iconPath += "IconsDark/"
+	--LPM_iconPath += "IconsDark/"
 )
 
 InitColorUI()
@@ -206,8 +206,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "CommonOff"
 		getIconFromBitmap "EnviromentOff"
 		getIconFromBitmap "RenderOff"
-		getIconFromBitmap "photoStudio"
-		getIconFromBitmap "photoStudioOff"
+		getIconFromBitmap "missing"
+		getIconFromBitmap "missing"
 		getIconFromBitmap "passGroupOn"
 		getIconFromBitmap "passGroupOff"
 		getIconFromBitmap "scriptOn"
@@ -270,8 +270,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		if maxfilepath != "" then
 		(
-			ProjRenderPath = getProjRenderPath()
-			if ProjRenderPath != "" then(OutputPathDDL.text=LPM_Root.rootDir=getProjRenderPath())
+			ProjRenderPath = LPM_Root.rootDir
+			--if ProjRenderPath != "" then(OutputPathDDL.text=LPM_Root.rootDir=getProjRenderPath())
+
+			if ProjRenderPath != "" then(OutputPathDDL.text=LPM_Root.rootDir)
 			else(OutputPathDDL.text=LPM_Root.rootDir)
 		)
 		else
@@ -515,16 +517,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			makeItalic newEnv
 		)
 
-		photoStudioProps=LPM_Fun.firstChildByType pmPass "photoStudio"
-		if(photoStudioProps!=undefined) then
-		(
-			newPS = createTVnode newPass photoStudioProps
-
-			newPS.ForeColor = LPM_FontColor
-			newPS.BackColor = LPM_BackColor
-			makeItalic newPS
-		)
-
 		xrefObjProps=LPM_Fun.firstChildByType pmPass "xrefObj"
 		if(xrefObjProps!=undefined) then
 		(
@@ -674,16 +666,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			newCP.ForeColor = LPM_FontColor
 			newCP.BackColor = LPM_BackColor
 			makeItalic newCP
-		)
-
-		photoStudioProps=LPM_Fun.firstChildByType pmShot "photoStudio"
-		if(photoStudioProps!=undefined) then
-		(
-			newPS = createTVnode newPass photoStudioProps
-
-			newPS.ForeColor = LPM_FontColor
-			newPS.BackColor = LPM_BackColor
-			makeItalic newPS
 		)
 
 		if(pmShot.allPasses==false) then
@@ -1779,12 +1761,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							delete theNode
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
-						"photoStudio":
-						(
-							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-							delete theNode
-							LPM_treeview_rollout.tv.selectedNode.remove()
-						)
 						"script":
 						(
 							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -2098,12 +2074,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						hitNode.tag.value.active= not hitNode.tag.value.active
 						LPM_Fun.setIcon hitNode
 					)
-
-					"photoStudio":
-					(
-						hitNode.tag.value.active= not hitNode.tag.value.active
-						LPM_Fun.setIcon hitNode
-					)
 					"script":
 					(
 						hitNode.tag.value.active= not hitNode.tag.value.active
@@ -2394,7 +2364,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"xrefObj":popUpMenu rc_xrefObj
 					"xrefScene":popUpMenu rc_xrefScene
 					"ShotPass":popUpMenu rc_shotPassMenu
-					"photoStudio":popUpMenu rc_photoStudioMenu
 					"script":popUpMenu rc_scriptMenu
 					"passGroup":popUpMenu rc_PassGroup
 					"mat":popUpMenu rc_matMenu
@@ -2464,7 +2433,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"xrefObj":(AddXrefObjOverride())
 					"xrefScene":(AddXrefSceneOverride())
 					"ShotPass":popUpMenu rc_shotPassMenu
-					"photoStudio":popUpMenu rc_photoStudioMenu
 					"script":(LPM_treeview_rollout.AddScriptOverride())
 					"passGroup":popUpMenu rc_PassGroup
 					"mat":popUpMenu rc_matMenu
@@ -2496,7 +2464,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		 -- Dabelow cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
 		it=arg.item.tag.value.type
-		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or(it=="photoStudio") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray6RenderElements") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
+		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray6RenderElements") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
 		tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 	 )
 
@@ -2520,8 +2488,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			else if((testType=="passGroup") or (testType=="root"))and (dragType=="pass") then
 				okToDrop=true
 			else if(testType=="shot") and (dragType =="commonProps") then
-				okToDrop=true
-			else if(testType=="shot") and (dragType =="photoStudio") then
 				okToDrop=true
 			else if(testType=="shot") and (dragType =="pass") then
 				okToDrop=true
@@ -2626,7 +2592,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theType=dragNode.tag.value.type
 
 					-- Dabelow / cameraOverscan / nukeExport / aeExport / Dabelow vray6
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="photoStudio") or (theType=="Deadline") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="Deadline") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it
@@ -2680,7 +2646,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	on LPM_treeview_rollout open do
 	(
 		lpm_fun.preFileOpenCallback_Add()
-		lpm_fun.vrayDR_restartSlaves_check() -- dabelow
 
 		editBox.visible = false
 		editBox.borderStyle = (dotNetClass "BorderStyle").FixedSingle
