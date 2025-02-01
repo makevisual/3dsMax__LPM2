@@ -878,57 +878,46 @@ rollout XrefObjRollout "Xref Object Override" width:400 height:300
 
 -------------------------------------------------------------------------------------------------------   LPM_atmRollout   -------------------------------------------------------------------------------------------------------
 
-rollout LPM_atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
+rollout LPM_atmRollout "Env, Effects, Atmosphere" width:235 height:445
 (
 	local elementArray=#()
 	local atmArray=#()
 	local effectArray=#()
 	local envMap
 
-	checkbox backgroundOverride "Override" pos:[3,3] width:72 height:13
 	GroupBox grp1 "Background" pos:[2,17] width:227 height:68 enabled:false
-
-	label lbl1 "Color:" pos:[7,40] width:47 height:12 enabled:false
-	label lbl2 "Environment Map:" pos:[66,37] width:89 height:17 enabled:false
-	checkbox useEnvMap "Use Map" pos:[162,36] width:63 height:16 enabled:false
-	colorPicker bgcolor "" pos:[3,55] width:52 height:19 enabled:false default:(color 0 0 0)
-	checkbutton envMapButton "None" pos:[71,55] width:151 height:19 enabled:false visible:false
-	mapbutton envMapButtonNew "None" pos:[61,55] width:121 height:19 enabled:false tooltip:"Select map"
-	button envMapButtonNewSet "<<" pos:[182,55] width:20 height:19 enabled:false tooltip:"Get map from selected Material editor slot"
-	button envMapButtonNewGet ">>" pos:[202,55] width:20 height:19 enabled:false tooltip:"Show map in selected Material editor slot"
-
+		checkbox backgroundOverride "Override" pos:[3,3] width:72 height:13
+		label lbl1 "Color:" pos:[7,40] width:47 height:12 enabled:false
+		label lbl2 "Environment Map:" pos:[66,37] width:89 height:17 enabled:false
+		checkbox useEnvMap "Use Map" pos:[162,36] width:63 height:16 enabled:false
+		colorPicker bgcolor "" pos:[3,55] width:52 height:19 enabled:false default:(color 0 0 0)
+		checkbutton envMapButton "None" pos:[71,55] width:151 height:19 enabled:false visible:false
+		mapbutton envMapButtonNew "None" pos:[61,55] width:121 height:19 enabled:false tooltip:"Select map"
+		button envMapButtonNewSet "<<" pos:[182,55] width:20 height:19 enabled:false tooltip:"Get map from selected Material editor slot"
+		button envMapButtonNewGet ">>" pos:[202,55] width:20 height:19 enabled:false tooltip:"Show map in selected Material editor slot"
 	GroupBox grp2 "Global Lighting" pos:[2,87] width:227 height:69 enabled:false
-
-	label lbl3 "Tint:" pos:[6,107] width:49 height:17 enabled:false
-	label lbl4 "Level:" pos:[61,110] width:53 height:15 enabled:false
-	label lbl5 "Ambient:" pos:[164,110] width:49 height:15 enabled:false
-	colorPicker tint "" pos:[5,128] width:53 height:20 enabled:false default:(color 255 255 255)
-	spinner level "" pos:[64,131] width:50 height:16 enabled:false range:[0,9999,1]
-	colorPicker Ambient "" pos:[160,128] width:58 height:18 enabled:false default:(color 0 0 0)
-
-	checkbox exposureOverride "Override" pos:[2,158] width:94 height:14
+		label lbl3 "Tint:" pos:[6,107] width:49 height:17 enabled:false
+		label lbl4 "Level:" pos:[61,110] width:53 height:15 enabled:false
+		label lbl5 "Ambient:" pos:[164,110] width:49 height:15 enabled:false
+		colorPicker tint "" pos:[5,128] width:53 height:20 enabled:false default:(color 255 255 255)
+		spinner level "" pos:[64,131] width:50 height:16 enabled:false range:[0,9999,1]
+		colorPicker Ambient "" pos:[160,128] width:58 height:18 enabled:false default:(color 0 0 0)
+		checkbox exposureOverride "Override" pos:[2,158] width:94 height:14
 	groupBox grp18 "Exposure Control" pos:[2,172] width:227 height:40
-	dropDownList exposureddl "" pos:[13,188] width:200 height:21 items:#("<No Exposure Control>", "Automatic Exposure Control", "Linear Exposure Control", "Logarithmic Exposure Control", "mr Photographic Exposure Control", "Pseudo Color Exposure Control") enabled:false
-
-	GroupBox grp8 "Select Render Elements" pos:[1,233] width:230 height:285
-	checkbox elementOverride "Override" pos:[2,215] width:62 height:17
-	dotNetControl elementList "system.windows.forms.listView" pos:[4,248] width:223 height:265
-
-	GroupBox grp5 "Select Atmospheres" pos:[3,540] width:227 height:90 enabled:false
-	checkbox atmOverride "Override" pos:[2,522] width:60 height:15
-	dotNetControl atmList "system.windows.forms.listView" pos:[5,554] width:223 height:66
-
-	GroupBox grp7 "Select Effects" pos:[3,653] width:229 height:90 enabled:false
-	checkbox effectOverride "Override" pos:[2,637] width:71 height:17
-	dotNetControl effectList "system.windows.forms.listView" pos:[5,668] width:224 height:66
-
+		dropDownList exposureddl "" pos:[13,188] width:200 height:21 items:#("<No Exposure Control>", "Automatic Exposure Control", "Linear Exposure Control", "Logarithmic Exposure Control", "mr Photographic Exposure Control", "Pseudo Color Exposure Control") enabled:false
+	
+	GroupBox grp5 "Select Atmospheres" pos:[3,240] width:227 height:90 enabled:false
+		checkbox atmOverride "Override" pos:[2,222] width:60 height:15
+		dotNetControl atmList "system.windows.forms.listView" pos:[5,254] width:223 height:66
+	GroupBox grp7 "Select Effects" pos:[3,353] width:229 height:90 enabled:false
+		checkbox effectOverride "Override" pos:[2,337] width:71 height:17
+		dotNetControl effectList "system.windows.forms.listView" pos:[5,368] width:224 height:66
 
 	local theNode
 
 	on LPM_atmRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
-
 		theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 
 		re = maxOps.GetCurRenderElementMgr()
@@ -937,11 +926,6 @@ rollout LPM_atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 			theEle=re.GetRenderElement (i-1)
 			elementArray[i]=theEle.elementName
 		)
-
-		--elementList.items= elementArray
-		elementList.enabled = false
-		LPM_Fun.InitListView elementList "elements" 223
-		LPM_Fun.FillListView elementList elementArray theNode.activeElement
 
 		for i=1 to numAtmospherics do
 		(
@@ -965,11 +949,6 @@ rollout LPM_atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 
 		if(theNode.initialized==true) then
 		(
-			--elements load
-			elementOverride.checked=theNode.elementOverride
-			elementList.enabled=theNode.elementOverride
-			grp8.enabled=theNode.elementOverride
-
 			--atmosphere load
 			atmOverride.checked=theNode.atmOverride
 			atmList.enabled=theNode.atmOverride
@@ -1158,11 +1137,6 @@ rollout LPM_atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 		level.enabled=state
 		ambient.enabled=state
 	)
-	on elementOverride changed state do
-	(
-		elementList.enabled=state
-		grp8.enabled=state
-	)
 	on effectOverride changed state do
 	(
 		effectList.enabled=state
@@ -1178,10 +1152,6 @@ rollout LPM_atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 
 	on LPM_atmRollout close do
 	(
-		--element
-		theNode.elementOverride=elementOverride.checked
-		theNode.activeElement = LPM_Fun.SaveListView elementList
-
 		--atm
 		theNode.atmOverride=atmOverride.checked
 		theNode.activeAtm = LPM_Fun.SaveListView atmList
@@ -2066,6 +2036,11 @@ rcMenu rc_PassGroup
 
 rcMenu rc_shotMenu
 (
+
+	menuItem nameIncrement "(+) Increment name"
+	menuItem nameDecrement "(-) Decrement name"
+
+	seperator s0
 	menuItem SelectPasses "Include Passes..."
 
 	seperator s2
@@ -2084,6 +2059,17 @@ rcMenu rc_shotMenu
 	seperator sepr4
 	menuItem duplicateShot "Duplicate Shot"
 	menuItem deleteShot "Delete Shot"
+
+	on nameIncrement picked do 
+	(
+		LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #increment
+	)
+
+	on nameDecrement picked do 
+	(
+		LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #decrement
+	)
+
 
 	on AddCommon picked do
 	(
@@ -2275,7 +2261,7 @@ rcMenu rc_PassMenu
 		menuItem objectSetAdd "Object Set"
 		menuItem lightSetAdd "Light Set"
 		seperator set8
-		menuItem effectsPropsAdd "Element, Environment and Effects Override"
+		menuItem effectsPropsAdd "Environment and Effects Override"
 		menuItem xrefObjAdd "Xref Object Override"
 		menuItem xrefSceneAdd "Xref Scene Override"
 		menuItem scriptAdd "Script"

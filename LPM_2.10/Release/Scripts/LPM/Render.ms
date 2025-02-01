@@ -249,14 +249,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pCastShadows of
 					(
-						2:
-						(
-							it.baseObject.castShadows = true
-						)
-						3:
-						(
-							it.baseObject.castShadows = false
-						)
+						2:(it.baseObject.castShadows = true)
+						3:(it.baseObject.castShadows = false)
 					)
 				)
 				catch()
@@ -265,14 +259,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectDiffuse of
 					(
-						2:
-						(
-							it.baseObject.affect_diffuse = true
-						)
-						3:
-						(
-							it.baseObject.affect_diffuse = false
-						)
+						2:(it.baseObject.affect_diffuse = true)
+						3:(it.baseObject.affect_diffuse = false)
 					)
 				)
 				catch()
@@ -281,14 +269,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectSpecular of
 					(
-						2:
-						(
-							it.baseObject.affect_specualr = true
-						)
-						3:
-						(
-							it.baseObject.affect_specualr = false
-						)
+						2:(it.baseObject.affect_specualr = true)
+						3:(it.baseObject.affect_specualr = false)
 					)
 				)
 				catch()
@@ -297,14 +279,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectReflections of
 					(
-						2:
-						(
-							it.baseObject.affect_reflections = true
-						)
-						3:
-						(
-							it.baseObject.affect_reflections = false
-						)
+						2:(it.baseObject.affect_reflections = true)
+						3:(it.baseObject.affect_reflections = false)
 					)
 				)
 				catch()
@@ -313,14 +289,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pUseTexture of
 					(
-						2:
-						(
-							it.baseObject.texmap_on = true
-						)
-						3:
-						(
-							it.baseObject.texmap_on = false
-						)
+						2:(it.baseObject.texmap_on = true)
+						3:(it.baseObject.texmap_on = false)
 					)
 				)
 				catch()
@@ -329,34 +299,22 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pVrayInvisible of
 					(
-						2:
-						(
-							it.baseObject.invisible = true
-						)
-						3:
-						(
-							it.baseObject.invisible = false
-						)
+						2:(it.baseObject.invisible = true)
+						3:(it.baseObject.invisible = false)
 					)
 				)
 				catch()
 
 				try
 				(
-					if lightSetArray[i].pTextureEnable then
-					(
-						it.baseObject.texmap=lightSetArray[i].pTexture
-					)
+					if lightSetArray[i].pTextureEnable then(it.baseObject.texmap=lightSetArray[i].pTexture)
 				)
 				catch()
 
 				---------    corona part
 				try
 				(
-					if (lightSetArray[i].pMultiplierEnable) then
-					(
-						it.baseObject.intensity = lightSetArray[i].pMultiplier
-					)
+					if (lightSetArray[i].pMultiplierEnable) then(it.baseObject.intensity = lightSetArray[i].pMultiplier)
 				)
 				catch()
 
@@ -364,24 +322,15 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pCastShadows of
 					(
-						2:
-						(
-							it.baseObject.castsShadows = true
-						)
-						3:
-						(
-							it.baseObject.castsShadows = false
-						)
+						2:(it.baseObject.castsShadows = true)
+						3:(it.baseObject.castsShadows = false)
 					)
 				)
 				catch()
 
 				try
 				(
-					if lightSetArray[i].pColorEnable then
-					(
-						it.color=lightSetArray[i].pColor
-					)
+					if lightSetArray[i].pColorEnable then(it.color=lightSetArray[i].pColor)
 				)
 				catch()
 
@@ -389,14 +338,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectDiffuse of
 					(
-						2:
-						(
-							it.baseObject.visibleDirectly = true
-						)
-						3:
-						(
-							it.baseObject.visibleDirectly = false
-						)
+						2:(it.baseObject.visibleDirectly = true)
+						3:(it.baseObject.visibleDirectly = false)
 					)
 				)
 				catch()
@@ -405,14 +348,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectReflections of
 					(
-						2:
-						(
-							it.baseObject.visibleRefl = true
-						)
-						3:
-						(
-							it.baseObject.visibleRefl = false
-						)
+						2:(it.baseObject.visibleRefl = true)
+						3:(it.baseObject.visibleRefl = false)
 					)
 				)
 				catch()
@@ -421,24 +358,15 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pUseTexture of
 					(
-						2:
-						(
-							it.baseObject.colorMode = 2
-						)
-						3:
-						(
-							it.baseObject.colorMode = 0
-						)
+						2:(it.baseObject.colorMode = 2)
+						3:(it.baseObject.colorMode = 0)
 					)
 				)
 				catch()
 
 				try
 				(
-					if lightSetArray[i].pTextureEnable then
-					(
-						it.baseObject.texmap=lightSetArray[i].pTexture
-					)
+					if lightSetArray[i].pTextureEnable then(it.baseObject.texmap=lightSetArray[i].pTexture)
 				)
 				catch()
 
@@ -447,14 +375,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectDiffuse of
 					(
-						2:
-						(
-							it.baseObject.affectDiffuse = true
-						)
-						3:
-						(
-							it.baseObject.affectDiffuse = false
-						)
+						2:(it.baseObject.affectDiffuse = true)
+						3:(it.baseObject.affectDiffuse = false)
 					)
 				)
 				catch()
@@ -463,14 +385,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pAffectSpecular of
 					(
-						2:
-						(
-							it.baseObject.affectSpecular = true
-						)
-						3:
-						(
-							it.baseObject.affectSpecular = false
-						)
+						2:(it.baseObject.affectSpecular = true)
+						3:(it.baseObject.affectSpecular = false)
 					)
 				)
 				catch()
@@ -480,9 +396,7 @@ struct LPM_RenderAPI
 					if lightSetArray[i].pTextureEnable then
 					(
 						tmpProjector = it.baseObject.projector
-
 						it.baseObject.projectorMap=lightSetArray[i].pTexture
-
 						it.baseObject.projector = tmpProjector
 					)
 				)
@@ -492,14 +406,8 @@ struct LPM_RenderAPI
 				(
 					case lightSetArray[i].pUseTexture of
 					(
-						2:
-						(
-							it.baseObject.projector = true
-						)
-						3:
-						(
-							it.baseObject.projector = false
-						)
+						2:(it.baseObject.projector = true)
+						3:(it.baseObject.projector = false)
 					)
 				)
 				catch()
@@ -594,13 +502,6 @@ struct LPM_RenderAPI
 				if(isvalidNode LPM_Root.renderCamera) then
 					viewport.setCamera LPM_Root.renderCamera
 
-				-- common properties Adjustment pass
---				if thePass.isAdjustment and (thePass.AdjustmentFor != undefined) then
---				(
---					theAdjustmentPass = thePass.AdjustmentFor
---					cp = (setCommonProps theAdjustmentPass)
---				)
-
 				-- Set common properties
 				rendSaveFile=true
 				cp = (setCommonProps thePass)
@@ -640,20 +541,11 @@ struct LPM_RenderAPI
 						preRenderSettingsNew=LPM_Fun.saveRenderPresetNew()
 						preRenderSettings = 0
 					)
-					else
-					(
-						preRenderSettings=LPM_Fun.saveRenderPreset()
-					)
+					else(preRenderSettings=LPM_Fun.saveRenderPreset())
 
 					--preRenderSettings=renderers.current
-					try
-					(
-						LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate
-					)
-					catch
-					(
-						LPM_Fun.loadRenderPreset theRenderProps[1].props
-					)
+					try(LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate)
+					catch(LPM_Fun.loadRenderPreset theRenderProps[1].props)
 				)
 
 				if findstring ((classof renderers.current) as string) "V_RAY" != undefined then
@@ -925,7 +817,7 @@ struct LPM_RenderAPI
 
 				--element backup
 				--Elements must always be backed up because using exposure control changes the number of elements
---				RenderElementsUpdatePaths()
+				--RenderElementsUpdatePaths()
 				re = maxOps.GetCurRenderElementMgr()
 
 				-- HideRFWBack  SkipExistingImagesBack
@@ -1135,10 +1027,6 @@ struct LPM_RenderAPI
 				)
 
 
-
-
-
-
 				------------- DISPATCH START -------------
 				-- Render dispatch is an API added by Aaron Dabelow to make it easier to implement additional render engines and render
 				-- engine versions.  This pare collects the pass, and the type of render action requested, and then calls the dispatch
@@ -1176,13 +1064,12 @@ struct LPM_RenderAPI
 
 
 
-
-
-
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
 				filein (LPM_Dir+"renderer_dispatch.ms")
 
 				------------- DISPATCH END -------------
+
+
 
 				-- final prepare
 				rendUseNet=false
@@ -1208,7 +1095,7 @@ struct LPM_RenderAPI
 			(
 				LPM_Render.execScriptNodes thePass #postRender
 
-				---------------------------------------------------------------------------------------------------     Common props  Postcript   ----------------------------------------------------------------------------------------
+				--------  Common props  Postcript -----------
 
 				psCP=LPM_fun.firstChildByType  thePass "commonProps"
 				if(psCP!=undefined) and (psCp.usePreScript) and (psCP.active) then
@@ -1245,8 +1132,7 @@ struct LPM_RenderAPI
 					)
 				)
 
-				--restore objects sets
-				-------------------------------------------------------------------------------------------------
+				-- restore objects sets -------
 				ts_properties = timestamp()
 
 				disablerefmsgs()
@@ -1301,11 +1187,11 @@ struct LPM_RenderAPI
 					try(theNode.baseObject.texmap_on=it[18])catch()
 					try(theNode.baseObject.texmap=it[9])catch()
 					-----------    corona part
-					try(theNode.baseObject.intensity=it[10])catch()
-					try(theNode.baseObject.castsShadows=it[13])catch()
-					try(theNode.baseObject.visibleDirectly=it[11])catch()
-					try(theNode.baseObject.visibleRefl=it[12])catch()
-					try(theNode.baseObject.colorMode=it[19])catch()
+					-- try(theNode.baseObject.intensity=it[10])catch()
+					-- try(theNode.baseObject.castsShadows=it[13])catch()
+					-- try(theNode.baseObject.visibleDirectly=it[11])catch()
+					-- try(theNode.baseObject.visibleRefl=it[12])catch()
+					-- try(theNode.baseObject.colorMode=it[19])catch()
 					-----------    default part
 					try(theNode.baseObject.affectDiffuse=it[14])catch()
 					try(theNode.baseObject.affectSpecular=it[15])catch()

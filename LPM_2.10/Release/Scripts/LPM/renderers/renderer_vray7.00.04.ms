@@ -1,10 +1,11 @@
 -- Sets the rendderer specific outputs for Vray7 and disables the max save file
 -- Included the depreciated function for any possible future use
--- 11/05/2024 Aaron Dabelow theonlyaaron@gmail.com
+-- 01/31/2025 Aaron Dabelow theonlyaaron@gmail.com
+
 
 ---------- CLASSES ----------
--- Object to hold all the restore data
 
+-- Object to hold all the restore data
 struct Vray7_RestoreDataStr
 (
     -- Scene specific properties
@@ -22,10 +23,8 @@ struct Vray7_RestoreDataStr
     rendUseActiveView       = undefined,
     regionDimensions        = undefined,
 
-    -- Vray7 Render Element Override
+    -- Vray7 Render Elementd Override
     vrayVFBElementStates    = undefined,
-
-    -- Vray7 Render Elements Active
     renderElements_active   = undefined,
 
     -- Vray7 Render Override
@@ -60,11 +59,12 @@ struct Vray7_RestoreDataStr
     dmcMult                 = undefined
 )
 
----------- GLOBAL SWITCHES ----------
----------- Prerender Global
 
--- For  using vray 7, do these actions
-function Vray7_Globals_Override_PreRender =
+---------- GLOBAL SWITCHES ----------
+
+---- Prerender Globals
+-- When rendering Production, these settings are applied
+function preRenderAction_ProductionGlobals =
 (
     -- Disable the interactive renderer if it is running.
     vrayStopIPR()
@@ -133,8 +133,9 @@ function Vray7_Globals_Override_PreRender =
     -- show(Vray7_RestoreData)
 )
 
----------- Postrender Global
-function Vray7_Globals_Override_PostRender =
+---- Postrender Globals
+-- When rendering Production, these settings will be restored
+function postRenderAction_ProductionGlobals =
 (
     -- Get the restore data from global variable
     Vray7_RestoreData = LPM_RenderDispatchRestoreData
@@ -154,12 +155,13 @@ function Vray7_Globals_Override_PostRender =
     if Vray7_RestoreData.matEditor_open then (MatEditor.Open())
 )
 
----------- RENDER ELEMENTS OPERATOR ----------
----------- Prerender Render Elements
 
-function Vray7_RE_Override_PreRender =
+---------- RENDER ELEMENTS OPERATOR ----------
+
+---- Prerender Render Elements
+function preRenderAction_RenderElements =
 (
-    print "= Vray7 Vray7_RE_Override_PreRender ="
+    print "= Vray7 preRenderAction_RenderElements ="
 
     -- localize this variable
     Vray7_RestoreData = LPM_RenderDispatchRestoreData
@@ -234,7 +236,7 @@ function Vray7_RE_Override_PreRender =
     -- get the active pass from the global variable
     thePass = LPM_RenderDispatchThePass
 
--- TODO:
+    --TODO:
     -- Elements are beiing stored, but not being applied, keep looking around here
 
 
@@ -267,10 +269,10 @@ function Vray7_RE_Override_PreRender =
     )
 )
 
----------- Postrender Render Elements
-function Vray7_RE_Override_PostRender =
+---- Postrender Render Elements
+function postRenderAction_RenderElements =
 (
-    -- print "= Vray7 Vray7_RE_Override_PostRender ="
+    -- print "= Vray7 postRenderAction_RenderElements ="
 
     -- Get the elements stored earlier and restore them
     curElements = LPM_RenderDispatchRestoreData.vrayVFBElementStates
@@ -283,9 +285,15 @@ function Vray7_RE_Override_PostRender =
 )
 
 
+-- TODO:
+---------- CAMERA OVERSCAN OPERATOR ----------
+---------- NUKE EXPORT OPERATOR ----------
+---------- AFTER EFFECTS EXPORT OPERATOR ----------
+
 ---------- UTILITIES ----------
--- Add additional metadata to the .exr files through the option RE render element for vray
-function Vray7_OptionRE_CustomMetadata = 
+
+-- Add optionRE metadata to the .exr files
+function preRenderAction_OptionRECustomMetadata = 
 (
     function applyExrMetadataToAllOptionRes arg_string = (
 
@@ -331,44 +339,51 @@ function Vray7_OptionRE_CustomMetadata =
     applyExrMetadataToAllOptionRes newStr
 )
 
--- Call all the prerender actions
-function curPrerenderAction =
-(
-    print "== Vray7 PreRenderAction =="
 
+---------- PROGRAM FLOW ---------- 
+
+---- Pre-Render Action for Production
+function preRenderAction_Production =
+(
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
 
     -- call each of the prerender functions
-    Vray7_Globals_Override_PreRender()  -- For all global actions
-    Vray7_RE_Override_PreRender()       -- For all Render Elements Operator
-    Vray7_OptionRE_CustomMetadata       -- Add additional metadata to the .exr files through the option RE render element for vray
+    preRenderAction_ProductionGlobals()  -- For all global actions
+    preRenderAction_RenderElements()       -- For all Render Elements Operator
+    preRenderAction_OptionRECustomMetadata()     -- Add additional metadata to the .exr files through the option RE render element for vray
 )
 
--- Call all the post render actions
-function curPostRenderAction =
+---- Pre-Render Action for Preview
+function preRenderAction_Preview =
 (
-    print "== Vray7 PostRenderAction =="
+    -- Construct object for storing pre-render state for use for restoring later
+    LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
 
+    -- Execute The Render Elements Prerender
+    preRenderAction_RenderElements()
+)
+
+---- Post-Render Action for Production
+function postRenderAction_Production =
+(
     --Calls Data from the global to check the restorepoint flag
     Vray7_RestoreData = LPM_RenderDispatchRestoreData
 
     --Only runs the Post render action if Settings were altered in the prerender based on the restorepoint flag
     if LPM_RenderDispatchAction != #PreviewRender then
     (
-        try( Vray7_Globals_Override_PostRender() )catch() -- TODO: remove later????
+        try( postRenderAction_ProductionGlobals() )catch() -- TODO: remove later????
         try( Vray7_Override_PostRender() )catch() -- TODO: remove later????
     )
 
-     Vray7_RE_Override_PostRender()
+     postRenderAction_RenderElements()
     -- call each of the postrender functions
 )
 
+---------- API HOOKS ---------- 
 
----------- PROGRAM FLOW ---------- 
--- These are the 3 Different ways that override can becalled, and it sends the correct function.
-if LPM_RenderDispatchAction == #preRender then curPrerenderAction()
-if LPM_RenderDispatchAction == #PreviewRender then curPrerenderAction()
-if LPM_RenderDispatchAction == #postRender then curPostRenderAction()
-
--- print " Vray 5.1.3 sucsusfully called from RenderDispatch "
+-- Cases for each of the methods a dispatch can be called.
+if LPM_RenderDispatchAction == #preRender then preRenderAction_Production()
+if LPM_RenderDispatchAction == #PreviewRender then  preRenderAction_Preview()
+if LPM_RenderDispatchAction == #postRender then postRenderAction_Production() -- May need to make a ' _preview ' version as well?

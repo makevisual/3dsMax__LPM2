@@ -578,6 +578,40 @@ fn createPassGroup theName=
 	passGroup
 ),
 
+fn offsetVersionString str mode =
+(
+    -- Split the string at any instance of "_v"
+    stringParts = (filterstring str "_v")
+
+    -- Grab the last part of the string after the "_v" and convert it to an integer
+    endPartStr = (stringParts[stringparts.count])
+    endPartInt = ( endPartStr as integer )
+
+    -- If the end part is not an integer, return the original string ( no modification )
+    if endPartInt == undefined then ( return str )
+
+    -- Increment or Decrement the number based on preferences
+    if mode == #increment then (endPartInt += 1)
+    if mode == #decrement then (endPartInt += -1)
+    
+    -- Handle preceeding 0 string padding
+    endPartInt += 2000
+    endPartstr = ( substring (endPartInt as string) 2 4 )
+
+    -- Put the string back together, putting any "_v" portions removed
+    fullString = ""
+    for i in 1 to ( stringParts.count - 1 ) do 
+    (
+        fullString = stringParts[i]
+        fullString += "_v"
+    )
+
+    -- Add the ending number string
+    fullString += endPartstr
+
+    -- Return the string
+    return fullString
+),
 
 fn createCommonProps theName=
 (

@@ -291,6 +291,22 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		theNode.Remove()
 	)
 
+	fn offsetSelectedShot tv arg_mode =
+	(
+		-- Get the node
+		theNode=tv.selectedNode
+
+		-- offset the version string - Passing the #increment or #decrement modes
+		newString = LPM_Fun.offsetVersionString theNode.tag.value.name arg_mode
+
+		-- Have to put this prefix on, LPM is expecting it and will trim the name.
+		newString = ("LPM_"+newString) 
+
+		-- Assign the new name and update the tree view		
+		theNode.tag.value.name = newString
+		LPM_treeview_rollout.updateTV()
+	)
+
 	fn duplicateSelectedShot tv =
 	(
 		theNode=tv.selectedNode
@@ -1659,7 +1675,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"Escape":
 			(
 				hideEditBox()
-
 			)
 		)
 	)
@@ -1671,23 +1686,31 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			max undo
 			LPM_treeview_rollout.updateTV()
 		)
+
+
 	)
 
 	on tv keyUp e do
 	(
+		-- For printing the keycodes out
+		-- print (e.keycode.tostring())
+
 		theNode=tv.selectedNode
 
 		TheNodeType = undefined
-		try
-		(
-			TheNodeType = LPM_activeElement.tag.value.type
-		)
-		catch
-		(
-		)
+		try(TheNodeType = LPM_activeElement.tag.value.type)
+		catch()
 
 		case e.keycode.tostring() of
 		(
+			"Add":
+			(
+				LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #increment
+			)
+			"Subtract":
+			(
+				LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #decrement
+			)
 			"F2":
 			(
 				if theNode.level >0 then renameNode (tv.selectedNode)
