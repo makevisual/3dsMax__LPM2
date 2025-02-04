@@ -18,4 +18,4 @@ filein (LPM_Dir+"OperatorData.ms") 		-- Dabelow
 
 LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass\\$APass$Pass" --Set Fileoutput Path Token String to default
 LPM_Root.renderType = 3 -- Force to shots
-print ("LPM Version - " + ( LPM_VersionNumber as string ) )
+print ("LPM Version - " + ( LPM_VersionNumber as string ) )		

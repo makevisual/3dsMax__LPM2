@@ -1703,13 +1703,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		case e.keycode.tostring() of
 		(
-			"Add":
+			"NumPad8":
 			(
-				LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #increment
+				if keyboard.altPressed == true then( LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #increment )
 			)
-			"Subtract":
+			"NumPad2":
 			(
-				LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #decrement
+				if keyboard.altPressed == true then( LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #decrement )
 			)
 			"F2":
 			(

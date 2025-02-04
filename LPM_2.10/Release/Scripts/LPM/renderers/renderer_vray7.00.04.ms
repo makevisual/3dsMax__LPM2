@@ -23,7 +23,7 @@ struct Vray7_RestoreDataStr
     rendUseActiveView       = undefined,
     regionDimensions        = undefined,
 
-    -- Vray7 Render Elementd Override
+    -- Vray7 Render Element Override
     vrayVFBElementStates    = undefined,
     renderElements_active   = undefined,
 
@@ -163,24 +163,26 @@ function preRenderAction_RenderElements =
 (
     print "= Vray7 preRenderAction_RenderElements ="
 
-    -- localize this variable
-    Vray7_RestoreData = LPM_RenderDispatchRestoreData
+    -- localize this variable for readability
+    Vray7_RestoreData           = LPM_RenderDispatchRestoreData
 
-    -- print("LPM_RenderDispatchThePass")
-    -- print("     " + ( LPM_RenderDispatchThePass ) as string )
+    -- Collect the render elements node from LPM
+    vrayRenderElementsNode      = LPM_Fun.firstChildByType LPM_RenderDispatchThePass "vrayRenderElements"
 
-    -- print("The Render Elements Node")
-    -- vray6RenderElementsNode = LPM_Fun.firstChildByType LPM_RenderDispatchThePass "vray6RenderElements"
-    -- print("     " + ( vray6RenderElementsNode ) as string )
-    -- print("     " + ( vray6RenderElementsNode.activeElement ) as string )
+    -- Inspector
+    if True then 
+    (
+        -- showproperties(Vray7_RestoreData)
 
+        print("LPM_RenderDispatchThePass")
+        print("     " + ( LPM_RenderDispatchThePass ) as string )
 
+        print("The Render Elements Node")
+        print("     " + ( vrayRenderElementsNode ) as string )
+        print("     " + ( vrayRenderElementsNode.activeElement ) as string )
+    )
 
-
-
-
-
-    -- object for holding render element states
+    -- object for holding render element states, to be instantiated for storing what is enabled / disabled
     struct elementObjStr
     (
         animhandle = undefined,
@@ -188,83 +190,50 @@ function preRenderAction_RenderElements =
         enabled = false
     )
 
-    -- Get the render element manager
+    -- Get the render element manager, and clear out any previous references to existing elements
     re                  = maxOps.GetCurRenderElementMgr()
     existingElements    = #()
 
-    -- Get the current render elements
+    -- For each of the render elements, add them to the existing elements array as an instance of elementObjStr
+    -- NOTE: render elements start at index 0, unlike most arrays in 3dsMax
     for i in 0 to ( re.NumRenderElements() - 1 ) do
     (
-        -- Try Catch added for non v-ray supported render elements, or vrayAlpha render element
-        try(
-            curElement = ( re.GetRenderElement i )
-            elementObj = elementObjStr()
+        -- Get the current element ( render elements start at index 0, unlike most arrays )
+        curElement = ( re.GetRenderElement i )
+        
+        -- Create an elementObj to store the states for restoring later.
+        elementObj = elementObjStr()
+        elementObj.animhandle       = gethandlebyanim curElement
+        elementObj.name             = curElement.elementName
+        elementObj.enabled          = curElement.vrayVFB
 
-            elementObj.animhandle       = gethandlebyanim curElement
-            elementObj.name             = curElement.elementName
-            elementObj.enabled          = curElement.vrayVFB
-
-            append existingElements elementObj
-        )catch()
+        -- Add it to the array
+        append existingElements elementObj
     )
 
-    print("EXISTING ELEMENTS")
-    print("     "+ existingElements as string)
+    -- Put the collected element definitions in the restore data object
+    Vray7_RestoreData.renderElements_active = existingElements
 
-
-
-
-    -- TODO: Why is this object not accessible?
-    -- Store the existing elements and their enable state toe be turned back on later
-
-    print("is Vray7_RestoreData available here?")
-    print(Vray7_RestoreData as string)
-
-
-
-
-    -- TODO: Turn These on
-    -- vray6RenderElementsNode.activeElement
-
-
-
-
-
-    -- Store the collected data for later restoration
-    LPM_RenderDispatchRestoreData.vrayVFBElementStates = existingElements
-
-    -- get the active pass from the global variable
-    thePass = LPM_RenderDispatchThePass
-
-    --TODO:
-    -- Elements are beiing stored, but not being applied, keep looking around here
-
-
-    -- Collect the operators that are "Vray7RenderElements", get their "activeElementList" and enable them
-    theVray7RenderElements =for it in thePass.children where ((it.type=="Vray7RenderElements") and (it.active)) collect it
-    for theVray7RenderElement in theVray7RenderElements do
+    -- Inspector
+    if True then 
     (
-        -- get the custom attribute from the current operator ( active elements as string array )
-        ca = custAttributes.get theVray7RenderElement 1
-        activeElements = ca.activeElement
+        print("Stored Element Values:")
+        for element in Vray7_RestoreData.renderElements_active do ( if element.enabled == true  then print("     Enabled - " + (element.name as string) ) )    
+        for element in Vray7_RestoreData.renderElements_active do ( if element.enabled == false then print("     Disabled - " + (element.name as string) ) )    
+    )
 
-        -- loop through all of the render elements
-        for i in 0 to ( re.NumRenderElements() - 1 ) do
+    -- Go through all of the render elements in the render element manager 'REM'
+    for rem_elementId in 0 to ( re.NumRenderElements() - 1 ) do
+    (
+        -- Get the render element from the REM, and turn it off
+        rem_element             = ( re.GetRenderElement rem_elementId )
+        rem_element.vrayVFB     = false
+
+        -- Go through all of the active elements enabled in the LPM override 'OVR' 
+        for ovr_element in vrayRenderElementsNode.activeElement do 
         (
-            -- try -- Try Catch for elements that do not have a .vrayVFB property, like vryaAlpha, that cannot render int the frame buffer
-            (
-                print (curElement)
-                -- turn the render element off
-                curElement = ( re.GetRenderElement i )
-                curElement.vrayVFB = false
-
-                -- turn on the ones that matche the activeElement name
-                for activeElement in activeElements do
-                (
-                    if curElement.elementName == activeElement then (curElement.vrayVFB = true)
-                )
-            )
-            -- catch()
+            -- If the 'OVR' element matches name with on of the 'REM' name, turn it on.
+            if ( ovr_element as string ) == ( rem_element.elementName ) then ( rem_element.vrayVFB = true )
         )
     )
 )
@@ -274,14 +243,14 @@ function postRenderAction_RenderElements =
 (
     -- print "= Vray7 postRenderAction_RenderElements ="
 
-    -- Get the elements stored earlier and restore them
-    curElements = LPM_RenderDispatchRestoreData.vrayVFBElementStates
-
-    for curElement in curElements do
-    (
-        curNode = getAnimByHandle curElement.animhandle
-        curNode.vrayVFB = curElement.enabled
-    )
+--    -- Get the elements stored earlier and restore them
+--    curElements = LPM_RenderDispatchRestoreData.vrayVFBElementStates
+--
+--    for curElement in curElements do
+--    (
+--        curNode = getAnimByHandle curElement.animhandle
+--        curNode.vrayVFB = curElement.enabled
+--    )
 )
 
 
@@ -349,14 +318,17 @@ function preRenderAction_Production =
     LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
 
     -- call each of the prerender functions
-    preRenderAction_ProductionGlobals()  -- For all global actions
-    preRenderAction_RenderElements()       -- For all Render Elements Operator
-    preRenderAction_OptionRECustomMetadata()     -- Add additional metadata to the .exr files through the option RE render element for vray
+    preRenderAction_ProductionGlobals()             -- For all global actions
+    preRenderAction_RenderElements()                -- For all Render Elements Operator
+    preRenderAction_OptionRECustomMetadata()        -- Add additional metadata to the .exr files through the option RE render element for vray
 )
 
 ---- Pre-Render Action for Preview
 function preRenderAction_Preview =
 (
+    clearListener()
+    print"=========== PreRender Preview ==============="
+
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
 
@@ -387,3 +359,6 @@ function postRenderAction_Production =
 if LPM_RenderDispatchAction == #preRender then preRenderAction_Production()
 if LPM_RenderDispatchAction == #PreviewRender then  preRenderAction_Preview()
 if LPM_RenderDispatchAction == #postRender then postRenderAction_Production() -- May need to make a ' _preview ' version as well?
+
+
+---------- TESTING ---------- 

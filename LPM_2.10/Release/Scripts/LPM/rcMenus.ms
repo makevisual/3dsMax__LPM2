@@ -2037,8 +2037,8 @@ rcMenu rc_PassGroup
 rcMenu rc_shotMenu
 (
 
-	menuItem nameIncrement "(+) Increment name"
-	menuItem nameDecrement "(-) Decrement name"
+	menuItem nameIncrement "Increment name (alt + numpad8)"
+	menuItem nameDecrement "Decrement name (alt + numpad2)"
 
 	seperator s0
 	menuItem SelectPasses "Include Passes..."
