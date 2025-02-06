@@ -163,26 +163,11 @@ function preRenderAction_RenderElements =
 (
     print "= Vray7 preRenderAction_RenderElements ="
 
-    -- localize this variable for readability
+    -- localize this variable for readability and Collect the render elements node from LPM
     Vray7_RestoreData           = LPM_RenderDispatchRestoreData
-
-    -- Collect the render elements node from LPM
     vrayRenderElementsNode      = LPM_Fun.firstChildByType LPM_RenderDispatchThePass "vrayRenderElements"
 
-    -- Inspector
-    if True then 
-    (
-        -- showproperties(Vray7_RestoreData)
-
-        print("LPM_RenderDispatchThePass")
-        print("     " + ( LPM_RenderDispatchThePass ) as string )
-
-        print("The Render Elements Node")
-        print("     " + ( vrayRenderElementsNode ) as string )
-        print("     " + ( vrayRenderElementsNode.activeElement ) as string )
-    )
-
-    -- object for holding render element states, to be instantiated for storing what is enabled / disabled
+    -- Class for holding render element states, to be used for storing enabled / disabled state for restore
     struct elementObjStr
     (
         animhandle = undefined,
@@ -194,70 +179,52 @@ function preRenderAction_RenderElements =
     re                  = maxOps.GetCurRenderElementMgr()
     existingElements    = #()
 
-    -- For each of the render elements, add them to the existing elements array as an instance of elementObjStr
+    -- Go through all of the render elements in the render element manager 'REM'
     -- NOTE: render elements start at index 0, unlike most arrays in 3dsMax
-    for i in 0 to ( re.NumRenderElements() - 1 ) do
+    for rem_elementId in 0 to ( re.NumRenderElements() - 1 ) do
     (
-        -- Get the current element ( render elements start at index 0, unlike most arrays )
-        curElement = ( re.GetRenderElement i )
+        -- Get the render element from the REM, and turn it off
+        rem_element                 = ( re.GetRenderElement rem_elementId )
         
         -- Create an elementObj to store the states for restoring later.
-        elementObj = elementObjStr()
-        elementObj.animhandle       = gethandlebyanim curElement
-        elementObj.name             = curElement.elementName
-        elementObj.enabled          = curElement.vrayVFB
+        elementObj                  = elementObjStr()
+        elementObj.animhandle       = gethandlebyanim rem_element
+        elementObj.name             = rem_element.elementName
+        elementObj.enabled          = rem_element.vrayVFB
 
         -- Add it to the array
         append existingElements elementObj
+
+        -- After recording its sate, turn it off
+        rem_element.vrayVFB     = false
+
+        -- Then go through all of the active elements enabled in the LPM override 'OVR' 
+        for ovr_element in vrayRenderElementsNode.activeElement do 
+        (
+            -- If the 'OVR' element matches name with on of the 'REM' name, turn it on.
+            if ( ovr_element ) == ( rem_element.elementName ) then ( rem_element.vrayVFB = true )
+        )
     )
 
-    -- Put the collected element definitions in the restore data object
+    -- Put the collected element definitions in the restore data object for later
     Vray7_RestoreData.renderElements_active = existingElements
 
     -- Inspector
-    if True then 
+    if False then 
     (
         print("Stored Element Values:")
         for element in Vray7_RestoreData.renderElements_active do ( if element.enabled == true  then print("     Enabled - " + (element.name as string) ) )    
         for element in Vray7_RestoreData.renderElements_active do ( if element.enabled == false then print("     Disabled - " + (element.name as string) ) )    
-    )
-
-    -- Go through all of the render elements in the render element manager 'REM'
-    for rem_elementId in 0 to ( re.NumRenderElements() - 1 ) do
-    (
-        -- Get the render element from the REM, and turn it off
-        rem_element             = ( re.GetRenderElement rem_elementId )
-        rem_element.vrayVFB     = false
-
-        -- Go through all of the active elements enabled in the LPM override 'OVR' 
-        for ovr_element in vrayRenderElementsNode.activeElement do 
-        (
-            -- If the 'OVR' element matches name with on of the 'REM' name, turn it on.
-            if ( ovr_element as string ) == ( rem_element.elementName ) then ( rem_element.vrayVFB = true )
-        )
     )
 )
 
 ---- Postrender Render Elements
 function postRenderAction_RenderElements =
 (
-    -- print "= Vray7 postRenderAction_RenderElements ="
-
---    -- Get the elements stored earlier and restore them
---    curElements = LPM_RenderDispatchRestoreData.vrayVFBElementStates
---
---    for curElement in curElements do
---    (
---        curNode = getAnimByHandle curElement.animhandle
---        curNode.vrayVFB = curElement.enabled
---    )
+    ----------------- No Idea why the elements are turning themselves back to their original state? ----------------------------
+    ----------------- Could be, because vray VFB has them set before the render and then rests them?
 )
 
-
--- TODO:
----------- CAMERA OVERSCAN OPERATOR ----------
----------- NUKE EXPORT OPERATOR ----------
----------- AFTER EFFECTS EXPORT OPERATOR ----------
 
 ---------- UTILITIES ----------
 
@@ -308,6 +275,12 @@ function preRenderAction_OptionRECustomMetadata =
     applyExrMetadataToAllOptionRes newStr
 )
 
+-- TODO:
+---------- CAMERA OVERSCAN OPERATOR ----------
+---------- NUKE EXPORT OPERATOR ----------
+---------- AFTER EFFECTS EXPORT OPERATOR ----------
+
+
 
 ---------- PROGRAM FLOW ---------- 
 
@@ -350,6 +323,7 @@ function postRenderAction_Production =
     )
 
      postRenderAction_RenderElements()
+
     -- call each of the postrender functions
 )
 
@@ -358,7 +332,4 @@ function postRenderAction_Production =
 -- Cases for each of the methods a dispatch can be called.
 if LPM_RenderDispatchAction == #preRender then preRenderAction_Production()
 if LPM_RenderDispatchAction == #PreviewRender then  preRenderAction_Preview()
-if LPM_RenderDispatchAction == #postRender then postRenderAction_Production() -- May need to make a ' _preview ' version as well?
-
-
----------- TESTING ---------- 
+if LPM_RenderDispatchAction == #postRender then postRenderAction_Production()

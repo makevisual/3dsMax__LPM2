@@ -1936,29 +1936,25 @@ fn collectPasses activeOnly:true theShot:undefined=
 
 fn setWhoToRenderByRenderType =
 (
-	if ((CheckProjRenderPath())[1]) then
+	renderCollect=#()
+	shotRoot=(LPM_Fun.firstChildByType LPM_Root "shotRoot")
+	if(LPM_Root.renderType <=2) then
 	(
-		renderCollect=#()
-		shotRoot=(LPM_Fun.firstChildByType LPM_Root "shotRoot")
-
-		if(LPM_Root.renderType <=2) then
-		(
-			renderCollect=collectPasses()
-		)
-		else
-		(
-			for theShot in shotRoot.children  where (theShot.type=="shot") and (theShot.active) do
-				(
-					if(theShot.allpasses) then
-					(
-						join renderCollect (collectPasses activeOnly:true theShot:theShot)
-					)
-					else
-						for i=1 to theShot.passes.count  where  (isvalidnode theShot.passes[i])  and (theShot.passesOn[i]==true) and (theShot.passes[i].active) do append renderCollect #(theShot.passes[i], theShot)
-				)
-		)
-		LPM_Fun.whoToRender=renderCollect
+		renderCollect=collectPasses()
 	)
+	else
+	(
+		for theShot in shotRoot.children  where (theShot.type=="shot") and (theShot.active) do
+			(
+				if(theShot.allpasses) then
+				(
+					join renderCollect (collectPasses activeOnly:true theShot:theShot)
+				)
+				else
+					for i=1 to theShot.passes.count  where  (isvalidnode theShot.passes[i])  and (theShot.passesOn[i]==true) and (theShot.passes[i].active) do append renderCollect #(theShot.passes[i], theShot)
+			)
+	)
+	LPM_Fun.whoToRender=renderCollect
 ),
 
 fn getWhoToRender =
@@ -1969,57 +1965,21 @@ fn getWhoToRender =
 
 fn localRenderSubmit=
 (
-	ProjRenderPathTest = CheckProjRenderPath()
-
-	if ProjRenderPathTest[1] then
-	(
-
-
-		ProjRenderPath = LPM_Root.rootDir
-		if ProjRenderPath != LPM_Root.rootDir then
-		(
-			if (queryBox "Saving directory is not correct. Continue?") then
-			(
-				if(LPM_Root.renderType==2) or (LPM_Root.renderType==4) then
-					renderFlag=#hwPreview
-				else
-					renderFlag=#local
-
-				renderSubmit renderFlag
-
-				LPM_Fun.renderBarProgress=undefined
-			)
-		)
-		else
-		(
-
-				if(LPM_Root.renderType==2) or (LPM_Root.renderType==4) then
-					renderFlag=#hwPreview
-				else
-					renderFlag=#local
-
-				renderSubmit renderFlag
-
-				LPM_Fun.renderBarProgress=undefined
-		)
-	)
-	else
-	(
-		messageBox ProjRenderPathTest[2]
-	)
+	if(LPM_Root.renderType==2) or (LPM_Root.renderType==4)
+	then (renderFlag=#hwPreview)
+	else(renderFlag=#local)
+	
+	renderSubmit renderFlag
+	LPM_Fun.renderBarProgress=undefined
 ),
 
 fn getPreviewFile thePass=
 (
 	tmpName = ""
-	try
-	(
-		tmpName = (getDir #preview)+"\\"+maxFileName+"_"+"\\"+(LPM_Fun.getname thePass.name)+"_."+(LPM_Fun.getIni "Settings" "Default Format" string "exr")
-	)
-	catch
-	(
-		tmpName = ""
-	)
+	
+	try(tmpName = (getDir #preview)+"\\"+maxFileName+"_"+"\\"+(LPM_Fun.getname thePass.name)+"_."+(LPM_Fun.getIni "Settings" "Default Format" string "exr"))
+	catch()
+
 	tmpName
 ),
 

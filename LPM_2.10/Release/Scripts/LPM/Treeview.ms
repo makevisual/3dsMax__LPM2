@@ -120,7 +120,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	button 			tyPreviewButton "TyPreview" pos:[40,200] height:22 width:60 enabled:false tooltip:"TODO:"
 	button 			nukeRenderButton "NukeFile" pos:[40,200] height:22 width:55 enabled:false tooltip:"TODO:"
 	button 			maxFileRenderButton "Bake Files" pos:[40,200] height:22 width:55 enabled:true tooltip:"TODO:"
-	button 			localRenderButton "Local" pos:[40,200] height:22 width:55 enabled:false tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+	button 			localRenderButton "Local" pos:[40,200] height:22 width:55 enabled:true tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
 	button 			networkRenderButton "Deadline" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
 	checkbutton 	skipIdiotChecks "Skip IC" pos:[165,200] height:22 width:40 tooltip:"When enabled, Idiot checks will be skipped with a time penalty"
 	button 			setRenderDirButton "Set" pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
@@ -142,7 +142,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- tyPreviewButton.enabled = false
 		-- nukeRenderButton.enabled = false 
 		maxFileRenderButton.enabled = false 
-		-- localRenderButton.enabled = false
+		localRenderButton.enabled = false
 		networkRenderButton.enabled = false
 	)
 
@@ -158,7 +158,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- tyPreviewButton.enabled = true 
 		-- nukeRenderButton.enabled = true
 		maxFileRenderButton.enabled = true
-		-- localRenderButton.enabled = true
+		localRenderButton.enabled = true
 		networkRenderButton.enabled = true
 
 		case LPM_Root.renderType of
