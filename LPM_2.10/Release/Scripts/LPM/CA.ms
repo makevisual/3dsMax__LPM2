@@ -166,7 +166,7 @@ attribID:#(0x21912344, 0x01013380)
 	)
 )
 
--- Dabelow
+-- Dabelow deadlinePropsCA
 deadlinePropsCA = attributes deadlineProps
 attribID:#(0x73e22a56, 0x439f0d00)
 (
@@ -204,6 +204,17 @@ attribID:#(0x54e3ca47, 0x1381f195)
 	    resOverride type:#boolean default:false
     	resXOverride type:#integer default:1920
     	resYOverride type:#integer default:1080
+	)
+)
+
+-- Dabelow renderImage
+renderImagePropsCA = attributes renderImageProps 
+attribID:#(0x6b3527c8, 0x211bc7eb)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
 	)
 )
 

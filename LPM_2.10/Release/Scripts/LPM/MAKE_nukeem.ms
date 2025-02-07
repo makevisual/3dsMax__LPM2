@@ -9,6 +9,7 @@
 -- LPM integration - 03/04/2020
 
 
+-- TODO: Rework this from absolute paths, come on Neil...
   struct LPM_NukeEM_Settings_Str
  (
  	frameStart = 1000,
