@@ -1459,7 +1459,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 --------
 		--cp=LPM_Fun.firstChildByType item "commonProps"
-		cp=LPM_Fun.firstChildByType theShot "commonProps"
+
 -----
 
 
@@ -1470,6 +1470,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			if(renderType==#local)
 			then
 			(
+				cp=LPM_Fun.firstChildByType theShot "commonProps"
 				SetQuietMode LPM_Root.quietMode
 				render fromframe:cp._rendStart toframe:cp._rendEnd
 				--render fromframe:theShot._rendStart toframe:theShot._rendEnd

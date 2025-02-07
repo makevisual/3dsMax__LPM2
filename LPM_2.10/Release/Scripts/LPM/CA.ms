@@ -207,6 +207,20 @@ attribID:#(0x54e3ca47, 0x1381f195)
 	)
 )
 
+-- Dabelow renderImage
+renderImagePropsCA = attributes renderImageProps
+attribID:#(0x2cc0578d, 0x1919e838)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+ 		-- initialized type:#boolean
+
+	    renderEnabled type:#boolean default:false
+	)
+)
+
 -- Dabelow nukeExport
 nukeExportPropsCA = attributes nukeExportProps
 attribID:#(0x6250aff1, 0x44179dee)

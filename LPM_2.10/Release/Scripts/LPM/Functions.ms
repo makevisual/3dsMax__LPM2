@@ -40,6 +40,7 @@ fn destroyAllDialogs=
 		try(destroyDialog vrayPropsRoll)catch()					-- Dabelow vrayRenderElements
 		try(destroyDialog vrayRenderElementsPropsRoll)catch()	-- Dabelow vrayRenderElements
 		try(destroyDialog cameraOverscanPropsRoll)catch()		-- Dabelow cameraOverscan
+		try(destroyDialog renderImagePropsRoll)catch()			-- Dabelow renderImage
 		try(destroyDialog nukeExportPropsRoll)catch()			-- Dabelow nukeExport
 		try(destroyDialog aeExportPropsRoll)catch()				-- Dabelow aeExport
 		try(destroyDialog LPM_treeview_rollout)catch()
@@ -128,6 +129,7 @@ fn setIcon theNode=
 			"vray6RenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 58 59 	-- Dabelow vray6
 			"vray6":LPM_Fun.setImageIndex theNode theNode.tag.value.active 60 61 				-- Dabelow vray6
 			"vrayRenderElements":LPM_Fun.setImageIndex theNode theNode.tag.value.active 62 63 	-- Dabelow vrayRenderElements 
+			"renderImage":LPM_Fun.setImageIndex theNode theNode.tag.value.active 64 65 			-- Dabelow renderImage 
 		)
 
 	)catch(messagebox "Error setting icon see listener (F11) for details\nThis is often due to a memory allocation in 3ds max")
@@ -172,6 +174,7 @@ fn passByNode theNode =
 			"vray6RenderElements":theNode.parent.tag.value 		-- Dabelow vray6
 			"vrayRenderElements":theNode.parent.tag.value 		-- Dabelow vrayrenderelements
 			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
+			"renderImage":theNode.parent.tag.value 				-- Dabelow renderImage
 			"nukeExport":theNode.parent.tag.value 				-- Dabelow nukeExport
 			"aeExport":theNode.parent.tag.value 				-- Dabelow aeExport
 			default:undefined
@@ -491,6 +494,7 @@ fn createNode pName type=
 		"vray6RenderElements":custAttributes.add theNode vray6RenderElementsPropsCA 	-- Dabelow vray6
 		"vrayRenderElements":custAttributes.add theNode vrayRenderElementsPropsCA 		-- Dabelow vrayrenderelements
 		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
+		"renderImage":custAttributes.add theNode renderImagePropsCA 					-- Dabelow renderImage
 		"nukeExport":custAttributes.add theNode nukeExportPropsCA 						-- Dabelow nukeExport
 		"aeExport":custAttributes.add theNode aeExportPropsCA 							-- Dabelow aeExport
 	)
@@ -914,6 +918,17 @@ fn createCameraOverscanProps theName=
 	cp.resOverride = false
     cp.resXOverride = 1920
     cp.resYOverride = 1080
+
+	cp
+),
+
+-- Dabelow renderImage
+fn createRenderImageProps theName=
+(
+	cp=LPM_Fun.createNode theName "renderImage"
+	cp.active = true
+
+	cp.renderEnabled = true
 
 	cp
 ),
@@ -1395,6 +1410,15 @@ fn generateCameraOverscanName cp=
 	)
 
 	theName
+),
+
+-- Dabelow nukeExport
+fn generateRenderImageName cp=
+(
+	--theName = ( cp.type + " Override" )
+	theName = ( "Render Image" )
+
+	return theName
 ),
 
 -- Dabelow nukeExport
