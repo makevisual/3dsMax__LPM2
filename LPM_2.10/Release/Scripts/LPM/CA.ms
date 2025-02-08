@@ -208,13 +208,16 @@ attribID:#(0x54e3ca47, 0x1381f195)
 )
 
 -- Dabelow renderImage
-renderImagePropsCA = attributes renderImageProps 
-attribID:#(0x6b3527c8, 0x211bc7eb)
+renderImagePropsCA = attributes renderImageProps
+attribID:#(0x2cc0578d, 0x1919e838)
 (
 	parameters main
 	(
 		type type:#string
 		active type:#boolean default:true
+    
+	  renderEnabled type:#boolean default:false
+
 	)
 )
 

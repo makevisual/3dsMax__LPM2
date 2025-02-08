@@ -3,6 +3,7 @@ filein @"rcMenus\rcMenu_deadlineOverride.ms" 					-- Dabelow
 filein @"rcMenus\rcMenu_Utilities.ms" 							-- Dabelow
 filein @"rcMenus\rcMenu_vrayRenderElementsOverride.ms" 			-- Dabelow vrayRenderElements
 filein @"rcMenus\rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
+filein @"rcMenus\rcMenu_renderImage.ms"							-- Dabelow renderImage
 filein @"rcMenus\rcMenu_nukeExport.ms"							-- Dabelow nukeExport
 filein @"rcMenus\rcMenu_aeExport.ms"							-- Dabelow aeExport
 
@@ -2048,6 +2049,7 @@ rcMenu rc_shotMenu
 
 	seperator s1
 	menuItem    AddCommon "Add Common Properties"
+	menuItem    AddRenderImage "Add RenderImage Export" 			-- Dabelow renderImage
 	menuItem    AddCameraOverscan "Add Camera Overscan Override" 	-- Dabelow cameraOverscan
 	menuItem    AddNukeExport "Add Nuke Export" 					-- Dabelow nukeExport
 	menuItem    AddAeExport "Add After Effect Export" 				-- Dabelow aeExport
@@ -2092,6 +2094,18 @@ rcMenu rc_shotMenu
 			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
 		)
 	)
+
+	on AddRenderImage picked do
+	(
+		thePass=LPM_treeview_rollout.tv.selectedNode.tag.value
+		if((LPM_Fun.firstChildByType thePass "renderImage")==undefined) then
+		(
+			theProps=LPM_Fun.createRenderImageProps "renderImage"
+			theProps.parent=thePass
+			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
+		)
+	)
+
 
 	on AddNukeExport picked do
 	(

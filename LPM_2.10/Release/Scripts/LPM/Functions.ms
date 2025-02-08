@@ -184,6 +184,7 @@ fn passByNode theNode =
 			"renderImage":theNode.parent.tag.value 				-- Dabelow renderImage
 			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
 			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
+			"renderImage":theNode.parent.tag.value 				-- Dabelow renderImage
 			"nukeExport":theNode.parent.tag.value 				-- Dabelow nukeExport
 			"aeExport":theNode.parent.tag.value 				-- Dabelow aeExport
 			default:undefined
@@ -504,6 +505,7 @@ fn createNode pName type=
 		"vrayRenderElements":custAttributes.add theNode vrayRenderElementsPropsCA 		-- Dabelow vrayrenderelements
 		"renderImage":custAttributes.add theNode renderImagePropsCA 					-- Dabelow renderImage
 		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
+		"renderImage":custAttributes.add theNode renderImagePropsCA 					-- Dabelow renderImage
 		"nukeExport":custAttributes.add theNode nukeExportPropsCA 						-- Dabelow nukeExport
 		"aeExport":custAttributes.add theNode aeExportPropsCA 							-- Dabelow aeExport
 	)
@@ -949,6 +951,17 @@ fn createCameraOverscanProps theName=
 	cp.resOverride = false
     cp.resXOverride = 1920
     cp.resYOverride = 1080
+
+	cp
+),
+
+-- Dabelow renderImage
+fn createRenderImageProps theName=
+(
+	cp=LPM_Fun.createNode theName "renderImage"
+	cp.active = true
+
+	cp.renderEnabled = true
 
 	cp
 ),
@@ -1439,6 +1452,15 @@ fn generateCameraOverscanName cp=
 	)
 
 	theName
+),
+
+-- Dabelow nukeExport
+fn generateRenderImageName cp=
+(
+	--theName = ( cp.type + " Override" )
+	theName = ( "Render Image" )
+
+	return theName
 ),
 
 -- Dabelow nukeExport

@@ -1,5 +1,6 @@
--- TODO: Change this to a RENDER IMAGE menu
-rollout cameraOverscanPropsRoll "Camera Overscan Override 1.0" width:225 height:130
+
+rollout renderImagePropsRoll "Render Image Override 1.0" width:225 height:130
+
 (
 	local theNode = undefined
 
@@ -57,7 +58,9 @@ rollout cameraOverscanPropsRoll "Camera Overscan Override 1.0" width:225 height:
 	)
 
 	-- event for rollout open 
-	on cameraOverscanPropsRoll open do
+
+	on renderImagePropsRoll open do
+
 	(
 		cp 		=LPM_treeview_rollout.tv.selectedNode.tag.value
 		theNode = cp
@@ -69,14 +72,18 @@ rollout cameraOverscanPropsRoll "Camera Overscan Override 1.0" width:225 height:
 		updateResolution()	
  	)
 	
-	on cameraOverscanPropsRoll close do
+
+	on renderImagePropsRoll close do
+
 	(
 
 		updateCA()
 	
-		setFocus cameraOverscanPropsRoll
 
-		-- TODO: having issues updating the name in LPM_Fun.generateCameraOverscanName, so it is just set to static for now
+		setFocus renderImagePropsRoll
+
+		-- TODO: having issues updating the name in LPM_Fun.generaterenderImageName, so it is just set to static for now
+
 
 		-- cp  	=theNode.tag.value
 		-- cp 		=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -88,20 +95,24 @@ rollout cameraOverscanPropsRoll "Camera Overscan Override 1.0" width:225 height:
 		-- print theNode
 		-- show theNode
 
-		--theNode.text = LPM_Fun.generateCameraOverscanName cp
 
-		--LPM_Fun.generateCameraOverscanName cp
+		--theNode.text = LPM_Fun.generaterenderImageName cp
+
+		--LPM_Fun.generaterenderImageName cp
 		--LPM_treeview_rollout.tv.enabled=true
 
 		----theNode.text=LPM_Fun.generateCommonPropName cp
- 		--LPM_Fun.generateCameraOverscanName theNode			-- Dabelow cameraOverscan
+ 		--LPM_Fun.generaterenderImageName theNode			-- Dabelow renderImage
+
 
 		LPM_treeview_rollout.UnFreezeWindow()
 
 	)
 )
 
-rcMenu rc_CameraOverscanPropsMenu
+
+rcMenu rc_renderImagePropsMenu
+
 (
 	menuItem	editProps	"Edit"
 	menuItem 	copyProps 	"Copy"
@@ -120,7 +131,9 @@ rcMenu rc_CameraOverscanPropsMenu
 	)
 	on editProps picked do
 	(		
-		createDialog cameraOverscanPropsRoll pos:(LPM_Fun.getRoPos  cameraOverscanPropsRoll.width)
+
+		createDialog renderImagePropsRoll pos:(LPM_Fun.getRoPos  renderImagePropsRoll.width)
 	)
 )
---createDialog cameraOverscanPropsRoll pos:(LPM_Fun.getRoPos  cameraOverscanPropsRoll.width)
+--createDialog renderImagePropsRoll pos:(LPM_Fun.getRoPos  renderImagePropsRoll.width)
+

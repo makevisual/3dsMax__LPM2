@@ -3,10 +3,11 @@
 -- Extra props can be added for any future operators or data needs.
 
 struct LPM_OperatorDataStr (
-	cameraOverscan = undefined,
-    nukeExport = undefined,
-    aeExport = undefined,
-    null = undefined
+	cameraOverscan      = undefined,
+    renderImage         = undefined,
+    nukeExport          = undefined,
+    aeExport            = undefined,
+    null                = undefined
 )
 
 LPM_OperatorData = LPM_OperatorDataStr()

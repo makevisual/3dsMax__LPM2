@@ -255,6 +255,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "vrayRenderElements" 				--Dabelow vrayRebderElements
 		getIconFromBitmap "vrayRenderElementsOff" 			--Dabelow vrayRebderElements
 
+		getIconFromBitmap "renderImage" 					--Dabelow vrayRebderElements
+		getIconFromBitmap "renderImageOff" 					--Dabelow vrayRebderElements
+
 		tv.imageList = ilTv
 	)
 
@@ -351,6 +354,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			"vray6": 				nodeName = (LPM_Fun.generateVray6PropName theNode) 				-- Dabelow Vray6
 			"vrayRenderElements": 	nodeName = (LPM_Fun.generateVrayRenderElementsName theNode) 	-- Dabelow VrayRenderElements
 			"cameraOverscan": 		nodeName = (LPM_Fun.generateCameraOverscanName theNode) 		-- Dabelow cameraOverscan
+			"renderImage": 			nodeName = (LPM_Fun.generateRenderImageName theNode) 			-- Dabelow renderImage
 			"nukeExport": 			nodeName = (LPM_Fun.generateNukeExportName theNode) 			-- Dabelow nukeExport
 			"aeExport": 			nodeName = (LPM_Fun.generateAeExportName theNode) 				-- Dabelow aeExport
 
@@ -656,6 +660,17 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		if(cameraOverscan!=undefined) then
 		(
 			newCP = createTVnode newShot cameraOverscan nodeType:"cameraOverscan"
+
+			newCP.ForeColor = LPM_FontColor
+			newCP.BackColor = LPM_BackColor
+			makeItalic newCP
+		)
+
+		-- dabelow renderImage
+		renderImage=LPM_Fun.firstChildByType pmShot "renderImage"
+		if(renderImage!=undefined) then
+		(
+			newCP = createTVnode newShot renderImage nodeType:"renderImage"
 
 			newCP.ForeColor = LPM_FontColor
 			newCP.BackColor = LPM_BackColor
@@ -1173,6 +1188,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	fn EditCameraOverscan =
 	(
 		createDialog cameraOverscanPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+	)
+
+	--Dabelow renderImage
+	fn EditRenderImage =
+	(
+		createDialog renderImagePropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)
 
 	--Dabelow nukeExport
@@ -1847,6 +1868,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 							delete theNode
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
+						-- Dabelow renderImage
+						"renderImage":
+						(
+							theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
+							delete theNode
+							LPM_treeview_rollout.tv.selectedNode.remove()
+						)
 						-- Dabelow nukeExport
 						"nukeExport":
 						(
@@ -2083,7 +2111,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						hitNode.tag.value.active= not hitNode.tag.value.active
 						LPM_Fun.setIcon hitNode
 					)
-
+					-- Dabelow renderImage
+					"renderImage":
+					(
+						hitNode.tag.value.active= not hitNode.tag.value.active
+						LPM_Fun.setIcon hitNode
+					)
 					-- Dabelow nukeExport
 					"nukeExport":
 					(
@@ -2402,6 +2435,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"vray6RenderElements":popUpMenu rc_vray6RenderElementsPropsMenu 	-- Dabelow Vray6RenderElements
 					"vrayRenderElements":popUpMenu rc_vrayRenderElementsPropsMenu 		-- Dabelow VrayRenderElements
 					"cameraOverscan":popUpMenu rc_cameraOverscanPropsMenu 				-- Dabelow cameraOverscan
+					"renderImage":popUpMenu rc_renderImagePropsMenu 					-- Dabelow renderImage
 					"nukeExport":popUpMenu rc_nukeExportPropsMenu 						-- Dabelow nukeExport
 					"aeExport":popUpMenu rc_aeExportPropsMenu 							-- Dabelow aeExport
 				)
@@ -2471,6 +2505,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					"vray6":(EditVray6()) 									-- Dabelow Vray6
 					"vrayRenderElements":(EditVrayRenderElements()) 		-- Dabelow VrayRenderElements
 					"cameraOverscan":(EditCameraOverscan())					-- Dabelow cameraOverscan
+					"renderImage":(EditRenderImage())						-- Dabelow renderImage
 					"nukeExport":(EditNukeExport())							-- Dabelow nukeExport
 					"aeExport":(EditAeExport())								-- Dabelow aeExport
 				)
@@ -2487,7 +2522,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		 -- Dabelow cameraOverscan / nukeExport / aeExport / Vray6 / VrayRenderElements
 		it=arg.item.tag.value.type
-		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray6RenderElements") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport")then
+		if(it=="pass") or (it=="shot") or (it=="objectSet") or (it=="lightSet") or (it=="renderProps") or (it=="vrayProps")or (it=="envProps") or (it=="commonProps") or (it=="xrefObj") or (it=="xrefScene") or (it=="passGroup") or (it=="ModifierOver") or (it=="script") or (it=="Deadline") or (it=="vray6RenderElements") or (it=="vray6") or (it=="vrayRenderElements") or (it=="cameraOverscan") or (it=="nukeExport") or (it=="aeExport") or (it=="renderImage") then
 		tv.doDragDrop arg.item m.Move -- this actually starts the drag and drop process
 	 )
 
@@ -2615,7 +2650,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					theType=dragNode.tag.value.type
 
 					-- Dabelow / cameraOverscan / nukeExport / aeExport / Dabelow vray6
-					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="Deadline") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") then
+					if (theType=="envProps") or (theType=="commonProps") or (theType=="xrefObj") or (theType=="xrefScene") or (theType=="Deadline") or (theType=="vray6RenderElements") or (theType=="vrayRenderElements") or (theType=="vray6") or (theType=="cameraOverscan") or (theType=="nukeExport") or (theType=="aeExport") or (it=="renderImage") then
 					(
 						for it in thePass.children where it.type==theType do --delete the previous nodes of the above types
 							delete it
