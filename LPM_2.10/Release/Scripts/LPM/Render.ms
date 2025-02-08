@@ -1457,13 +1457,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 -- print LPM_Root.renderCamera
 
 
---------
-		--cp=LPM_Fun.firstChildByType item "commonProps"
-
------
-
-
-
 		--And go!!
 		with defaultAction #logmsg
 		(
@@ -1472,6 +1465,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			(
 				cp=LPM_Fun.firstChildByType theShot "commonProps"
 				SetQuietMode LPM_Root.quietMode
+				cp=LPM_Fun.firstChildByType theShot "commonProps"
 				render fromframe:cp._rendStart toframe:cp._rendEnd
 				--render fromframe:theShot._rendStart toframe:theShot._rendEnd
 			)

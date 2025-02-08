@@ -55,7 +55,16 @@ fn cleanSet theSet=
 
 fn firstChildByType theParent type=
 (
-	for kids in theParent.children where kids.type==type do return kids
+	print( theParent.children )
+
+	for kids in theParent.children where kids.type==type do
+	(
+--		print(kids.type)
+--		print(kids.name)
+		return kids
+	)
+
+
 	undefined
 ),
 
@@ -172,7 +181,8 @@ fn passByNode theNode =
 			"Deadline":theNode.parent.tag.value 				-- Dabelow
 			"vray6":theNode.parent.tag.value 					-- Dabelow vray6
 			"vray6RenderElements":theNode.parent.tag.value 		-- Dabelow vray6
-			"vrayRenderElements":theNode.parent.tag.value 		-- Dabelow vrayrenderelements
+			"renderImage":theNode.parent.tag.value 				-- Dabelow renderImage
+			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
 			"cameraOverscan":theNode.parent.tag.value 			-- Dabelow cameraOverscan
 			"renderImage":theNode.parent.tag.value 				-- Dabelow renderImage
 			"nukeExport":theNode.parent.tag.value 				-- Dabelow nukeExport
@@ -493,6 +503,7 @@ fn createNode pName type=
 		"vray6":custAttributes.add theNode vray6PropsCA 								-- Dabelow vray6
 		"vray6RenderElements":custAttributes.add theNode vray6RenderElementsPropsCA 	-- Dabelow vray6
 		"vrayRenderElements":custAttributes.add theNode vrayRenderElementsPropsCA 		-- Dabelow vrayrenderelements
+		"renderImage":custAttributes.add theNode renderImagePropsCA 					-- Dabelow renderImage
 		"cameraOverscan":custAttributes.add theNode cameraOverscanPropsCA 				-- Dabelow cameraOverscan
 		"renderImage":custAttributes.add theNode renderImagePropsCA 					-- Dabelow renderImage
 		"nukeExport":custAttributes.add theNode nukeExportPropsCA 						-- Dabelow nukeExport
@@ -777,6 +788,28 @@ fn createVray6RenderElementsProps theName=
 	cp.active = true
 	cp.elementOverride = true
 	cp.activeElement = #()
+
+	cp
+),
+
+-- renderImage
+fn loadRenderImageSettings cp isPreviewMode=
+(
+	if isPreviewMode then ( return false )
+
+	LPM_SMTDSettings.active 	 		= cp.active
+--	LPM_SMTDSettings.elementOverride 	= cp.elementOverride
+--	LPM_SMTDSettings.activeElement 		= cp.activeElement
+),
+
+-- renderImage
+fn createRenderImageProps theName=
+(
+	cp=LPM_Fun.createNode theName "renderImage"
+
+	cp.active = true
+--	cp.elementOverride = true
+--	cp.activeElement = #()
 
 	cp
 ),
@@ -1343,6 +1376,15 @@ fn generateVrayRenderElementsName cp=
 (
 	--theName = ( cp.type + " Override" )
 	theName = ( "VRay Render Elements Override" )
+	theName
+),
+
+-- Dabelow renderImage
+fn generateRenderImageName cp=
+(
+	print("===== FN generateRenderImageName =====")
+	--theName = ( cp.type + " Override" )
+	theName = ( "Render Image" )
 	theName
 ),
 

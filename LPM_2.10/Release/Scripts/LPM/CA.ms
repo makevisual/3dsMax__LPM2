@@ -166,7 +166,7 @@ attribID:#(0x21912344, 0x01013380)
 	)
 )
 
--- Dabelow
+-- Dabelow deadlinePropsCA
 deadlinePropsCA = attributes deadlineProps
 attribID:#(0x73e22a56, 0x439f0d00)
 (
@@ -215,9 +215,9 @@ attribID:#(0x2cc0578d, 0x1919e838)
 	(
 		type type:#string
 		active type:#boolean default:true
- 		-- initialized type:#boolean
+    
+	  renderEnabled type:#boolean default:false
 
-	    renderEnabled type:#boolean default:false
 	)
 )
 
