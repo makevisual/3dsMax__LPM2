@@ -11,10 +11,8 @@ struct LPM_RenderAPI
 
 	fn setWarning=
 	(
-		try(
-			LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
-			LPM_renderProgress_Ro.warning.color=(color 135 6 6)
-		)catch()
+		LPM_renderProgress_Ro.warning.text="Warnings See Log F11"
+		LPM_renderProgress_Ro.warning.color=(color 135 6 6)
 	),
 	fn saveBG=
 	(
@@ -58,6 +56,7 @@ struct LPM_RenderAPI
 				rendFileNumberBase=cp._rendFileNumberBase
 				rendPickupFrames=cp._rendPickupFrames
 			)
+
 			if(cp.outputSizeTgl) then
 			(
 				renderHeight=cp._renderHeight
@@ -65,6 +64,7 @@ struct LPM_RenderAPI
 				setRendApertureWidth cp._RendApertureWidth
 				renderPixelAspect=cp._renderPixelAspect
 			)
+
 			if(cp.optionsTgl) then
 			(
 				rendAtmosphere=cp._rendAtmosphere
@@ -77,25 +77,20 @@ struct LPM_RenderAPI
 				rendForce2Side=cp._rendForce2Side
 				rendSuperBlack=cp._rendSuperBlack
 			)
+
 			if(cp.advancedLightingTgl ) then
 			(
 				RadiosityPreferences.useAdvancedLighting=cp._useAdvancedLighting
 				RadiosityPreferences.computeAdvancedLighting	=cp._computeAdvancedLighting
 			)
-			if(cp.cameraTgl) then
-			(
-				try(viewport.setCamera cp._Camera)catch()
-			)
-			if(cp.renderTypeTgl) then
-			(
-				try(setRenderType (cp.renderType as name))catch()
-			)
-			try(
-				renderers.current.output_rawExrDeep = cp.deepEXR
-			)catch()
 
+			if(cp.cameraTgl) then(viewport.setCamera cp._Camera)
+			if(cp.renderTypeTgl) then(setRenderType (cp.renderType as name))
+
+			renderers.current.output_rawExrDeep = cp.deepEXR
 			rendSaveFile=not cp.disableFinalOutput
 		)
+
 		return cp
 	),
 
@@ -190,6 +185,8 @@ struct LPM_RenderAPI
 			for it in lightNodes[i] where ((finditem hitNodes it)==0) do
 			(
 				append hitNodes it
+
+				-- TODO: Remove these TRY CATCH blocks
 
 				try
 				(
@@ -311,64 +308,64 @@ struct LPM_RenderAPI
 				)
 				catch()
 
-				---------    corona part
-				try
-				(
-					if (lightSetArray[i].pMultiplierEnable) then(it.baseObject.intensity = lightSetArray[i].pMultiplier)
-				)
-				catch()
-
-				try
-				(
-					case lightSetArray[i].pCastShadows of
-					(
-						2:(it.baseObject.castsShadows = true)
-						3:(it.baseObject.castsShadows = false)
-					)
-				)
-				catch()
-
-				try
-				(
-					if lightSetArray[i].pColorEnable then(it.color=lightSetArray[i].pColor)
-				)
-				catch()
-
-				try
-				(
-					case lightSetArray[i].pAffectDiffuse of
-					(
-						2:(it.baseObject.visibleDirectly = true)
-						3:(it.baseObject.visibleDirectly = false)
-					)
-				)
-				catch()
-
-				try
-				(
-					case lightSetArray[i].pAffectReflections of
-					(
-						2:(it.baseObject.visibleRefl = true)
-						3:(it.baseObject.visibleRefl = false)
-					)
-				)
-				catch()
-
-				try
-				(
-					case lightSetArray[i].pUseTexture of
-					(
-						2:(it.baseObject.colorMode = 2)
-						3:(it.baseObject.colorMode = 0)
-					)
-				)
-				catch()
-
-				try
-				(
-					if lightSetArray[i].pTextureEnable then(it.baseObject.texmap=lightSetArray[i].pTexture)
-				)
-				catch()
+--				---------    corona part
+--				try
+--				(
+--					if (lightSetArray[i].pMultiplierEnable) then(it.baseObject.intensity = lightSetArray[i].pMultiplier)
+--				)
+--				catch()
+--
+--				try
+--				(
+--					case lightSetArray[i].pCastShadows of
+--					(
+--						2:(it.baseObject.castsShadows = true)
+--						3:(it.baseObject.castsShadows = false)
+--					)
+--				)
+--				catch()
+--
+--				try
+--				(
+--					if lightSetArray[i].pColorEnable then(it.color=lightSetArray[i].pColor)
+--				)
+--				catch()
+--
+--				try
+--				(
+--					case lightSetArray[i].pAffectDiffuse of
+--					(
+--						2:(it.baseObject.visibleDirectly = true)
+--						3:(it.baseObject.visibleDirectly = false)
+--					)
+--				)
+--				catch()
+--
+--				try
+--				(
+--					case lightSetArray[i].pAffectReflections of
+--					(
+--						2:(it.baseObject.visibleRefl = true)
+--						3:(it.baseObject.visibleRefl = false)
+--					)
+--				)
+--				catch()
+--
+--				try
+--				(
+--					case lightSetArray[i].pUseTexture of
+--					(
+--						2:(it.baseObject.colorMode = 2)
+--						3:(it.baseObject.colorMode = 0)
+--					)
+--				)
+--				catch()
+--
+--				try
+--				(
+--					if lightSetArray[i].pTextureEnable then(it.baseObject.texmap=lightSetArray[i].pTexture)
+--				)
+--				catch()
 
 				---------    default part
 				try
@@ -544,8 +541,9 @@ struct LPM_RenderAPI
 					else(preRenderSettings=LPM_Fun.saveRenderPreset())
 
 					--preRenderSettings=renderers.current
-					try(LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate)
-					catch(LPM_Fun.loadRenderPreset theRenderProps[1].props)
+--	???				try(LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate)
+					LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate
+-- ???				catch(LPM_Fun.loadRenderPreset theRenderProps[1].props)
 				)
 
 				if findstring ((classof renderers.current) as string) "V_RAY" != undefined then
@@ -602,26 +600,35 @@ struct LPM_RenderAPI
 				(
 					tmp=#(it)
 
-					try(tmp[2]=it.on)catch()
-					try(tmp[3]=it.baseObject.multiplier)catch()
-					try(tmp[4]=it.color)catch()
-					try(tmp[5]=it.baseObject.castShadows)catch()
-					try(tmp[6]=it.baseObject.affect_diffuse)catch()
-					try(tmp[7]=it.baseObject.affect_specualr)catch()
-					try(tmp[8]=it.baseObject.affect_reflections)catch()
-					try(tmp[9]=it.baseObject.texmap)catch()
-					try(tmp[10]=it.baseObject.intensity)catch()
-					try(tmp[11]=it.baseObject.visibleDirectly)catch()
-					try(tmp[12]=it.baseObject.visibleRefl)catch()
-					try(tmp[13]=it.baseObject.castsShadows)catch()
-					try(tmp[14]=it.baseObject.affectDiffuse)catch()
-					try(tmp[15]=it.baseObject.affectSpecular)catch()
-					try(tmp[16]=it.baseObject.projectorMap)catch()
-					try(tmp[17]=it.baseObject.projector)catch()
-					try(tmp[18]=it.baseObject.texmap_on)catch()
-					try(tmp[19]=it.baseObject.colorMode)catch()
-					try(tmp[20]=it.isHidden)catch()
-					try(tmp[21]=it.enabled)catch()
+					-- Need to populate this array out with information to have properties for the correct indecies
+					for i=2 to 21 do(tmp[i] = undefined)
+
+					-- Default paramaters
+					tmp[2]=it.on
+					tmp[3]=it.baseObject.multiplier
+					tmp[4]=it.color
+					tmp[5]=it.baseObject.castShadows
+					tmp[14]=it.baseObject.affectDiffuse
+					tmp[15]=it.baseObject.affectSpecular
+					tmp[20]=it.isHidden
+					tmp[21]=it.enabled
+					
+					-- Attempt to modify lights based on engine
+					if ( classof(it) == VRayLight ) then
+					(
+						tmp[6]=it.baseObject.affect_diffuse  		
+						tmp[7]=it.baseObject.affect_specular 		
+						tmp[8]=it.baseObject.affect_reflections  	
+						tmp[9]=it.baseObject.texmap  				
+						tmp[18]=it.baseObject.texmap_on 			
+						tmp[13]=it.baseObject.castShadows 			
+						tmp[19]=it.baseObject.color_mode 			
+					)
+					else
+					(
+						tmp[16]=it.baseObject.projectorMap 			
+						tmp[17]=it.baseObject.projector 			
+					)
 
 					tmp
 				)
@@ -1175,28 +1182,31 @@ struct LPM_RenderAPI
 				for it in lightBackup do
 				(
 					theNode=it[1]
-					try(theNode.on=it[2])catch()
-					try(theNode.isHidden = it[20])catch()
-					try(theNode.enabled = it[21])catch()
-					try(theNode.baseObject.multiplier=it[3])catch()
-					try(theNode.color=it[4])catch()
-					try(theNode.baseObject.castShadows=it[5])catch()
-					try(theNode.baseObject.affect_diffuse=it[6])catch()
-					try(theNode.baseObject.affect_specualr=it[7])catch()
-					try(theNode.baseObject.affect_reflections=it[8])catch()
-					try(theNode.baseObject.texmap_on=it[18])catch()
-					try(theNode.baseObject.texmap=it[9])catch()
-					-----------    corona part
-					-- try(theNode.baseObject.intensity=it[10])catch()
-					-- try(theNode.baseObject.castsShadows=it[13])catch()
-					-- try(theNode.baseObject.visibleDirectly=it[11])catch()
-					-- try(theNode.baseObject.visibleRefl=it[12])catch()
-					-- try(theNode.baseObject.colorMode=it[19])catch()
-					-----------    default part
-					try(theNode.baseObject.affectDiffuse=it[14])catch()
-					try(theNode.baseObject.affectSpecular=it[15])catch()
-					try(theNode.baseObject.projectorMap=it[16])catch()
-					try(theNode.baseObject.projector=it[17])catch()
+					theNode.on=it[2]
+					theNode.isHidden = it[20]
+					theNode.enabled = it[21]
+					theNode.baseObject.multiplier=it[3]
+					theNode.color=it[4]
+					theNode.baseObject.castShadows=it[5]
+
+					-- Attempt to modify lights based on engine
+					if ( classof(theNode) == VRayLight ) then
+					(
+						theNode.baseObject.affect_diffuse=it[6]
+						theNode.baseObject.affect_specular=it[7]
+						theNode.baseObject.affect_reflections=it[8]
+						theNode.baseObject.texmap=it[9]
+						theNode.baseObject.texmap_on=it[18]
+					)
+					else 
+					(
+						theNode.baseObject.projectorMap=it[16]
+						theNode.baseObject.projector=it[17]
+					)
+					-- Default paramaters
+					theNode.baseObject.affectDiffuse=it[14]
+					theNode.baseObject.affectSpecular=it[15]
+
 				)
 
 				--Generic Nodes
@@ -1222,8 +1232,8 @@ struct LPM_RenderAPI
 				(
 					theEle=re.GetRenderElement (i-1)
 
-					try(theEle.enabled=elementBackup[i][1])catch()
-					try(theEle.vrayVFB=elementVrayBackup[i])catch()
+					theEle.enabled=elementBackup[i][1]
+					theEle.vrayVFB=elementVrayBackup[i]
 				)
 
 				--  Modifiers Override
@@ -1247,7 +1257,7 @@ struct LPM_RenderAPI
 				)
 
 				--     HideRFW  SkipExistingImages restore
-				try( if SkipExistingImagesBack != 0 then ( skipRenderedFrames = SkipExistingImagesBack ) )catch()
+				if SkipExistingImagesBack != 0 then ( skipRenderedFrames = SkipExistingImagesBack )
 
 				--  envProps Override restore
 				ep=LPM_Fun.firstChildByType thePass "envProps"
@@ -1352,6 +1362,7 @@ struct LPM_RenderAPI
 					setRenderType commonSettings[26]
 				fileOutGamma	=commonSettings[27]
 				displayGamma=commonSettings[28]
+
 				--restore viewport
 				if(viewPortCamBack!=undefined) then
 					viewport.setCamera viewportCamBack
@@ -1359,14 +1370,9 @@ struct LPM_RenderAPI
 					viewport.setType viewportTypeBack
 
 				LPM_Render.execScriptNodes thePass #postLPM
-
-				try(
-					LPM_Root.PostRenderFrameScript = false
-					LPM_Root.PostRenderFrameScriptText = ""
-				)catch()
-
+				LPM_Root.PostRenderFrameScript = false
+				LPM_Root.PostRenderFrameScriptText = ""
 				LPM_Root.PostConvertVrimg2exr = LPM_Fun.getIni "Settings" "PostConvertVrimg2exr" string "C:\\Program Files\\Chaos Group\\V-Ray\\3dsmax 2014 for x64\\tools\\vrimg2exr.exe"
-
 				LPM_Root.PostConvert = false
 				LPM_Root.PostConvertCompression = 3
 				LPM_Root.PostConvertHalfFoat = false
@@ -1400,18 +1406,20 @@ LPM_Render=LPM_RenderAPI()
 
 fn LPM_renderPass thePass renderType theShot:undefined=
 (
-	if( maxOps.GetCurRenderElementMgr()==undefined) then
-	(
-		messagebox "Please disable active shade and enable production renderer." title:"Warning!"
-	)
-	else
-	(
+--	if( maxOps.GetCurRenderElementMgr()==undefined) then
+--	(
+--		messagebox "Please disable active shade and enable production renderer." title:"Warning!"
+--	)
+--	else
+--	(
+		-- Store if the render dialog is opened, and close it if it is
 		RndDialogOpened = false
 		if renderSceneDialog.isopen() then
 		(
 			RndDialogOpened = true
 			renderSceneDialog.close()
 		)
+
 
 		TmpPassName = LPM_Fun.generatePassName thePass
 
@@ -1429,12 +1437,9 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		--Pre render action
 		isPreviewMode=((renderType==#preview)or(renderType==#previewHalf))
 
-		-- TODO: Turn this back on, super important, just turned off for testing -- Dabelow
 		LPM_Render.fnPreRenderAction thePass theShot isPreviewMode:isPreviewMode
 
 		--Set settings based on render type
-		-------------------------------------------------------------------------------------------------
-
 		if(isPreviewMode) then
 		(
 			rendOutputFilename=LPM_Fun.getPreviewFile thePass
@@ -1467,7 +1472,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 				SetQuietMode LPM_Root.quietMode
 				cp=LPM_Fun.firstChildByType theShot "commonProps"
 				render fromframe:cp._rendStart toframe:cp._rendEnd
-				--render fromframe:theShot._rendStart toframe:theShot._rendEnd
 			)
 			else(render())--max quick render
 
@@ -1475,7 +1479,6 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 		SetQuietMode false
 
-		-- TODO: Turn this back on, super important, just turned off for testing -- Dabelow
 		LPM_Render.fnPostRenderAction thePass theShot
 
 		if ( classOf getLocalTime == MAXScriptFunction ) then
@@ -1508,23 +1511,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 		try(destroyDialog LPM_renderProgress_Ro)catch()
 
-		--update the compositor and the last 10 renders
-		if(renderType==#preview or renderType==#previewHalf) then
-		(	if(LPM_Compositor!=undefined) then
-				if(LPM_Compositor.open) then
-					LPM_Compositor.refresh()
-			makedir ((getDir #preview)+"\\"+maxFileName+"_"+"\\Revisions\\")
-
-			y=copy localtime
-			for i=1 to y.count where y[i]=="/" or y[i]==":" or y[i]==" " do y[i]="_"
-			renderFile=LPM_Fun.getPreviewFile thePass;
-			newFile=(getfilenamepath renderFile+"Revisions\\")+(getfilenameFile renderFile )+y+(getfilenametype renderFile)
-			try(copyfile renderFile newFile)catch();
-		)
-
-		if RndDialogOpened then
-		(
-			renderSceneDialog.open()
-		)
-	)
+		-- Open back up the render dialog if it was open at the start of the render.
+		if RndDialogOpened then(renderSceneDialog.open())
+--	)
 )

@@ -2136,46 +2136,46 @@ rcMenu rc_shotMenu
 		shellLaunch curPath ""
 	)
 
-	on viewRamPlayer picked do
-	(
-		rollout LPM_shotPicker "Ram Player"
-		(
-			local passArray=#()
-			local theShot
-
-			label shotLabel align:#left
-			dropdownlist passDDL
-
-			on LPM_shotPicker open do
-			(
-				theShot=LPM_treeview_rollout.tv.selectedNode.tag.value
-				shotLabel.text="Shot: "+(LPM_Fun.getName theShot.name)
-				passArray=for it in (LPM_FUn.getallchildren LPM_Root) where it.type=="pass" collect it
-				passDDL.items=for it in passArray collect
-				(
-
-					thePath=LPM_Fun.getPassPath LPM_Root it theShot:theShot elementName:"Beauty"
-
-					fileList= getfiles ((getFilenamePath thePath) + (getFileNameFile thePath) + "*" + (getFileNametype thePath))
-
-					if(fileList.count==0) then
-						(LPM_Fun.getname it.name) + " (Missing)"
-					else
-						(LPM_Fun.getname it.name)
-
-				)
-
-			)
-			on passDDL selected item do
-			(
-				thePath=LPM_Fun.getPassPath LPM_Root passArray[item] theShot:theShot elementName:"Beauty"
-				LPM_Fun.viewRamplayer thePath
-
-			)
-		)
-		createDialog LPM_shotPicker pos:(LPM_Fun.getRoPos LPM_shotPicker.width)
-
-	)
+--	on viewRamPlayer picked do
+--	(
+--		rollout LPM_shotPicker "Ram Player"
+--		(
+--			local passArray=#()
+--			local theShot
+--
+--			label shotLabel align:#left
+--			dropdownlist passDDL
+--
+--			on LPM_shotPicker open do
+--			(
+--				theShot=LPM_treeview_rollout.tv.selectedNode.tag.value
+--				shotLabel.text="Shot: "+(LPM_Fun.getName theShot.name)
+--				passArray=for it in (LPM_FUn.getallchildren LPM_Root) where it.type=="pass" collect it
+--				passDDL.items=for it in passArray collect
+--				(
+--
+--					thePath=LPM_Fun.getPassPath LPM_Root it theShot:theShot elementName:"Beauty"
+--
+--					fileList= getfiles ((getFilenamePath thePath) + (getFileNameFile thePath) + "*" + (getFileNametype thePath))
+--
+--					if(fileList.count==0) then
+--						(LPM_Fun.getname it.name) + " (Missing)"
+--					else
+--						(LPM_Fun.getname it.name)
+--
+--				)
+--
+--			)
+--			on passDDL selected item do
+--			(
+--				thePath=LPM_Fun.getPassPath LPM_Root passArray[item] theShot:theShot elementName:"Beauty"
+--				LPM_Fun.viewRamplayer thePath
+--
+--			)
+--		)
+--		createDialog LPM_shotPicker pos:(LPM_Fun.getRoPos LPM_shotPicker.width)
+--
+--	)
 
 	on selectPasses picked do
 	(
