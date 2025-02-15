@@ -299,7 +299,7 @@ function preRenderAction_Production =
 ---- Pre-Render Action for Preview
 function preRenderAction_Preview =
 (
-    clearListener()
+--    clearListener()
     print"=========== PreRender Preview ==============="
 
     -- Construct object for storing pre-render state for use for restoring later

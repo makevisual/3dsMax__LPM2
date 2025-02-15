@@ -1406,12 +1406,13 @@ LPM_Render=LPM_RenderAPI()
 
 fn LPM_renderPass thePass renderType theShot:undefined=
 (
---	if( maxOps.GetCurRenderElementMgr()==undefined) then
---	(
---		messagebox "Please disable active shade and enable production renderer." title:"Warning!"
---	)
---	else
---	(
+
+---- TODO: Put the ONE try catch around this block to restore render on bad execution
+
+	---- Begin render saftey try Catch Block ----
+	recoveryException = #none	
+	try(
+
 		-- Store if the render dialog is opened, and close it if it is
 		RndDialogOpened = false
 		if renderSceneDialog.isopen() then
@@ -1420,29 +1421,28 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			renderSceneDialog.close()
 		)
 
-
+		-- Make a name for the pass
 		TmpPassName = LPM_Fun.generatePassName thePass
 
-		-- let's use getLocalTime if available (since 2008 or with AVG)
-		if ( classOf getLocalTime == MAXScriptFunction ) then
-			startTime = getLocalTime()
-		else
-			startTime = timeStamp()
+		-- Get the start time
+		if ( classOf getLocalTime == MAXScriptFunction )
+		then(startTime = getLocalTime())
+		else(startTime = timeStamp())
 
+		-- Initialize the renderProgress_Rollout
 		LPM_Fun.init_LPM_renderProgress_Ro thePass theShot
-		if(isvalidnode theShot) then
-			format "===== S:% P:% =====\n"  (LPM_Fun.getName theShot.name) (TmpPassName)
-		else format "===== P:% =====\n" (TmpPassName)
+		if(isvalidnode theShot)
+		then( format "===== S:% P:% =====\n"  (LPM_Fun.getName theShot.name) (TmpPassName))
+		else(format "===== P:% =====\n" (TmpPassName))
 
-		--Pre render action
-		isPreviewMode=((renderType==#preview)or(renderType==#previewHalf))
-
+		-- Pre render action
+		isPreviewMode = ((renderType==#preview) or (renderType==#previewHalf))
 		LPM_Render.fnPreRenderAction thePass theShot isPreviewMode:isPreviewMode
 
 		--Set settings based on render type
 		if(isPreviewMode) then
 		(
-			rendOutputFilename=LPM_Fun.getPreviewFile thePass
+			rendOutputFilename 	= LPM_Fun.getPreviewFile thePass
 
 			makeDir ((getDir #preview)+"\\"+maxFileName+"_"+"\\") all:true
 			deleteFile rendOutputFilename
@@ -1451,36 +1451,55 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 			if(renderType==#previewHalf) then
 			(
-				renderHeight=(renderHeight * (LPM_Root.previewSize as float) /100.0)
-				renderWidth=(renderWidth * (LPM_Root.previewSize as float) / 100.0)
+				renderHeight 	=(renderHeight 	* (LPM_Root.previewSize as float) / 100.0)
+				renderWidth 	=(renderWidth 	* (LPM_Root.previewSize as float) / 100.0)
 			)
 		)
 
 
--- TODO: put cameraOverscan in here
--- print "---------- testeroo -------------"
--- print LPM_Root.renderCamera
+		-- TODO: put cameraOverscan in here?
+		-- print LPM_Root.renderCamera
+		
 
+		-- For testing recovery
+		-- throw(recoveryException = #prerender)
+	)
+	catch(recoveryException = #prerender)
 
-		--And go!!
+	try(
+		-- Render calls for #local and #preview
 		with defaultAction #logmsg
 		(
+
+			-- If Local Mode Mode
 			if(renderType==#local)
 			then
 			(
-				cp=LPM_Fun.firstChildByType theShot "commonProps"
 				SetQuietMode LPM_Root.quietMode
 				cp=LPM_Fun.firstChildByType theShot "commonProps"
 				render fromframe:cp._rendStart toframe:cp._rendEnd
 			)
-			else(render())--max quick render
+			else()
 
+			-- If Preview Mode
+			if(renderType==#preview)
+			then(render() )
+
+			-- For testing recovery
+			--throw(recoveryException = #render)
 		)
+	)
+	catch(recoveryException = #render)
 
+	if recoveryException != #none
+	then ( messagebox("An error has occured in LPM during "+ recoveryException + "\nAttempting to restore the scene."))
+	else()
+
+		-- Post render actions
 		SetQuietMode false
-
 		LPM_Render.fnPostRenderAction thePass theShot
 
+		-- Resolve timers
 		if ( classOf getLocalTime == MAXScriptFunction ) then
 		(
 			endTime = getLocalTime()
@@ -1496,22 +1515,28 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			secs=mod secs 60
 		)
 
+		-- Print reports
 		if(isvalidnode theShot) then
 		(
-			if (hours > 0) then
-				format "RenderTime: % Hours % Mins Shot:% Pass:% type:% \n"  hours mins (LPM_Fun.getName theShot.name) (TmpPassName) (renderType as string)
-			else
-				format "RenderTime: % Mins % Secs Shot:% Pass:% type:% \n"  mins secs (LPM_Fun.getName theShot.name) (TmpPassName) (renderType as string)
-		) else (
-			if (hours > 0) then
-				format "RenderTime: % Hours % Mins Pass:% type:%\n" hours mins (TmpPassName)(renderType as string)
-			else
-				format "RenderTime: % Mins % Secs Pass:% type:%\n" mins secs (TmpPassName)(renderType as string)
+			if (hours > 0)
+			then(format "RenderTime: % Hours % Mins Shot:% Pass:% type:% \n"  hours mins (LPM_Fun.getName theShot.name) (TmpPassName) (renderType as string))
+			else(format "RenderTime: % Mins % Secs Shot:% Pass:% type:% \n"  mins secs (LPM_Fun.getName theShot.name) (TmpPassName) (renderType as string))
+		)
+		else
+		(
+			if (hours > 0) then(format "RenderTime: % Hours % Mins Pass:% type:%\n" hours mins (TmpPassName)(renderType as string))
+			else(format "RenderTime: % Mins % Secs Pass:% type:%\n" mins secs (TmpPassName)(renderType as string))
 		)
 
-		try(destroyDialog LPM_renderProgress_Ro)catch()
+		-- Destroy the render progress rollout
+		-- try(destroyDialog LPM_renderProgress_Ro)catch()
+		destroyDialog LPM_renderProgress_Ro
 
 		-- Open back up the render dialog if it was open at the start of the render.
 		if RndDialogOpened then(renderSceneDialog.open())
+
+	if recoveryException != #none
+	then ( messagebox("LPM sucsussfully attempted as scene recovery, \nPlease review your scene for any issues."))
+	else()
 --	)
 )
