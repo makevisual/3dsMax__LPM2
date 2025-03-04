@@ -1,9 +1,3 @@
-/* 
-	
-	
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-	
-	 */
 		rollout pickPasses_RO "Include Passes" width:200 height:360
 		(
 			radiobuttons allPassesRB "" pos:[5,7] width:102 height:32 labels:#("All Active Passes", "Selected Passes") default:1 columns:1

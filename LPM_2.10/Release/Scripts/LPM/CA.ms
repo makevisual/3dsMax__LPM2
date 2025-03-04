@@ -1,36 +1,3 @@
-/*
-Lukas Lepicovsky
-L Pass Manager
-lukashi@gmail.com
-www.lukashi.com
-
-
-    Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
-
-
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-
-
-
-*/
-
-
 rootCA = attributes root
 attribID:#(0x73921019, 0x018210301)
 version:2
@@ -47,16 +14,12 @@ version:2
 		expanded type:#boolean
 		renderType type:#integer default:3
 		previewSize type:#integer default:50
-
-		DistributedRender type:#boolean default:false
 		LastActivePass type:#string default:""
-
 		PostConvertVrimg2exr type:#string default:"C:\\Program Files\\Chaos Group\\V-Ray\\3dsmax 2014 for x64\\tools\\vrimg2exr.exe"
 		PostConvert type:#boolean default:false
 		PostConvertCompression type:#integer default:3
 		PostConvertHalfFoat type:#boolean default:false
 		PostConvertDatawindow type:#boolean default:false
-
 		PostRenderFrameScript type:#boolean default:false
 		PostRenderFrameScriptText type:#string default:""
 
@@ -127,10 +90,6 @@ attribID:#(0x83813919, 0x02155421)
 		UseCustomPath type:#boolean default:false
 		CustomPath type:#string default:"$Shot\\$APass$Pass$Element\\$APass$Pass$Element_"
 
-
-		isAdjustment type:#boolean default:false
-		AdjustmentFor type:#node
-
 		VRayRaw type:#boolean default:false
 		VRayRawFileType type:#integer default:1
 		VRayRawFull type:#boolean default:false
@@ -140,7 +99,6 @@ attribID:#(0x83813919, 0x02155421)
 		PostConvertCompression type:#integer default:3
 		PostConvertHalfFoat type:#boolean default:false
 		PostConvertDatawindow type:#boolean default:false
-
 	)
 )
 
@@ -208,30 +166,7 @@ attribID:#(0x21912344, 0x01013380)
 	)
 )
 
-VRayGICA = attributes VRayGI
-attribID:#(0x24de5872, 0x3b5a78e9)
-(
-	parameters main
-	(
-		type type:#string
-		active type:#boolean default:true
-		WriteMode type:#boolean default:true
-		InputPass type:#node
-
-		IrMapOn type:#boolean default:false
-		IrmapMode type:#integer default:1
-		IrmapUseCamera type:#boolean default:false
-
-		LightCacheOn type:#boolean default:false
-		LightCacheMode type:#integer default:1
-		LightCacheUseCamera type:#boolean default:false
-
-		DontRenderFinal type:#boolean default:true
-	)
-)
-
-
--- Dabelow
+-- Dabelow deadlinePropsCA
 deadlinePropsCA = attributes deadlineProps
 attribID:#(0x73e22a56, 0x439f0d00)
 (
@@ -239,8 +174,6 @@ attribID:#(0x73e22a56, 0x439f0d00)
 	(
 		type type:#string
 		active type:#boolean default:true
--- 		initialized type:#boolean -- ??????????? Do I need this????????????
-
 		priorityOn type:#boolean default:false
 		priorityOffsetOn type:#boolean default:false
 		priorityOffset type:#integer default:0
@@ -271,6 +204,20 @@ attribID:#(0x54e3ca47, 0x1381f195)
 	    resOverride type:#boolean default:false
     	resXOverride type:#integer default:1920
     	resYOverride type:#integer default:1080
+	)
+)
+
+-- Dabelow renderImage
+renderImagePropsCA = attributes renderImageProps
+attribID:#(0x2cc0578d, 0x1919e838)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+    
+	  renderEnabled type:#boolean default:false
+
 	)
 )
 
@@ -307,10 +254,9 @@ attribID:#(0x2116dbbc, 0x278662ed)
 	)
 )
 
-
--- Dabelow vray5
-vray5RenderElementsPropsCA = attributes vray5RenderElementsProps
-attribID:#(0x6743c747, 0x742f062b)
+-- Dabelow vray6
+vray6RenderElementsPropsCA = attributes vray6RenderElementsProps
+attribID:#(0x43bd437f, 0x5de2aa2d)
 (
 	parameters main
 	(
@@ -323,9 +269,24 @@ attribID:#(0x6743c747, 0x742f062b)
 	)
 )
 
--- Dabelow vray5
-vray5PropsCA = attributes vray5Props
-attribID:#(0x2aa18b31, 0x23cf92fb)
+-- Dabelow vray render elements
+vrayRenderElementsPropsCA = attributes vrayRenderElementsProps
+attribID:#(0x25058692, 0x1e340ec9)
+(
+	parameters main
+	(
+		type type:#string
+		active type:#boolean default:true
+ 		-- initialized type:#boolean
+
+		elementOverride type:#boolean
+		activeElement type:#stringTab tabSizeVariable:true
+	)
+)
+
+-- Dabelow vray6
+vray6PropsCA = attributes vray6Props
+attribID:#(0x31571798, 0x239ee7fe)
 (
 	parameters main
 	(
@@ -371,34 +332,6 @@ attribID:#(0x2aa18b31, 0x23cf92fb)
 		dmc_check type:#boolean
 			dmcThresh type:#float
 			dmcMult type:#float
-
-	)
-)
-
-
-AutoMaskCA = attributes AutoMask
-attribID:#(0x52ce8e55, 0x3829ed6b)
-(
-	parameters main
-	(
-		type type:#string
-		active type:#boolean default:true
-
-		layersOn type:#boolean default:false
-		layersRGB type:#boolean default:false
-		layers type:#stringTab tabSizeVariable:true
-
-		ObjectIDsOn type:#boolean default:false
-		ObjectIDsRGB type:#boolean default:true
-		ObjectIDs  type:#string default:"1,3,5-10"
-
-		MaterialIDsOn type:#boolean default:false
-		MaterialIDsRGB type:#boolean default:true
-		MaterialIDs  type:#string default:"1,3,5-10"
-
-		nodesOn type:#boolean default:false
-		nodesRGB type:#boolean default:false
-		nodes type:#nodeTab tabSizeVariable:true
 
 	)
 )
@@ -477,6 +410,8 @@ attribID:#(0x01028309, 0x03010930)
 		gammaTgl type:#boolean default:false
 		_fileOutGamma type:#float default:1.0
 
+		--Deep
+		deepEXR type:#boolean default:false
 
 		--Camera
 		cameraTgl type:#boolean
@@ -587,55 +522,6 @@ attribID:#(0x01828340, 0x02948239)
 	)
 )
 
-photoStudio_DataCA= attributes photoStudio_Data
-attribID:#(0x2f0c0d5d, 0x2c7c0655)
-version:2
-(
-	parameters main
-	(
-		ps type:#texturemap
-		type type:#string
-		active type:#boolean default:true
-		autoUpdate type:#boolean default:true
-
-		gi_id 			type:#integer default:2
-		caustics_id 		type:#integer default:2
-		physical_id 		type:#integer default:0
-		physical_status 	type:#integer default:3
-		streaks_id 		type:#integer default:0
-		bg_lock_id   type:#boolean default:off
-		bokeh_id 		type:#integer default:0
-		rgb_bokeh_id 		type:#integer default:0
-		openexr_name 	type:#string default:"<<none>>"
-		camera_name 		type:#string default:"<<none>>"
-		physical_scale 	type:#float default:80000
-
-		fov 			type:#float default:35
-
-		--camera sliders
-		film_iso_slider 	type:#integer default:2
-		camera_shutter_slider type:#integer default:10
-		f_number_slider 	type:#integer default:5
-		bg_multiply 		type:#float default:1
-
-		--Motion blur
-		mb_aktiv 		type:#boolean default:off
-		blur_all 		type:#boolean default:on
-		duration 		type:#float default:0.5
-		offset 		type:#float default:0.25
-		motion_segments 	type:#integer default:1
-		time_samples 	type:#integer default:5
-		rapid_samples	type:#integer default:1
-
-		--open
-		rAboutOpen type:#boolean default:false
-		rPhysicOpen type:#boolean default:false
-		rGlareOpen type:#boolean default:false
-		rDOFOpen type:#boolean default:false
-		rmotionblurOpen type:#boolean default:false
-		rCameraOpen type:#boolean default:true
-	)
-)
 
 LPM_scriptCA = attributes LPM_ScriptDef
 attribID:#(0x236b7a3b, 0x4be701be)
@@ -730,7 +616,6 @@ attribID:#(0x426c7db3, 0x343c98d9)
 			)
 			else
 			(
-				print "Could not find an appropriate container"
 				return false
 			)
 
@@ -789,14 +674,6 @@ attribID:#(0x426c7db3, 0x343c98d9)
 	)
 )
 
-
-
-
-
-
-
-
-
 ModifierOverCA = attributes ModifierOver
 attribID:#(0x46a023af, 0x761d5f73)
 (
@@ -811,8 +688,6 @@ attribID:#(0x46a023af, 0x761d5f73)
 
 	)
 )
-
-
 
 /*EXAMPLE
 x=point()
@@ -839,4 +714,3 @@ x.getValue "d1" 0
 x.getValue "e1" 0
 x.getValue "f1" 0
 x.getValue "g1" 0*/
-

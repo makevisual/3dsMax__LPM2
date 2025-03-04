@@ -1,58 +1,15 @@
-/*
-Lukas Lepicovsky
-L Pass Manager
-lukashi@gmail.com
-www.lukashi.com
-
-
-    Copyright (C) 2010  Lukas Lepicovsky LPM, 3DS Max Pass Manager
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
-
-	Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-
-
-
-*/
-
---RC MENU
---Contains menus and menu functions
-
-
-filein "rcMenu_vrayOverride.ms"
-filein "rcMenu_deadlineOverride.ms" 					-- Dabelow
-filein "rcMenu_Utilities.ms" 							-- Dabelow
-filein "rcMenu_vray5RenderElementsOverride.ms" 			-- Dabelow vray5
-filein "rcMenu_vray5Override.ms" 						-- Dabelow vray5
-filein "rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
-filein "rcMenu_nukeExport.ms"							-- Dabelow nukeExport
-filein "rcMenu_aeExport.ms"								-- Dabelow aeExport
-
--------------------------------------------------------------------------------------------------------   Rollouts   -------------------------------------------------------------------------------------------------------
-
-
-
-
--------------------------------------------------------------------------------------------------------   lightSetProps   -------------------------------------------------------------------------------------------------------
+filein @"rcMenus\rcMenu_vrayOverride.ms"
+filein @"rcMenus\rcMenu_deadlineOverride.ms" 					-- Dabelow
+filein @"rcMenus\rcMenu_Utilities.ms" 							-- Dabelow
+filein @"rcMenus\rcMenu_vrayRenderElementsOverride.ms" 			-- Dabelow vrayRenderElements
+filein @"rcMenus\rcMenu_cameraOverscanOverride.ms"				-- Dabelow cameraOverscan
+filein @"rcMenus\rcMenu_renderImage.ms"							-- Dabelow renderImage
+filein @"rcMenus\rcMenu_nukeExport.ms"							-- Dabelow nukeExport
+filein @"rcMenus\rcMenu_aeExport.ms"							-- Dabelow aeExport
 
  rollout lightSetProps ("Editing: "+ (LPM_Fun.getname LPM_treeview_rollout.tv.selectedNode.tag.value.name)) width:195 height:265
 	(
 		GroupBox grp3 "Light Control" pos:[5,0] width:184 height:260
-
 
 		dropdownList pEnable "" pos:[11,16] width:45 height:21 items:#("--", "On", "Off")
 		label lbl_Enabled "Enabled" pos:[61,20] width:71 height:15
@@ -98,7 +55,6 @@ filein "rcMenu_aeExport.ms"								-- Dabelow aeExport
 			pColorEnable.checked=theLightSet.pColorEnable
 			pColor.enabled = pColorEnable.checked
 			pColor.color=theLightSet.pColor
-
 
 			try
 			(
@@ -249,9 +205,9 @@ filein "rcMenu_aeExport.ms"								-- Dabelow aeExport
 
 
 
--------------------------------------------------------------------------------------------------------   objectSetProps   -------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------   LPM_objectSetProps   -------------------------------------------------------------------------------------------------------
 
-rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.selectedNode.tag.value.name))
+rollout LPM_objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.selectedNode.tag.value.name))
 (
 
 	GroupBox grp5 "Render Control" pos:[3,3] width:190 height:325
@@ -339,8 +295,6 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 			(
 				MatTemp = getMeditMaterial activeMeditSlot
 			)
-
-
 		)
 
 		if MatTemp != 0 then
@@ -349,8 +303,6 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 			pMaterialButtonNew.caption = pMaterial.name
 			pMatEnable.checked=true
 		)
-
-
 	)
 
 	on pMaterialGoToEditor pressed do
@@ -412,7 +364,7 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 
 	)
 
-	on objectSetProps open do
+	on LPM_objectSetProps open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 
@@ -442,9 +394,8 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 
 		if (pMaterial!=undefined) then
 		(
-			--pMaterialButton.text=pMaterial.name + " ( " +((classof pMaterial) as string) +" )"
 			pMaterialButtonNew.material = pMaterial
-			pMaterialButtonNew.caption = pMaterial.name --+ " ( " +((classof pMaterial) as string) +" )"
+			pMaterialButtonNew.caption = pMaterial.name 
 		)
 
 		if(theObjectSet.intP[9]==2) then
@@ -489,7 +440,7 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 		)
 	)
 
-	on objectSetProps close do
+	on LPM_objectSetProps close do
 	(
 		theObjectSet=LPM_treeview_rollout.tv.selectedNode.tag.value
 		theObjectSet.intP=#(pRenderable.selection,pCastShadows.selection,pReceiveShadows.selection,\
@@ -514,9 +465,6 @@ rollout objectSetProps ("Editing: "+(LPM_Fun.getname LPM_treeview_rollout.tv.sel
 		LPM_treeview_rollout.UnFreezeWindow()
 	)
 )
-
-
-
 
 -------------------------------------------------------------------------------------------------------   wildCardRO   -------------------------------------------------------------------------------------------------------
 
@@ -559,8 +507,6 @@ rollout wildCardRO "Wildcard" width:217 height:57
 )
 
 
-
-
 -------------------------------------------------------------------------------------------------------   LPM_scriptRO   -------------------------------------------------------------------------------------------------------
 
  LPM_scriptRO2 = ""
@@ -574,12 +520,9 @@ rollout LPM_scriptRO1 "Main options" --width:500 height:434
 
 	checkbox PreRender "Pre Render           or" pos:[14,10] width:114 height:17
 	checkbox PostRender "Post Render         or" pos:[14,28] width:114 height:17
-
 	checkbox PreLPM "Pre LPM Evaluation" pos:[140,10] width:114 height:17
 	checkbox PostLPM "Post LPM Evaluation" pos:[140,28] width:114 height:17
 	checkbox PostRenderFrame "PostRenderFrameScript" pos:[300,28] width:154 height:17 tooltip:"Evaluates every time after Frame render ends. It will work on all render nodes of your render farm if you put LPM_node_startup.ms in nodes 3Ds MAX startup folder."
-
-
 
 	on PreRender changed TmpState do
 	(
@@ -649,16 +592,13 @@ rollout LPM_scriptRO1 "Main options" --width:500 height:434
 
 )
 
-
 rollout LPM_scriptRO2 "Pre Script" --width:500 height:434
 (
 	local scriptObj
 	label tryLbl "Try( Execute" pos:[13,5] width:60 height:13
 	edittext ScriptText "" pos:[5,20] width:575 height:320
 	label catchLbl ")Catch(Messagebox (GetcurrentException() as string))" pos:[13,345] width:351 height:13
-
 	button tryIt "Test the Script" pos:[455,345] width:125 height:30
-
 
 	on LPM_scriptRO2 open do
 	(
@@ -669,8 +609,6 @@ rollout LPM_scriptRO2 "Pre Script" --width:500 height:434
 	(
 		try(Execute ScriptText.text)Catch(Messagebox (GetcurrentException() as string))
 	)
-
-
 )
 
 rollout LPM_scriptRO3 "Post Script" --width:500 height:434
@@ -719,9 +657,6 @@ rollout LPM_scriptRO4 "PostRenderFrameScript" --width:500 height:434
 
 )
 
-
-
-
 -------------------------------------------------------------------------------------------------------   ModifierOverRollout   -------------------------------------------------------------------------------------------------------
 
 rollout ModifierOverRollout "Modifiers Override" width:217 height:361
@@ -734,14 +669,11 @@ rollout ModifierOverRollout "Modifiers Override" width:217 height:361
 	pickbutton pbActiveNode "Select Object" pos:[6,6] width:166 height:26
 
 	GroupBox grp8 "Select Modifiers" pos:[3,39] width:210 height:287
-	--button btnClear "Clear" pos:[178,25] width:35 height:16
-	--multiListBox LBModifierOver "" pos:[6,56] width:203 height:20
 	dotNetControl LBModifierOver "system.windows.forms.listView" pos:[6,56] width:203 height:265
 	label lblDisMod22 "Warning! Modifiers names should differ." pos:[15,335] width:224 height:13
 
 	fn fnUpdateUI=
 	(
-		--print this.disabledModifiers
 		if(isvalidnode activeNode==false) then
 		(
 			pbActiveNode.text="Pick the Object To Modify"
@@ -750,29 +682,14 @@ rollout ModifierOverRollout "Modifiers Override" width:217 height:361
 		(
 			pbActiveNode.text = activeNode.name
 
-			--LBModifierOver.items=for modi in activeNode.modifiers collect modi.name
-
 			TmpItems=for modi in activeNode.modifiers collect modi.name
-			/*
-			sel=#{}
-			for i=1 to LBModifierOver.items.count do
-			(
-				if(finditem activeModifiersArray LBModifierOver.items[i] !=0) then
-					sel[i]=true
-			)
-
-			LBModifierOver.selection=sel
-			 */
-
 			LPM_Fun.InitListView LBModifierOver "Modifiers" 203
-
 			LPM_Fun.FillListView LBModifierOver TmpItems activeModifiersArray
 		)
 	)
 
 	on btnClear pressed do
 	(
-		--LBModifierOver.selection = #()
 	)
 
 	on LBModifierOver selectionEnd do
@@ -821,489 +738,20 @@ rollout ModifierOverRollout "Modifiers Override" width:217 height:361
 	)
 )
 
-
-
-
--------------------------------------------------------------------------------------------------------   V-Ray Global Illumination Rollout   -------------------------------------------------------------------------------------------------------
-
-
-rollout LPMVrayGI "V-Ray Global Illumination" width:245 height:245
-(
-	checkbutton ckbWrite "Write" pos:[5,5] width:50 height:25 checked:true
-	checkbutton ckbRead "Read" pos:[55,5] width:50 height:25
-
-	button btnHelp " ?" pos:[215,4] width:26 height:25 tooltip:"How it works?"
-
-	GroupBox grpWrite "GI Write" pos:[5,34] width:235 height:205
-	GroupBox grpRead "GI Read" pos:[5,34] width:235 height:205 visible:false
-
-	checkbox chkIrmap "Irradiance map" pos:[10,70] width:96 height:17
-	label lbl1 "Mode:" pos:[10,95] width:33 height:19
-	dropdownList ddlIrmapMode "" pos:[45,93] width:185 height:21 enabled:false items:#("Single frame", "Multiframe incremental", "Animation: prerass")
-	checkbox chkIrmapUseCamera "Use Camera Path" pos:[45,115] width:106 height:18 enabled:false
-
-	edittext edtFoundIrmap "" pos:[10,95] width:185 height:30 readOnly:true visible:false text:"Irradiance map NOT FOUND!"
-
-
-	checkbox chkLightCache "Light cache" pos:[10,142] width:96 height:17
-	label lbl2 "Mode:" pos:[10,162] width:33 height:19
-	dropdownList ddlLightCacheMode "" pos:[45,165] width:185 height:21 enabled:false items:#("Single frame", "Fly-through")
-	checkbox chkLightCacheUseCamera "Use Camera Path" pos:[45,187] width:106 height:18 enabled:false
-
-	edittext edtFoundLightCache "" pos:[10,162] width:185 height:30 readOnly:true visible:false text:"Light Cache NOT FOUND!"
-
-
-	checkbox chkDontRenderFinal "Don't render final image" pos:[10,209] width:134 height:17 checked:true
-
-	label lblOutput "Output:" pos:[10,49] width:45 height:14
-	edittext edtOutput "" pos:[50,49] width:165 height:16 readOnly:true
-	button btnOutputExplore "..." pos:[217,50] width:18 height:16 tooltip:"Explore Output folder if it exists."
-
-	label lblInput "Input Pass:" pos:[10,49] width:85 height:19 visible:false
-	dropdownList ddlInputPass "" pos:[70,48] width:165 height:21 items:#("NONE") visible:false tooltip:"Select Pass with V-Ray GI override\n wich works in WRITE mode."
-
-
-	local VRayGIobj
-	local passArray
-	local theNode
-
-	fn UpdateInputPass =
-	(
-		if ddlInputPass.selection > 1 then
-		(
-			VRayGIobj.InputPass = passArray[ddlInputPass.selection-1]
-		)
-		else
-		(
-			VRayGIobj.InputPass = undefined
-		)
-	)
-
-	fn UpdateLPMVrayGIFiles =
-	(
-		UpdateInputPass()
-
-		TmpExistFiles = LPM_Fun.CheckVRayGIExist VRayGIobj
-
-		if TmpExistFiles[1] then
-		(
-			edtFoundIrmap.text = "Irradiance map FOUND."
-		)
-		else
-		(
-			edtFoundIrmap.text = "Irradiance map NOT FOUND!"
-		)
-
-		if TmpExistFiles[2] then
-		(
-			edtFoundLightCache.text = "Light Cache FOUND."
-		)
-		else
-		(
-			edtFoundLightCache.text = "Light Cache NOT FOUND!"
-		)
-	)
-
-	fn UpdateLPMVrayGIMode state =
-	(
-		ckbWrite.state = btnOutputExplore.visible = edtOutput.visible = grpWrite.visible = lblOutput.visible = chkDontRenderFinal.visible = lbl1.visible = lbl2.visible = ddlIrmapMode.visible = ddlLightCacheMode.visible = chkIrmapUseCamera.visible = chkLightCacheUseCamera.visible =  state
-		grpRead.visible = ckbRead.state = lblInput.visible = ddlInputPass.visible = edtFoundIrmap.visible = edtFoundLightCache.visible = not state
-
-		VRayGIobj.WriteMode = state
-		edtOutput.text = LPM_Fun.GetVRayGIPath VRayGIobj
-
-		UpdateLPMVrayGIFiles()
-	)
-
-	on ddlInputPass selected sel do
-	(
-		UpdateLPMVrayGIFiles()
-
-	)
-
-	on btnOutputExplore pressed do
-	(
-		shellLaunch edtOutput.text ""
-	)
-
-	on ckbWrite changed state do
-	(
-		UpdateLPMVrayGIMode state
-	)
-
-	on ckbRead changed state do
-	(
-		UpdateLPMVrayGIMode (not state)
-	)
-
-	on chkIrmap changed state do
-	(
-		ddlIrmapMode.enabled = chkIrmapUseCamera.enabled = state
-	)
-
-	on chkLightCache changed state do
-	(
-		ddlLightCacheMode.enabled = chkLightCacheUseCamera.enabled = state
-	)
-
-	on LPMVrayGI open do
-	(
-		LPM_treeview_rollout.FreezeWindow()
-
-		VRayGIobj=LPM_treeview_rollout.tv.selectedNode.tag.value
-		theNode=LPM_treeview_rollout.tv.selectedNode
-		TmpthePass=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
-		passArray = for it in (LPM_FUn.getallchildren LPM_Root) where ((it.type=="pass")and(it != TmpthePass)) collect it
-		namesArray = for it in passArray collect (LPM_Fun.generatePassName it)
-		ddlInputPass.items = join #("NONE") namesArray
-
-		if VRayGIobj.InputPass != undefined then
-		(
-			tmpPassNumb = findItem passArray VRayGIobj.InputPass
-			if(tmpPassNumb>0) then
-			(
-				ddlInputPass.selection = tmpPassNumb +1
-			)
-		)
-
-		UpdateLPMVrayGIMode VRayGIobj.WriteMode
-
-		chkIrmap.state = ddlIrmapMode.enabled = chkIrmapUseCamera.enabled = VRayGIobj.IrMapOn
-		ddlIrmapMode.selection = VRayGIobj.IrmapMode
-		chkIrmapUseCamera.state = VRayGIobj.IrmapUseCamera
-
-		chkLightCache.state = ddlLightCacheMode.enabled = chkLightCacheUseCamera.enabled = VRayGIobj.LightCacheOn
-		ddlLightCacheMode.selection = VRayGIobj.LightCacheMode
-		chkLightCacheUseCamera.state = VRayGIobj.LightCacheUseCamera
-
-		chkDontRenderFinal.state = VRayGIobj.DontRenderFinal
-
-
-	)
-
-	on LPMVrayGI close do
-	(
-		VRayGIobj.WriteMode = ckbWrite.state
-		VRayGIobj.IrMapOn = chkIrmap.state
-		VRayGIobj.IrmapMode = ddlIrmapMode.selection
-		VRayGIobj.IrmapUseCamera = chkIrmapUseCamera.state
-
-		VRayGIobj.LightCacheOn = chkLightCache.state
-		VRayGIobj.LightCacheMode = ddlLightCacheMode.selection
-		VRayGIobj.LightCacheUseCamera = chkLightCacheUseCamera.state
-
-		VRayGIobj.DontRenderFinal = chkDontRenderFinal.state
-
-		UpdateInputPass()
-
-		theNode.text=LPM_Fun.generateVRayGIName VRayGIobj
-
-		LPM_treeview_rollout.UnFreezeWindow()
-	)
-)
-
-
-
--------------------------------------------------------------------------------------------------------   AutoMask Rollout   -------------------------------------------------------------------------------------------------------
-
-
-
-rollout AutoMaskRoll "AutoMask" width:250 height:495
-(
-	GroupBox grpLayers "                                                                       " pos:[5,5] width:240 height:200
-	checkbox chkLayers "Scene Layers Output" pos:[15,5] width:125 height:15
-	checkbox chkLayersRGB "RGB" pos:[185,5] width:40 height:15 tooltip:"If checked creates RGB masks (several masks in one file)\nIf not checked creates Black&White masks"
-	--multiListBox lbxLayers "" pos:[10,25] width:230 height:13 enabled:false
-
-	dotNetControl lbxLayers "system.windows.forms.listView" pos:[10,25] width:230 height:176-- enabled:false
-
-	GroupBox grpObjectIDs "                                                                       " pos:[5,210] width:240 height:45
-	checkbox chkObjectIDs "Separated Object ID Output" pos:[15,210] width:160 height:15
-	checkbox chkObjectIDsRGB "RGB" pos:[185,210] width:40 height:15 tooltip:"If checked creates RGB masks (several masks in one file)\nIf not checked creates Black&White masks"
-	edittext edtObjectIDs "Object IDs: " pos:[10,226] width:230 height:16 enabled:false text:"1,3,5-10"
-
-	GroupBox grpMaterialIDs "                                                                       " pos:[5,257] width:240 height:45
-	checkbox chkMaterialIDs "Separated Material ID Output" pos:[15,258] width:165 height:15
-	checkbox chkMaterialIDsRGB "RGB" pos:[185,258] width:40 height:15 tooltip:"If checked creates RGB masks (several masks in one file)\nIf not checked creates Black&White masks"
-	edittext edtMaterialIDs "Material IDs: " pos:[10,276] width:230 height:16 enabled:false text:"1,3,5-10"
-
-	GroupBox grpObjects "                                                                       " pos:[5,306] width:240 height:185
-	checkbox chkObjects "Separated Objects Output" pos:[15,306] width:160 height:15
-	checkbox chkObjectsRGB "RGB" pos:[185,306] width:40 height:15 tooltip:"If checked creates RGB masks (several masks in one file)\nIf not checked creates Black&White masks"
-
-	multiListBox lbxObjects "" pos:[10,349] width:230 height:10 enabled:false
-	button btnAddSelected "Add Selected" pos:[10,325] width:80 height:20 enabled:false
-	button btnAddObjects "Add Objects" pos:[92,325] width:80 height:20 enabled:false
-	button btnDelete "Delete" pos:[174,325] width:65 height:20 enabled:false
-
-	local AutoMaskObj
-	local theNode
-	local NodesArr = #()
-
-	fn ElementsEnableUpdate =
-	(
-		lbxLayers.enabled = chkLayersRGB.enabled = chkLayers.checked
-		edtObjectIDs.enabled = chkObjectIDsRGB.enabled = chkObjectIDs.checked
-		edtMaterialIDs.enabled = chkMaterialIDsRGB.enabled = chkMaterialIDs.checked
-		lbxObjects.enabled = btnAddSelected.enabled = btnAddObjects.enabled = btnDelete.enabled = chkObjectsRGB.enabled = chkObjects.checked
-
-	)
-
-	fn compareFN v1 v2 = if((LPM_Fun.uppercase v1) < (LPM_Fun.uppercase v2)) then return -1 else return 1
-
-	fn compareFN2 v1 v2 =
-	(
-		try
-		(
-			if((LPM_Fun.uppercase v1.name) < (LPM_Fun.uppercase v2.name)) then return -1 else return 1
-		)
-		catch
-		(
-			return 1
-		)
-	)
-
-	fn Lights_filt obj = (not (isKindOf obj light))
-
-	on btnAddObjects pressed do
-	(
-		tmpSelection = selectByName title:"Add objects" filter:Lights_filt single:false
-
-		if tmpSelection != #() and tmpSelection != undefined then
-		(
-			for obj in tmpSelection do
-			(
-				appendIfUnique NodesArr obj
-			)
-
-			qsort NodesArr compareFN2
-
-
-
-			TmpNamesArr = #()
-
-			for i = 1 to NodesArr.count do
-			(
-				try
-				(
-					append TmpNamesArr NodesArr[i].name
-				)
-				catch
-				(
-					append TmpNamesArr "Deleted Node"
-				)
-			)
-
-
-			lbxObjects.items = TmpNamesArr
-		)
-	)
-
-	on btnDelete pressed do
-	(
-
-		for i=1 to lbxObjects.items.count do
-		(
-			j = lbxObjects.items.count-i+1
-
-			if lbxObjects.selection[j] then
-			(
-				deleteItem NodesArr j
-			)
-		)
-
-		qsort NodesArr compareFN2
-
-		TmpNamesArr = #()
-
-		for i = 1 to NodesArr.count do
-		(
-			try
-			(
-				append TmpNamesArr NodesArr[i].name
-			)
-			catch
-			(
-				append TmpNamesArr "Deleted Node"
-			)
-		)
-
-		lbxObjects.items = TmpNamesArr
-	)
-
-	on btnAddSelected pressed do
-	(
-		if selection[1] != undefined then
-		(
-
-			for obj in selection do
-			(
-				appendIfUnique NodesArr obj
-			)
-
-			qsort NodesArr compareFN2
-
-			TmpNamesArr = #()
-
-			for i = 1 to NodesArr.count do
-			(
-				try
-				(
-					append TmpNamesArr NodesArr[i].name
-				)
-				catch
-				(
-					append TmpNamesArr "Deleted Node"
-				)
-			)
-
-			lbxObjects.items = TmpNamesArr
-		)
-
-	)
-
-	on AutoMaskRoll open do
-	(
-		LPM_treeview_rollout.FreezeWindow()
-
-		AutoMaskObj = LPM_treeview_rollout.tv.selectedNode.tag.value
-		theNode = LPM_treeview_rollout.tv.selectedNode
-
-		items=#()
-		for i=1 to LayerManager.count do
-		(
-			layerName = ((LayerManager.getLayer (i-1)).name)
-			if (layerName != "zz-LPM") do append items layerName
-		)
-		qsort items compareFN
-		--lbxLayers.items=items
-
-		LPM_Fun.InitListView lbxLayers "Layers" 230
-		LPM_Fun.FillListView lbxLayers items AutoMaskObj.layers
-
-		chkLayers.checked = AutoMaskObj.layersOn
-		chkObjectIDs.checked = AutoMaskObj.ObjectIDsOn
-		chkMaterialIDs.checked = AutoMaskObj.MaterialIDsOn
-		chkObjects.checked = AutoMaskObj.nodesOn
-
-		chkLayersRGB.checked = AutoMaskObj.layersRGB
-		chkObjectIDsRGB.checked = AutoMaskObj.ObjectIDsRGB
-		chkMaterialIDsRGB.checked = AutoMaskObj.MaterialIDsRGB
-		chkObjectsRGB.checked = AutoMaskObj.nodesRGB
-
-		edtObjectIDs.text = AutoMaskObj.ObjectIDs
-		edtMaterialIDs.text = AutoMaskObj.MaterialIDs
-
-		--lbxLayers.selection=(for i=1 to lbxLayers.items.count where (findItem AutoMaskObj.layers lbxLayers.items[i])!=0  collect i)
-
-		if AutoMaskObj.nodes.count > 0 then
-		(
-
-			TmpNamesArr = #()
-
-			for i = 1 to AutoMaskObj.nodes.count do
-			(
-				try
-				(
-					append TmpNamesArr AutoMaskObj.nodes[i].name
-				)
-				catch
-				(
-					append TmpNamesArr "Deleted Node"
-				)
-			)
-
-			lbxObjects.items = TmpNamesArr
-		)
-
-		NodesArr =  (AutoMaskObj.nodes as Array)
-
-		ElementsEnableUpdate()
-	)
-
-	on AutoMaskRoll close do
-	(
-		AutoMaskObj.layersOn = chkLayers.checked
-		AutoMaskObj.ObjectIDsOn = chkObjectIDs.checked
-		AutoMaskObj.MaterialIDsOn = chkMaterialIDs.checked
-		AutoMaskObj.nodesOn = chkObjects.checked
-
-		AutoMaskObj.layersRGB = chkLayersRGB.checked
-		AutoMaskObj.ObjectIDsRGB = chkObjectIDsRGB.checked
-		AutoMaskObj.MaterialIDsRGB = chkMaterialIDsRGB.checked
-		AutoMaskObj.nodesRGB = chkObjectsRGB.checked
-
-		AutoMaskObj.ObjectIDs = edtObjectIDs.text
-		AutoMaskObj.MaterialIDs = edtMaterialIDs.text
-
-		--AutoMaskObj.layers=(for i=1 to lbxLayers.items.count where lbxLayers.selection[i] collect lbxLayers.items[i])
-		AutoMaskObj.layers=LPM_Fun.SaveListView lbxLayers
-
-		AutoMaskObj.nodes = NodesArr
-
-		LPM_treeview_rollout.UnFreezeWindow()
-	)
-
-	on chkLayers changed theState do
-	(
-		ElementsEnableUpdate()
-	)
-
-	on chkObjectIDs changed theState do
-	(
-		ElementsEnableUpdate()
-	)
-
-	on chkMaterialIDs changed theState do
-	(
-		ElementsEnableUpdate()
-	)
-
-	on chkObjects changed theState do
-	(
-		ElementsEnableUpdate()
-	)
-)
-
-
-
-
-
 -------------------------------------------------------------------------------------------------------   XrefSceneRollout   -------------------------------------------------------------------------------------------------------
 
 rollout XrefSceneRollout "Xref Scene Override" width:400 height:300
 (
-
 	local activeXrefSceneArray=#()
 	local theNode
 
 	GroupBox grp8xrs "Select Xref Scenes" pos:[5,5] width:390 height:287
-	--button btnClear "Clear" pos:[360,4] width:35 height:16
-	--multiListBox LBXrefSceneOver "" pos:[10,35] width:380 height:20
 	dotNetControl LBXrefSceneOver "system.windows.forms.listView" pos:[10,22] width:380 height:265
 
 	fn fnUpdateUI =
 	(
 		xrefSceneProps = theNode
 		xrefFileCount = xrefs.getXrefFileCount()
-		/*
-		sel=#{}
-
-		LBXrefSceneOver.items = for i=1 to xrefFileCount collect
-		(
-			theFile=(xrefs.getXrefFile i).fileName
-		)
-
-
-		for i=1 to LBXrefSceneOver.items.count do
-		(
-			if(finditem activeXrefSceneArray LBXrefSceneOver.items[i] !=0) then
-				sel[i]=true
-		)
-
-		LBXrefSceneOver.selection=sel
-		 */
 
 		TmpItems = for i=1 to xrefFileCount collect
 		(
@@ -1312,28 +760,14 @@ rollout XrefSceneRollout "Xref Scene Override" width:400 height:300
 
 		LPM_Fun.InitListView LBXrefSceneOver "Xref Scenes" 380
 		LPM_Fun.FillListView LBXrefSceneOver TmpItems activeXrefSceneArray
-
-	)
-	/*
-	on btnClear pressed do
-	(
-		LBXrefSceneOver.selection = #()
 	)
 
-	on LBXrefSceneOver selectionEnd do
-	(
-		activeXrefSceneArray=for i=1 to LBXrefSceneOver.items.count where LBXrefSceneOver.selection[i] collect LBXrefSceneOver.items[i]
-	)
-	 */
 	on XrefSceneRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 
 		theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-
-
 		activeXrefSceneArray = theNode.fileNames
-
 		fnUpdateUI ()
 	)
 
@@ -1349,7 +783,6 @@ rollout XrefSceneRollout "Xref Scene Override" width:400 height:300
 		(
 			append theNode.fileNames activeXrefSceneArray[i]
 		)
-
 	)
 
 	on XrefSceneRollout resized theSize do
@@ -1383,33 +816,12 @@ rollout XrefObjRollout "Xref Object Override" width:400 height:300
 	local theNode
 
 	GroupBox grp8xro "Select Xref Objects" pos:[5,5] width:590 height:287
-	--button btnClear "Clear" pos:[360,4] width:35 height:16
-	--multiListBox LBXrefObjOver "" pos:[10,35] width:380 height:20
 	dotNetControl LBXrefObjOver "system.windows.forms.listView" pos:[10,22] width:580 height:265
 
 	fn fnUpdateUI =
 	(
 		xrefObjProps = theNode
 		xrefObjCount = objXRefMgr.recordCount
-		/*
-		sel=#{}
-
-
-		LBXrefObjOver.items = for i=1 to xrefObjCount collect
-		(
-			theFile=(objXRefMgr.GetRecord i).srcFileName
-		)
-
-
-
-		for i=1 to LBXrefObjOver.items.count do
-		(
-			if(finditem activeXrefObjArray LBXrefObjOver.items[i] !=0) then
-				sel[i]=true
-		)
-
-		LBXrefObjOver.selection=sel
-		 */
 
 		TmpItems = for i=1 to xrefObjCount collect
 		(
@@ -1419,26 +831,12 @@ rollout XrefObjRollout "Xref Object Override" width:400 height:300
 		LPM_Fun.InitListView LBXrefObjOver "Xref Objects" 580
 		LPM_Fun.FillListView LBXrefObjOver TmpItems activeXrefObjArray
 	)
-	/*
-	on btnClear pressed do
-	(
-		LBXrefObjOver.selection = #()
-	)
 
-	on LBXrefObjOver selectionEnd do
-	(
-		activeXrefObjArray=for i=1 to LBXrefObjOver.items.count where LBXrefObjOver.selection[i] collect LBXrefObjOver.items[i]
-	)
-	 */
 	on XrefObjRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
-
 		theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-
-
 		activeXrefObjArray = theNode.fileNames
-
 		fnUpdateUI ()
 	)
 
@@ -1479,71 +877,48 @@ rollout XrefObjRollout "Xref Object Override" width:400 height:300
 )
 
 
--------------------------------------------------------------------------------------------------------   atmRollout   -------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------   LPM_atmRollout   -------------------------------------------------------------------------------------------------------
 
-rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
+rollout LPM_atmRollout "Env, Effects, Atmosphere" width:235 height:445
 (
 	local elementArray=#()
 	local atmArray=#()
 	local effectArray=#()
 	local envMap
 
-	checkbox backgroundOverride "Override" pos:[3,3] width:72 height:13
 	GroupBox grp1 "Background" pos:[2,17] width:227 height:68 enabled:false
-
-	label lbl1 "Color:" pos:[7,40] width:47 height:12 enabled:false
-	label lbl2 "Environment Map:" pos:[66,37] width:89 height:17 enabled:false
-	checkbox useEnvMap "Use Map" pos:[162,36] width:63 height:16 enabled:false
-	colorPicker bgcolor "" pos:[3,55] width:52 height:19 enabled:false default:(color 0 0 0)
-	checkbutton envMapButton "None" pos:[71,55] width:151 height:19 enabled:false visible:false
-	mapbutton envMapButtonNew "None" pos:[61,55] width:121 height:19 enabled:false tooltip:"Select map"
-	button envMapButtonNewSet "<<" pos:[182,55] width:20 height:19 enabled:false tooltip:"Get map from selected Material editor slot"
-	button envMapButtonNewGet ">>" pos:[202,55] width:20 height:19 enabled:false tooltip:"Show map in selected Material editor slot"
-
-
+		checkbox backgroundOverride "Override" pos:[3,3] width:72 height:13
+		label lbl1 "Color:" pos:[7,40] width:47 height:12 enabled:false
+		label lbl2 "Environment Map:" pos:[66,37] width:89 height:17 enabled:false
+		checkbox useEnvMap "Use Map" pos:[162,36] width:63 height:16 enabled:false
+		colorPicker bgcolor "" pos:[3,55] width:52 height:19 enabled:false default:(color 0 0 0)
+		checkbutton envMapButton "None" pos:[71,55] width:151 height:19 enabled:false visible:false
+		mapbutton envMapButtonNew "None" pos:[61,55] width:121 height:19 enabled:false tooltip:"Select map"
+		button envMapButtonNewSet "<<" pos:[182,55] width:20 height:19 enabled:false tooltip:"Get map from selected Material editor slot"
+		button envMapButtonNewGet ">>" pos:[202,55] width:20 height:19 enabled:false tooltip:"Show map in selected Material editor slot"
 	GroupBox grp2 "Global Lighting" pos:[2,87] width:227 height:69 enabled:false
-
-	label lbl3 "Tint:" pos:[6,107] width:49 height:17 enabled:false
-	label lbl4 "Level:" pos:[61,110] width:53 height:15 enabled:false
-	label lbl5 "Ambient:" pos:[164,110] width:49 height:15 enabled:false
-	colorPicker tint "" pos:[5,128] width:53 height:20 enabled:false default:(color 255 255 255)
-	spinner level "" pos:[64,131] width:50 height:16 enabled:false range:[0,9999,1]
-	colorPicker Ambient "" pos:[160,128] width:58 height:18 enabled:false default:(color 0 0 0)
-
-
-	checkbox exposureOverride "Override" pos:[2,158] width:94 height:14
+		label lbl3 "Tint:" pos:[6,107] width:49 height:17 enabled:false
+		label lbl4 "Level:" pos:[61,110] width:53 height:15 enabled:false
+		label lbl5 "Ambient:" pos:[164,110] width:49 height:15 enabled:false
+		colorPicker tint "" pos:[5,128] width:53 height:20 enabled:false default:(color 255 255 255)
+		spinner level "" pos:[64,131] width:50 height:16 enabled:false range:[0,9999,1]
+		colorPicker Ambient "" pos:[160,128] width:58 height:18 enabled:false default:(color 0 0 0)
+		checkbox exposureOverride "Override" pos:[2,158] width:94 height:14
 	groupBox grp18 "Exposure Control" pos:[2,172] width:227 height:40
-	dropDownList exposureddl "" pos:[13,188] width:200 height:21 items:#("<No Exposure Control>", "Automatic Exposure Control", "Linear Exposure Control", "Logarithmic Exposure Control", "mr Photographic Exposure Control", "Pseudo Color Exposure Control") enabled:false
-
-
-
-	GroupBox grp8 "Select Render Elements" pos:[1,233] width:230 height:285
-	checkbox elementOverride "Override" pos:[2,215] width:62 height:17
-	--button clearElement "Clear" pos:[194,222] width:35 height:16 enabled:false
-	--multiListBox elementList "" pos:[4,248] width:223 height:20 enabled:false
-	dotNetControl elementList "system.windows.forms.listView" pos:[4,248] width:223 height:265
-
-
-	GroupBox grp5 "Select Atmospheres" pos:[3,540] width:227 height:90 enabled:false
-	checkbox atmOverride "Override" pos:[2,522] width:60 height:15
-	--button clearAtm "Clear" pos:[194,526] width:35 height:16 enabled:false
-	--multiListBox atmList "" pos:[5,554] width:223 height:5 enabled:false
-	dotNetControl atmList "system.windows.forms.listView" pos:[5,554] width:223 height:66
-
-
-	GroupBox grp7 "Select Effects" pos:[3,653] width:229 height:90 enabled:false
-	checkbox effectOverride "Override" pos:[2,637] width:71 height:17
-	--button clearEffect "Clear" pos:[194,641] width:35 height:16 enabled:false
-	--multiListBox effectList "" pos:[5,668] width:224 height:5 enabled:false
-	dotNetControl effectList "system.windows.forms.listView" pos:[5,668] width:224 height:66
-
+		dropDownList exposureddl "" pos:[13,188] width:200 height:21 items:#("<No Exposure Control>", "Automatic Exposure Control", "Linear Exposure Control", "Logarithmic Exposure Control", "mr Photographic Exposure Control", "Pseudo Color Exposure Control") enabled:false
+	
+	GroupBox grp5 "Select Atmospheres" pos:[3,240] width:227 height:90 enabled:false
+		checkbox atmOverride "Override" pos:[2,222] width:60 height:15
+		dotNetControl atmList "system.windows.forms.listView" pos:[5,254] width:223 height:66
+	GroupBox grp7 "Select Effects" pos:[3,353] width:229 height:90 enabled:false
+		checkbox effectOverride "Override" pos:[2,337] width:71 height:17
+		dotNetControl effectList "system.windows.forms.listView" pos:[5,368] width:224 height:66
 
 	local theNode
 
-	on atmRollout open do
+	on LPM_atmRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
-
 		theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 
 		re = maxOps.GetCurRenderElementMgr()
@@ -1552,12 +927,6 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 			theEle=re.GetRenderElement (i-1)
 			elementArray[i]=theEle.elementName
 		)
-
-		--elementList.items= elementArray
-		elementList.enabled = false
-		LPM_Fun.InitListView elementList "elements" 223
-		LPM_Fun.FillListView elementList elementArray theNode.activeElement
-
 
 		for i=1 to numAtmospherics do
 		(
@@ -1569,70 +938,27 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 		LPM_Fun.InitListView atmList "atm" 223
 		LPM_Fun.FillListView atmList atmArray theNode.activeAtm
 
-
 		for i=1 to numEffects do
 		(
 			theEffect=getEffect i
 			effectArray[i]=theEffect.name
 		)
-		--effectList.items=effectArray
+		
 		effectList.enabled = false
 		LPM_Fun.InitListView effectList "eff" 223
 		LPM_Fun.FillListView effectList effectArray theNode.activeEffect
 
 		if(theNode.initialized==true) then
 		(
-			--elements load
-			elementOverride.checked=theNode.elementOverride
-			elementList.enabled=theNode.elementOverride
-			grp8.enabled=theNode.elementOverride
-			--clearElement.enabled=theNode.elementOverride
-			/*
-			sel=#()
-
-			for i=1 to theNode.activeElement.count do
-			(
-				theItem=findItem elementArray theNode.activeElement[i]
-				if  theItem!=0 then
-					append sel theItem
-			)
-			elementList.selection=sel
-			 */
-
-
 			--atmosphere load
 			atmOverride.checked=theNode.atmOverride
 			atmList.enabled=theNode.atmOverride
 			grp5.enabled=theNode.atmOverride
-			--clearAtm.enabled=theNode.atmOverride
-			/*
-			sel=#()
-
-			for i=1 to theNode.activeAtm.count do
-			(
-				theItem=findItem atmArray theNode.activeAtm[i]
-				if  theItem!=0 then
-					append sel theItem
-			)
-			atmList.selection=sel
-			 */
 
 			--effects load
 			effectOverride.checked=theNode.effectOverride
 			effectList.enabled=theNode.effectOverride
 			grp7.enabled=theNode.effectOverride
-			--clearEffect.enabled=theNode.effectOverride
-			/*
-			sel=#()
-
-			for i=1 to theNode.activeEffect.count do
-			(
-				theItem=findItem effectArray theNode.activeEffect[i]
-				if  theItem!=0 then
-					append sel theItem
-			)
-			effectList.selection=sel
-			 */
 
 			--bg load
 			backGroundOverride.checked=theNode.backGroundOverride
@@ -1812,84 +1138,27 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 		level.enabled=state
 		ambient.enabled=state
 	)
-	on elementOverride changed state do
-	(
-		elementList.enabled=state
-		grp8.enabled=state
-		--clearElement.enabled=state
-	)
-	/*
-	on clearElement pressed do
-	(
-		elementList.selection=#{}
-	)
-	 */
 	on effectOverride changed state do
 	(
 		effectList.enabled=state
 		grp7.enabled=state
-		--clearEffect.enabled=state
 	)
-	/*
-	on clearEffect pressed do
-	(
-		effectList.selection=#{}
-	)
-	 */
+
 	on atmOverride changed state do
 	(
 		atmList.enabled=state
 		grp5.enabled=state
 		--clearAtm.enabled=state
 	)
-	/*
-	on clearAtm pressed do
+
+	on LPM_atmRollout close do
 	(
-		atmList.selection=#{}
-	)
-	 */
-
-	on atmRollout close do
-	(
-		--element
-		theNode.elementOverride=elementOverride.checked
-		/*
-		theNode.activeElement=#()
-		for i=1 to elementArray.count do
-		(
-
-			if(elementList.selection[i]) then
-			(
-				append theNode.activeElement elementList.items[i]
-			)
-		)
-		 */
-
-		theNode.activeElement = LPM_Fun.SaveListView elementList
-
-
 		--atm
 		theNode.atmOverride=atmOverride.checked
-		/*
-		theNode.activeAtm=#()
-		for i=1 to atmArray.count do
-		(
-			if(atmList.selection[i]) then
-				append theNode.activeAtm atmList.items[i]
-		)
-		 */
 		theNode.activeAtm = LPM_Fun.SaveListView atmList
 
 		--effects
 		theNode.effectOverride=effectOverride.checked
-		/*
-		theNode.activeEffect=#()
-		for i=1 to effectArray.count do
-		(
-			if(effectList.selection[i]) then
-				append theNode.activeEffect effectList.items[i]
-		)
-		 */
 		theNode.activeEffect = LPM_Fun.SaveListView effectList
 
 		--background
@@ -1910,12 +1179,8 @@ rollout atmRollout "Env, Effects, Elements, Atmosphere" width:235 height:745
 	)
 )
 
-
-
-
--------------------------------------------------------------------------------------------------------   commonRollout   -------------------------------------------------------------------------------------------------------
-
-rollout commonRollout "Common Properties" width:370 height:640
+-------------------------------------------------------------------------------------------------------   LPM_commonRollout   -------------------------------------------------------------------------------------------------------
+rollout LPM_commonRollout "Common Properties" width:370 height:530
 (
 	GroupBox grp1 "Time Output" pos:[24,4] width:335 height:111 enabled:false
 	GroupBox grp2 "Output Size" pos:[24,112] width:336 height:88 enabled:false
@@ -1962,38 +1227,11 @@ rollout commonRollout "Common Properties" width:370 height:640
 
 	dropdownList _CameraDdl "" pos:[31,467] width:270 height:21 enabled:false items:#("--") --120 width
 	checkbutton _CameraExport "Export" pos:[305,467] enabled:false check:true
-
 	edittext _fileType "" pos:[91,418] width:53 height:19 readOnly:true
 	button pickTypeButton "Pick" pos:[39,419] width:47 height:16 enabled:false
-
-	checkbox gammaTgl "" pos:[182,405] width:15 height:16
-	GroupBox grp13 "Gamma" pos:[201,402] width:157 height:43 enabled:false
-	spinner _fileOutGamma "File Out Gamma" pos:[260,421] width:95 height:16 enabled:false range:[0.01,5,1]
-
-	label lbl1 "To" pos:[187,52] width:19 height:18 enabled:false
-	label lbl4 "Width:" pos:[33,132] width:35 height:14 enabled:false
-	label lbl5 "Height:" pos:[33,151] width:35 height:14 enabled:false
-	label lbl6 "Aperture Width(mm):" pos:[152,133] width:99 height:15 enabled:false
-	label lbl7 "Pixel Aspect:" pos:[186,153] width:61 height:15 enabled:false range:[0.01,100,.01]
-
-
-	GroupBox grp8 "Pre Render Script" pos:[24,496] width:336 height:57
-	checkbox usePreScript "" pos:[5,505] width:18 height:15
-	button pickPreScript "Pick" pos:[37,510] width:47 height:17
-	checkbox usePostScript "" pos:[5,561] width:14 height:15
-	button pickPostScript "Pick" pos:[33,570] width:47 height:17
-	button EditPreScript "Edit..." pos:[85,510] width:42 height:17
-	button EditPostScript "Edit..." pos:[82,570] width:42 height:17
-	button newPreScript "New" pos:[183,510] width:42 height:17
-	button newPostScript "New" pos:[181,570] width:42 height:17
-	GroupBox grp16 "Post Render Script" pos:[24,554] width:336 height:60
-	edittext preScript "" pos:[33,531] width:320 height:18
-	edittext postScript "" pos:[27,590] width:326 height:18
-	button execPreScript "Execute" pos:[129,510] width:55 height:17
-	button execPostScript "Execute" pos:[126,570] width:55 height:17
-
-	checkbox autoUpdateName "Auto Update Name" pos:[8,620] width:115 height:15
-	checkbox disableFinalOutput "Disable Final Image Output" pos:[150, 620] width:170 height:15
+	checkbutton chkbtn_enableDeepOutput "Enable Deep Output" pos:[158,405] width:200 height:40
+	checkbox autoUpdateName "Auto Update Name" pos:[8,501] width:115 height:15
+	checkbox disableFinalOutput "Disable Final Image Output" pos:[150, 501] width:170 height:15
 	GroupBox RenderTypeGroup "Render Type" pos:[24,202] width:335 height:37
 	checkbox renderTypeTgl "" pos:[4,209] width:15 height:16
 	dropdownList renderTypeDDL "" pos:[34,216] width:116 height:21 items:#("view", "region", "crop", "blowup")
@@ -2013,7 +1251,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 			_rendEnd.enabled=state
 			_rendFileNumberBase.enabled=state
 			_rendPickupFrames.enabled=state
-			lbl1.enabled=state
+			-- lbl1.enabled=state
 
 			state=outputSizeTgl.checked
 			grp2.enabled=state
@@ -2027,13 +1265,6 @@ rollout commonRollout "Common Properties" width:370 height:640
 			presetDDL.enabled=state
 			addPreset.enabled=state
 			removePreset.enabled=state
-
-
-
-			lbl4.enabled=state
-			lbl5.enabled=state
-			lbl6.enabled=state
-			lbl7.enabled=state
 
 			state=optionsTgl.checked
 			grp3.enabled=state
@@ -2054,9 +1285,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 
 			state=fileTypeTgl.checked
 			grp5.enabled=state
-			--_fileType.enabled=state
 			pickTypeButton.enabled=state
-
 
 			state=cameraTgl.checked
 			grp7.enabled=state
@@ -2064,26 +1293,17 @@ rollout commonRollout "Common Properties" width:370 height:640
 
 			_CameraExport.enabled=state
 
-
 			state=renderTypeTgl.checked
 			renderTypeDDL.enabled=state
 			RenderTypeGroup.enabled=state
-
-			state=gammaTgl.state
-			grp13.enabled=state
-			_fileOutGamma.enabled=state
-
 	)
 	on timeOutputTgl changed state do
 	(
 		toggleState()
-
 	)
 	on outputSizeTgl changed state do
 	(
 		toggleState()
-
-
 	)
 	on optionsTgl changed state do
 	(
@@ -2100,18 +1320,12 @@ rollout commonRollout "Common Properties" width:370 height:640
 	on filePathTgl changed state do
 	(
 		toggleState()
-
 	)
 	on cameraTgl changed state do
 	(
 		toggleState()
-
 	)
 	on renderTypeTgl changed state do
-	(
-		toggleState()
-	)
-	on gammaTgl changed state do
 	(
 		toggleState()
 	)
@@ -2123,55 +1337,6 @@ rollout commonRollout "Common Properties" width:370 height:640
 	(
 		try(edit postScript.text)catch()
 	)
-	on pickPreScript pressed do
-	(
-		thePath=getOpenFileName()
-		if(thePath!=undefined) then
-		prescript.text=thePath
-		usePreScript.checked=true
-	)
-	on pickPostScript pressed do
-	(
-		thePath=getOpenFileName()
-		if(thePath!=undefined) then
-		postscript.text=thePath
-		usePostScript.checked=true
-	)
-	on newPreScript pressed do
-	(
-		thePath=getSaveFileName types:"maxscript(*.ms)|*.ms"
-		if(thePath!=undefined) then
-		(
-			close (createFile thePath)
-			edit thePath
-			preScript.text=thePath
-			usePreScript.checked=true
-		)
-	)
-
-	on newPostScript pressed do
-	(
-		thePath=getSaveFileName types:"maxscript(*.ms)|*.ms"
-
-
-		if(thePath!=undefined) then
-		(
-			close (createFile thePath)
-			edit thePath
-			postScript.text=thePath
-			usePostScript.checked=true
-		)
-	)
-
-	on execPreScript pressed do
-	(
-		try(fileIn preScript.text) catch (messagebox (getCurrentException()))
-	)
-	on execPostScript pressed do
-	(
-		try(fileIn postScript.text) catch (messagebox (getCurrentException()))
-	)
-
 
 	on pickTypeButton pressed do
 	(
@@ -2196,9 +1361,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 	on _rendEnd changed valt  do
 	(
 		_rendTimeType.state=3
-
 	)
-
 
 	fn updateAspect=
 	(
@@ -2291,7 +1454,7 @@ rollout commonRollout "Common Properties" width:370 height:640
 	)
 
 
-	on commonRollout open do
+	on LPM_commonRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -2333,9 +1496,8 @@ rollout commonRollout "Common Properties" width:370 height:640
 		advancedLightingTgl.checked=cp.advancedLightingTgl
 		fileTypeTgl.checked=cp.fileTypeTgl
 		_fileType.text=cp._fileType
-		gammaTgl.checked=cp.gammaTgl
-		_fileOutGamma.value=cp._fileOutGamma
-		renderTypeTgl.checked=cp.renderTypeTgl
+		chkbtn_enableDeepOutput.checked = cp.deepEXR
+
 
 		_CameraExport.checked=cp._CameraExport
 
@@ -2350,18 +1512,11 @@ rollout commonRollout "Common Properties" width:370 height:640
 				_cameraDDl.selection=x
 		)
 
-
-		usePreScript.checked=cp.usePreScript
-		preScript.text=cp.preScript
-		usePostScript.checked=cp.usePostScript
-		postScript.text=cp.postScript
-
 		autoUpdateName.checked=cp.autoUpdateName
 		disableFinalOutput.checked=cp.disableFinalOutput
 		toggleState()
-
 	)
-	on commonRollout close do
+	on LPM_commonRollout close do
 	(
 		try(
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -2396,16 +1551,10 @@ rollout commonRollout "Common Properties" width:370 height:640
 		cp._fileType=_fileType.text
 		cp.renderTypeTgl=renderTypeTgl.checked
 		cp.renderType=renderTypeDDL.selected
-		cp.gammaTgl=gammaTgl.state
-		cp._fileOutGamma=_fileOutGamma.value
-		cp.usePreScript=usePreScript.state
-		cp.preScript=preScript.text
-		cp.usePostScript=usePostScript.state
-		cp.postScript=postScript.text
+		cp.deepEXR=chkbtn_enableDeepOutput.checked
 		cp.autoUpdateName=autoUpdateName.checked
 		cp.disableFinalOutput=disableFinalOutput.checked
 		cp.cameraTgl=cameraTgl.checked
-
 		cp._CameraExport=_CameraExport.checked
 
 		if(cameraTgl.checked) then
@@ -2415,29 +1564,22 @@ rollout commonRollout "Common Properties" width:370 height:640
 					theCam=cameraList[_cameraDDL.selection]
 					if (isvalidnode theCam) then
 						cp._Camera=theCam
-
 				)
 		)
 		theNode.text=LPM_Fun.generateCommonPropName cp
 		LPM_treeview_rollout.UnFreezeWindow()
 	)
 	catch( messagebox "LPM failed to save common properties" title:"LPM Error")
-
 	)
 )
 
-
-
-
 -------------------------------------------------------------------------------------------------------   setPickerRollout   -------------------------------------------------------------------------------------------------------
-
 rollout setPicker "Pick the Set"
 (
 	dropDownList theSets
 
 	on setPicker open do
 	(
-
 		LPM_treeview_rollout.FreezeWindow()
 		if(getNumNamedSelSets()==0) then
 			theSets.items=#("")
@@ -2452,7 +1594,6 @@ rollout setPicker "Pick the Set"
 		thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 		LPM_treeview_rollout.addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 )
@@ -2484,21 +1625,15 @@ rollout matPicker "Pick the Material"
 		thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 		LPM_treeview_rollout.addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 )
-
-
-
 
 -------------------------------------------------------------------------------------------------------   layerPickerRollout   -------------------------------------------------------------------------------------------------------
 
 rollout layerPicker "Pick Layers" height:420 width:200
 (
 	Label HintLabel "[Ctrl-Click] To pick multiple layers"
-	--multiListBox theLayers height:30 width:190 pos:[5,20]
-
 	dotNetControl theLayers "system.windows.forms.listView" height:400 width:190 pos:[5,20]
 
 	on layerPicker open do
@@ -2514,11 +1649,6 @@ rollout layerPicker "Pick Layers" height:420 width:200
 			if (layerName != "zz-LPM") do append items layerName
 		)
 		qsort items compareFN
-		--theLayers.items=items
-		--now select
-		--theLayers.selection=(for i=1 to theLayers.items.count where (findItem theObjectSet.layers theLayers.items[i])!=0  collect i)
-
-
 
 		x=LPM_Fun.getIni "Layer Picker" "X_Size" integer 185
 		y=LPM_Fun.getIni "Layer Picker" "Y_Size" integer 260
@@ -2526,8 +1656,6 @@ rollout layerPicker "Pick Layers" height:420 width:200
 		layerPicker.height=y
 		layerPicker.width=x
 		theLayers.width=x-10
-
-
 
 		LPM_Fun.InitListView theLayers "Layers" theLayers.width
 		LPM_Fun.FillListView theLayers items theObjectSet.layers
@@ -2545,7 +1673,6 @@ rollout layerPicker "Pick Layers" height:420 width:200
 		thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 		LPM_treeview_rollout.addPassTv thePassNode
 
-		LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 		LPM_treeview_rollout.updateTV()
 	)
 
@@ -2564,110 +1691,28 @@ rollout layerPicker "Pick Layers" height:420 width:200
 		theLayers.width=layerPicker.width-10
 		theLayers.height=layerPicker.height-25
 	)
-
-
 )
-
-
-
-
--------------------------------------------------------------------------------------------------------   AboutRO   -------------------------------------------------------------------------------------------------------
-
-rollout AboutRO "About LPM 1.09" width:265 height:180
-(
-	button bmp1 "" pos:[6,8] width:250 height:100 images:#(iconPath  + "lpm.jpg", undefined, 1, 1, 1, 1, 1)
-	HyperLink lbl1 "www.Lukashi.com" address:"http://www.lukashi.com" pos:[73,145] width:113 height:15
-	label lbl2 "Lukashi@Gmail.com" pos:[74,161] width:113 height:15
-	label lbl3 "L Pass Manager by Lukas Lepicovsky" pos:[37,112] width:186 height:15
-	label lbl4 "Copyright 2008, All rights reserved." pos:[46,129] width:186 height:16
-	--hyperLink lbl5 "Modified by grover_gol. 2014" pos:[56,190] width:186 height:15 address: "http://gg3dcg.ru/"
-	--hyperLink lbl6 "for Altspace" pos:[100,210] width:186 height:15 address: "http://altspace.com/"
-	--label lbl6 "http://gg3dcg.ru/" pos:[56,210] width:186 height:15
-	on bmp1 pressed do
-	(
-		shellLaunch "http://www.lukashi.com/LPM.php" ""
-	)
-)
-
-rollout AboutNewRO "About LPM 2.0" width:313 height:250
-(
-	button bmp1 "" pos:[6,8] width:300 height:100 images:#(iconPath  + "lpm_2.0.jpg", undefined, 1, 1, 1, 1, 1)
-
-	HyperLink lbl5 "in Altspace. 2015" pos:[160,113] width:186 height:15 address:"http://altspace.com/"
-	HyperLink lbl6 "Made by grover_gol" pos:[60,113] width:186 height:15 address:"http://grovergol.com/"
-	label lbl6fd "Great thanks for ideas, testing and other help:" pos:[50,170] width:256 height:15
-
-	editText edt1 "" pos:[6,191] width:300 height:51 editable:false text:"Tiufyakov Kirill, Muzalev Vladimir, Ilya Rutkovsky,\nEvgeny Kashin, gzibon, weaponer, ertaro,\nDmitry Grigorev, Filipp Gorbachev"
-
-
-	on bmp1 pressed do
-	(
-		shellLaunch "http://www.grovergol.com/?page_id=338" ""
-	)
-)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 -------------------------------------------------------------------------------------------------------   Right Click Menues   ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
 -------------------------------------------------------------------------------------------------------   MainMenu   -------------------------------------------------------------------------------------------------------
 
 rcMenu rc_MainMenu
 (
 	local scenePath=(getdir #maxroot)+"Scenes\\LPM\\"
 
-	menuItem	renderDialog	"Render..."
-	menuItem settingsMenu "Settings..."
+	menuItem	renderDialog	"Render"
+	
 	subMenu "Utilities"
 	(
 		menuItem nukeSceneGenerate "Build scene from Nuke Script"
 		seperator s1
 		menuitem elementGenerate "Generate Default Elements"
-		--menuItem elementDepthSet "Set Depth Element Distance"
 		menuItem elementAOSet "Set AO Element Size"
--- 		seperator s1
 	)
 
 	subMenu		"Help"
 	(
-		subMenu		"LPM 1.09 Help"
-		(
-			menuItem	helpMenu	"LPM 1.09 Help"
-			menuItem	AboutMenu	"About LPM 1.09..."
-		)
-
-		menuItem hotkeyMenu "Hotkeys..."
-		menuItem	HelpMenuNew	"LPM 2.0 Help..."
-
-		menuItem	AboutMenuNew	"About LPM 2.0..."
+		menuItem	HelpMenuNew	"LPM Help"
 	)
 
 	on elementGenerate picked do
@@ -2680,7 +1725,6 @@ rcMenu rc_MainMenu
 
 		nukeScriptDir = getOpenFileName \
 		types:"Nuke Scripts(*.nk)"
-		print nukeScriptDir
 		if nukeScriptDir != undefined then
 		(
 			try
@@ -2694,16 +1738,9 @@ rcMenu rc_MainMenu
 		)
 	)
 
--- 	on elementDepthSet picked do
--- 	(
--- 		utilityTools.rollout_setDepthprops_Function()
--- 		messagebox "DEPTH"
--- 	)
-
 	on elementAOSet picked do
 	(
 		utilityTools.rollout_setAOprops_Function()
--- 		messagebox "AO"
 	)
 
 	on quickScripts picked do
@@ -2711,25 +1748,9 @@ rcMenu rc_MainMenu
 		LPM_Fun.quickScripts()
 	)
 
-
 	on helpMenuNew picked do
 	(
-		shellLaunch "http://www.grovergol.com/?page_id=9" ""
-	)
-
-	on helpMenu picked do
-	(
-		shellLaunch "http://www.lukashi.com/LPM.php" ""
-	)
-
-	on aboutMenu picked do
-	(
-		createDialog AboutRo pos:(LPM_Fun.getRoPos AboutRo.width)
-	)
-
-	on aboutMenuNew picked do
-	(
-		createDialog AboutNewRo pos:(LPM_Fun.getRoPos AboutRo.width)
+		shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" ""
 	)
 
 	on renderDialog picked do
@@ -2737,55 +1758,7 @@ rcMenu rc_MainMenu
 		filein (LPM_Dir + "RenderRO.ms")
 
 	)
-
-	on settingsMenu Picked do
-	(
-
-		filein (LPM_Dir + "SettingsRO.ms")
-
-
-	)
-
-
-	on hotkeyMenu picked do
-	(
-		rollout helpRollout "Hotkeys" width:249 height:545
-		(
-			GroupBox grp1 "Hotkeys" pos:[4,7] width:240 height:533
-			label lbl6 "MMB +" pos:[15,29] width:59 height:18
-			label lbl7 "Pass    Object Set    LightSet  Node          Layer       Group           Wildcard     Named Set" pos:[82,31] width:59 height:107
-			label lbl8 "= Hide all except         picked item." pos:[140,29] width:92 height:41
-			label lbl9 "Ctrl + MMB +" pos:[15,148] width:66 height:18
-			label lbl10 "Object Set    LightSet  Node          Layer       Group           Wildcard     Named Set" pos:[84,148] width:59 height:107
-			label lbl11 "= Unhide picked        item." pos:[141,148] width:92 height:41
-			GroupBox grp3 "" pos:[11,20] width:224 height:120
-			GroupBox grp4 "" pos:[11,138] width:225 height:105
-			GroupBox grp5 "" pos:[11,240] width:226 height:102
-			label lbl12 "MMB +            Shot" pos:[15,250] width:128 height:18
-			label lbl13 "- Set viewport to shot camera.           - Set time range to shot time range.     - Select  shot camera." pos:[143,247] width:92 height:89
-			label lbl14 "=" pos:[129,250] width:9 height:14
-			GroupBox grp6 "" pos:[10,343] width:226 height:30
-			label lbl15 "MMB +            Empty Space     =    Unhide All" pos:[14,353] width:217 height:18
-			GroupBox grp8 "" pos:[9,375] width:226 height:30
-			label lbl16 "F2, Enter =   Rename Picked Item" pos:[13,385] width:217 height:18
-			GroupBox grp7 "" pos:[10,411] width:226 height:30
-			label lbl12et "F5 =   Update TreeView" pos:[13,421] width:217 height:18
-			label lbl13vd "Drad n Drop + Shift" pos:[13,451] width:99 height:18
-			GroupBox grp8vdfv "" pos:[10,442] width:226 height:93
-			label lbl14fsrdf "Pass =" pos:[118,451] width:37 height:18
-			label lbl15efe "Make Adjustment" pos:[146,465] width:87 height:18
-			label lbl16sdf "Other =" pos:[118,479] width:41 height:18
-			label lbl17zsdg "Instance" pos:[146,493] width:87 height:18
-			label lbl18zsf "Drad n Drop + Ctrl = Copy" pos:[13,510] width:213 height:18
-		)
-		createDialog helpRollout pos:(LPM_Fun.getROPos helpRollout.width)
-	)
-
-
-
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   RootMenu   -------------------------------------------------------------------------------------------------------
@@ -2940,8 +1913,6 @@ rcMenu rc_RootMenu
 )
 
 
-
-
 -------------------------------------------------------------------------------------------------------   shotRootMenu   -------------------------------------------------------------------------------------------------------
 
 rcMenu rc_shotRootMenu
@@ -2987,8 +1958,6 @@ rcMenu rc_shotRootMenu
 		)
 	)
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   PassGroupMenu   -------------------------------------------------------------------------------------------------------
@@ -3064,12 +2033,15 @@ rcMenu rc_PassGroup
 )
 
 
-
-
 -------------------------------------------------------------------------------------------------------   shotMenu   -------------------------------------------------------------------------------------------------------
 
 rcMenu rc_shotMenu
 (
+
+	menuItem nameIncrement "Increment name (alt + numpad8)"
+	menuItem nameDecrement "Decrement name (alt + numpad2)"
+
+	seperator s0
 	menuItem SelectPasses "Include Passes..."
 
 	seperator s2
@@ -3077,6 +2049,7 @@ rcMenu rc_shotMenu
 
 	seperator s1
 	menuItem    AddCommon "Add Common Properties"
+	menuItem    AddRenderImage "Add RenderImage Export" 			-- Dabelow renderImage
 	menuItem    AddCameraOverscan "Add Camera Overscan Override" 	-- Dabelow cameraOverscan
 	menuItem    AddNukeExport "Add Nuke Export" 					-- Dabelow nukeExport
 	menuItem    AddAeExport "Add After Effect Export" 				-- Dabelow aeExport
@@ -3086,7 +2059,18 @@ rcMenu rc_shotMenu
 	menuItem renderShotNetwork "Submit Network"
 
 	seperator sepr4
+	menuItem duplicateShot "Duplicate Shot"
 	menuItem deleteShot "Delete Shot"
+
+	on nameIncrement picked do 
+	(
+		LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #increment
+	)
+
+	on nameDecrement picked do 
+	(
+		LPM_treeview_rollout.offsetSelectedShot LPM_treeview_rollout.tv #decrement
+	)
 
 
 	on AddCommon picked do
@@ -3110,6 +2094,18 @@ rcMenu rc_shotMenu
 			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
 		)
 	)
+
+	on AddRenderImage picked do
+	(
+		thePass=LPM_treeview_rollout.tv.selectedNode.tag.value
+		if((LPM_Fun.firstChildByType thePass "renderImage")==undefined) then
+		(
+			theProps=LPM_Fun.createRenderImageProps "renderImage"
+			theProps.parent=thePass
+			LPM_treeview_rollout.addShotTv LPM_treeview_rollout.tv.selectedNode
+		)
+	)
+
 
 	on AddNukeExport picked do
 	(
@@ -3140,46 +2136,46 @@ rcMenu rc_shotMenu
 		shellLaunch curPath ""
 	)
 
-	on viewRamPlayer picked do
-	(
-		rollout LPM_shotPicker "Ram Player"
-		(
-			local passArray=#()
-			local theShot
-
-			label shotLabel align:#left
-			dropdownlist passDDL
-
-			on LPM_shotPicker open do
-			(
-				theShot=LPM_treeview_rollout.tv.selectedNode.tag.value
-				shotLabel.text="Shot: "+(LPM_Fun.getName theShot.name)
-				passArray=for it in (LPM_FUn.getallchildren LPM_Root) where it.type=="pass" collect it
-				passDDL.items=for it in passArray collect
-				(
-
-					thePath=LPM_Fun.getPassPath LPM_Root it theShot:theShot elementName:"Beauty"
-
-					fileList= getfiles ((getFilenamePath thePath) + (getFileNameFile thePath) + "*" + (getFileNametype thePath))
-
-					if(fileList.count==0) then
-						(LPM_Fun.getname it.name) + " (Missing)"
-					else
-						(LPM_Fun.getname it.name)
-
-				)
-
-			)
-			on passDDL selected item do
-			(
-				thePath=LPM_Fun.getPassPath LPM_Root passArray[item] theShot:theShot elementName:"Beauty"
-				LPM_Fun.viewRamplayer thePath
-
-			)
-		)
-		createDialog LPM_shotPicker pos:(LPM_Fun.getRoPos LPM_shotPicker.width)
-
-	)
+--	on viewRamPlayer picked do
+--	(
+--		rollout LPM_shotPicker "Ram Player"
+--		(
+--			local passArray=#()
+--			local theShot
+--
+--			label shotLabel align:#left
+--			dropdownlist passDDL
+--
+--			on LPM_shotPicker open do
+--			(
+--				theShot=LPM_treeview_rollout.tv.selectedNode.tag.value
+--				shotLabel.text="Shot: "+(LPM_Fun.getName theShot.name)
+--				passArray=for it in (LPM_FUn.getallchildren LPM_Root) where it.type=="pass" collect it
+--				passDDL.items=for it in passArray collect
+--				(
+--
+--					thePath=LPM_Fun.getPassPath LPM_Root it theShot:theShot elementName:"Beauty"
+--
+--					fileList= getfiles ((getFilenamePath thePath) + (getFileNameFile thePath) + "*" + (getFileNametype thePath))
+--
+--					if(fileList.count==0) then
+--						(LPM_Fun.getname it.name) + " (Missing)"
+--					else
+--						(LPM_Fun.getname it.name)
+--
+--				)
+--
+--			)
+--			on passDDL selected item do
+--			(
+--				thePath=LPM_Fun.getPassPath LPM_Root passArray[item] theShot:theShot elementName:"Beauty"
+--				LPM_Fun.viewRamplayer thePath
+--
+--			)
+--		)
+--		createDialog LPM_shotPicker pos:(LPM_Fun.getRoPos LPM_shotPicker.width)
+--
+--	)
 
 	on selectPasses picked do
 	(
@@ -3191,6 +2187,15 @@ rcMenu rc_shotMenu
 		undo "LPM delete" on
 		(
 			LPM_treeview_rollout.deleteSelectedPass LPM_treeview_rollout.tv
+		)
+	)
+
+	on duplicateShot picked do
+	(
+		undo "LPM delete" on
+		(
+			LPM_treeview_rollout.duplicateSelectedShot LPM_treeview_rollout.tv
+			LPM_treeview_rollout.updateTV()
 		)
 	)
 
@@ -3233,8 +2238,6 @@ rcMenu rc_shotMenu
 )
 
 
-
-
 -------------------------------------------------------------------------------------------------------   shotPassMenu   -------------------------------------------------------------------------------------------------------
 
 rcmenu rc_shotPassMenu
@@ -3249,17 +2252,12 @@ rcmenu rc_shotPassMenu
 			deleteItem theShot.passes index
 			deleteItem theSHot.passesOn index
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.fillInTreeView LPM_treeview_rollout.tv -- DABELOW
 		)
 	)
-
-
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   PassMenu   -------------------------------------------------------------------------------------------------------
@@ -3272,41 +2270,25 @@ rcMenu rc_PassMenu
 	menuItem	renderThisPassNetwork "Submit Network"
 	seperator set2
 	menuItem editPassSettings "Edit..."
-	--seperator set4
 	subMenu "Add"
 	(
 		menuItem objectSetAdd "Object Set"
 		menuItem lightSetAdd "Light Set"
 		seperator set8
-		menuItem commonPropsAdd "Common Properties Override"
-		menuItem effectsPropsAdd "Element, Environment and Effects Override"
-		menuItem renderPropsAdd "Renderer Override"
-		menuItem deadlineAdd "Deadline Override" 								-- Dabelow
-		--menuItem vrayPropsAdd "Vray Override"
-		--menuItem VrayGIAdd "V-Ray GI"
-		--menuItem ModifierOverAdd "Modifier Override"
-		--menuItem AutoMaskAdd "AutoMask"
+		menuItem effectsPropsAdd "Environment and Effects Override"
 		menuItem xrefObjAdd "Xref Object Override"
 		menuItem xrefSceneAdd "Xref Scene Override"
 		menuItem scriptAdd "Script"
 		seperator set5
-		menuItem vray5PropsAdd "Vray5 Override" 								-- Dabelow vray5
-		menuItem vray5RenderElementsPropsAdd "Vray5 RenderElement Override" 	-- Dabelow vray5
+		menuItem vrayRenderElementsPropsAdd "Vray RenderElement Override" 	-- Dabelow vrayRenderElements
 	)
 	seperator set10
 	menuItem    duplicatePass "Duplicate Pass"
 	menuItem duplicateInstPass "Duplicate Pass with instances"
 	menuItem paste "Paste"
 	menuItem pasteInstanced "Paste Instanced"
-	-- seperator set12
-	-- menuItem	viewPass "View Bitmap"
-	-- menuItem viewPassRam "View Ram Player"
 	seperator set11
 	menuItem    deletePass "Delete Pass"
-
-
-
-
 
 	on rc_PassMenu open do
 		preview50ThisPass.text="Render Preview "+(LPM_root.previewSize as string) + "%"
@@ -3341,17 +2323,9 @@ rcMenu rc_PassMenu
 	on renderThisPass picked do
 	(
 		thePass=LPM_treeview_rollout.tv.selectedNode.tag.value
-
-		if(LPM_Root.renderType==2) or (LPM_Root.renderType==4) then
-		(
-			LPM_hardwareRender thePass
-		)
-		else
-		(
-			LPM_renderPass thePass #local
-		)
-
+		LPM_renderPass thePass #local
 	)
+	
 	on renderThisPassNetwork picked do
 	(
 		if not((LPM_Root.renderType==2) or (LPM_Root.renderType==4)) then
@@ -3369,7 +2343,6 @@ rcMenu rc_PassMenu
 		gc light:true delayed:false
 		thePass=LPM_treeview_rollout.tv.selectedNode.tag.value
 		fname= LPM_Fun.getPreviewFile thePass
-		print fName
 		theBM=undefined
 		if((getfiles fname).count != 0) then
 		(
@@ -3396,7 +2369,6 @@ rcMenu rc_PassMenu
 			theProps.parent=thePass
 			LPM_treeview_rollout.addPassTV thePassNode
 			--edit: Jake Jeziorski with auto-name option it's just annoying to rename
-			--LPM_fun.editLabelByNode theProps LPM_treeview_rollout.tvroot
 		)
 	)
 	on newOperator picked do
@@ -3416,10 +2388,7 @@ rcMenu rc_PassMenu
 		theScript.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode
 		LPM_fun.editLabelByNode theScript LPM_treeview_rollout.tvroot
-
 	)
-
-
 
 	on xrefObjAdd picked do
 	(
@@ -3452,32 +2421,6 @@ rcMenu rc_PassMenu
 		filein (LPM_Dir + "renderPropsAdd.ms")
 	)
 
-	on VrayGIAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		thePass.expanded = true
-		if((LPM_Fun.firstChildByType thePass "VRayGI")==undefined) then
-		(
-			VrayGIOver = LPM_Fun.createNode "V-Ray GI" "VRayGI"
-			VrayGIOver.parent=thePass
-			LPM_treeview_rollout.addPassTV thePassNode
-		)
-	)
-
-	on AutoMaskAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		thePass.expanded = true
-		if((LPM_Fun.firstChildByType thePass "AutoMask")==undefined) then
-		(
-			VrayGIOver = LPM_Fun.createNode "AutoMask" "AutoMask"
-			VrayGIOver.parent=thePass
-			LPM_treeview_rollout.addPassTV thePassNode
-		)
-	)
-
 	-- Dabelow
 	on deadlineAdd picked do
 	(
@@ -3489,23 +2432,34 @@ rcMenu rc_PassMenu
 
 	)
 
-		-- Dabelow vray5
-	on vray5RenderElementsPropsAdd picked do
+	-- Dabelow vray6
+	on vray6RenderElementsPropsAdd picked do
 	(
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
 		thePass=thePassNode.tag.value
-		theSet=LPM_Fun.createVray5RenderElementsProps "vray5RenderElements"
+		theSet=LPM_Fun.createVray6RenderElementsProps "vray6RenderElements"
 		theSet.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode
 
 	)
 
-	-- Dabelow vray5
-	on vray5PropsAdd picked do
+	-- Dabelow vray6
+	on vray6PropsAdd picked do
 	(
 		thePassNode=LPM_treeview_rollout.tv.selectedNode
 		thePass=thePassNode.tag.value
-		theSet=LPM_Fun.createVray5Props "vray5"
+		theSet=LPM_Fun.createVray6Props "vray6"
+		theSet.parent=thePass
+		LPM_treeview_rollout.addPassTV thePassNode
+
+	)
+
+		-- Dabelow vrayRenderElements
+	on vrayRenderElementsPropsAdd picked do
+	(
+		thePassNode=LPM_treeview_rollout.tv.selectedNode
+		thePass=thePassNode.tag.value
+		theSet=LPM_Fun.createVrayRenderElementsProps "vrayRenderElements"
 		theSet.parent=thePass
 		LPM_treeview_rollout.addPassTV thePassNode
 
@@ -3532,7 +2486,6 @@ rcMenu rc_PassMenu
 			envProps=LPM_Fun.createNode "Environment Override" "envProps"
 			envProps.parent=thePass
 			LPM_treeview_rollout.addPassTV thePassNode
-			--LPM_fun.editLabelByNode envProps LPM_treeview_rollout.tvroot
 		)
 	)
 
@@ -3546,53 +2499,6 @@ rcMenu rc_PassMenu
 		LPM_treeview_rollout.addPassTV thePassNode
 		LPM_fun.editLabelByNode theModifierOver LPM_treeview_rollout.tvroot
 
-	)
-
-
-	on photoStudioAdd picked do
-	(
-		thePassNode=LPM_treeview_rollout.tv.selectedNode
-		thePass=thePassNode.tag.value
-		thePass.expanded = true
-		global LPM_Photostudio_Skip_Warning
-		if((LPM_Fun.firstChildByType thePass "photoStudio")==undefined) then
-		(
-			if (not (iskindof SceneExposureControl.exposureControl Logarithmic_Exposure_Control)) and (LPM_Photostudio_Skip_Warning!=true) then
-			(
-				rollout LPM_PS_Warning "Logarithmic Exposure Control" width:412 height:152
-				(
-					label lbl1 "You are creating a PhotoStudio Override" pos:[11,9] width:282 height:18
-					label lbl2 "It is recommended that you use a Logarithmic Exposure Control with Brightness=65.0, Exterior daylight=true" pos:[11,33] width:324 height:32
-					label lbl3 "Would you like to set this up now?  Futher changes can be made in the Environment and Effects Dialog" pos:[11,66] width:321 height:32
-					button YesButton "Yes" pos:[10,103] width:86 height:24
-					button NoButton "No" pos:[106,103] width:86 height:24
-					checkbox warnAgain "Don't Warn Me Again (For this Session)" pos:[10,130] width:204 height:19
-
-					on warnAgain changed value do LPM_Photostudio_Skip_Warning=value
-					on yesButton pressed do
-					(
-						SceneExposureControl.exposureControl=Logarithmic_Exposure_Control()
-						SceneExposureControl.exposureControl.brightness = 65
-						SceneExposureControl.exposureControl.physicalScale = 80000
-						SceneExposureControl.exposureControl.exteriordaylight = on
-						destroyDialog LPM_PS_Warning
-					)
-					on noButton pressed do
-					(
-						destroyDialog LPM_PS_Warning
-					)
-
-				)
-
-				createDialog LPM_PS_Warning
-
-			)
-
-			psProps=LPM_Fun.createPhotoStudio "Photo Studio"
-			psProps.parent=thePass
-			LPM_treeview_rollout.addPassTV thePassNode
-			LPM_fun.editLabelByNode envProps LPM_treeview_rollout.tvroot
-		)
 	)
 
 	on objectSetAdd picked do
@@ -3740,9 +2646,6 @@ rcMenu rc_PassMenu
 	)
 )
 
-
-
-
 -------------------------------------------------------------------------------------------------------   commonPropsMenu   -------------------------------------------------------------------------------------------------------
 
 rcMenu rc_commonPropsMenu
@@ -3769,7 +2672,6 @@ rcMenu rc_commonPropsMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -3777,7 +2679,7 @@ rcMenu rc_commonPropsMenu
 	)
 	on editProps picked do
 	(
-		createDialog commonRollout pos:(LPM_Fun.getRoPos  commonRollout.width)
+		createDialog LPM_commonRollout pos:(LPM_Fun.getRoPos  LPM_commonRollout.width)
 	)
 	on grabtime picked do
 	(
@@ -3810,64 +2712,12 @@ rcMenu rc_commonPropsMenu
 
 )
 
-
-rcMenu rc_LPMVrayGIMenu
-(
-	menuItem	EditVrayGI "Edit..."
-	menuItem    copyVrayGI "Copy"
-	seperator sp664g
-	menuItem    ExploreVrayGI "Explore VrayGI folder"
-	seperator sp66re
-	menuItem    removeVrayGI "Delete"
-
-	on ExploreVrayGI picked do
-	(
-		try
-		(
-			VRayGIobj=LPM_treeview_rollout.tv.selectedNode.tag.value
-			shellLaunch (LPM_Fun.GetVRayGIPath VRayGIobj) ""
-		)
-		catch
-		(
-
-		)
-	)
-
-	on copyVrayGI picked do
-	(
-		LPM_treeview_rollout.copyNode = LPM_treeview_rollout.tv.selectedNode.tag.value
-	)
-
-	on removeVrayGI picked do
-	(
-		undo "LPM delete" on
-		(
-			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-			delete theNode
-			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
-			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
-
-			LPM_treeview_rollout.updateTV()
-		)
-	)
-
-	on EditVrayGI picked do
-	(
-		LPM_treeview_rollout.EditVrayGI()
-	)
-)
-
-
 rcMenu rc_AutoMaskMenu
 (
 	menuItem	EditAutoMask "Edit..."
 	menuItem    copyAutoMask "Copy"
-
 	seperator sp66re
 	menuItem    removeAutoMask "Delete"
-
-
 
 	on copyAutoMask picked do
 	(
@@ -3881,7 +2731,6 @@ rcMenu rc_AutoMaskMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -3999,7 +2848,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4013,7 +2861,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4027,7 +2874,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4041,7 +2887,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4055,7 +2900,6 @@ rcMenu rc_ObjectSetMenu
 			thePassNode=LPM_treeview_rollout.tv.selectedNode.parent
 			LPM_treeview_rollout.addPassTv thePassNode
 
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.updateTV()
 		)
 	)
@@ -4104,7 +2948,6 @@ rcMenu rc_ObjectSetMenu
 			theObjectSet=theObjectSetNode.tag.value
 			delete theObjectSet
 			theObjectSetNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4151,15 +2994,12 @@ rcMenu rc_ObjectSetMenu
 	on editSet picked do
 	(
 		if(LPM_treeview_rollout.tv.selectedNode.tag.value.type=="objectSet")then
-			createDialog objectSetProps 194 403 pos:(LPM_Fun.getRoPos  194)
+			createDialog LPM_objectSetProps 194 403 pos:(LPM_Fun.getRoPos  194)
 		else
 			createDialog lightSetProps  pos:(LPM_Fun.getRoPos  194)
 
 	)
 )
-
-
-
 
 -------------------------------------------------------------------------------------------------------   matMenu   -------------------------------------------------------------------------------------------------------
 
@@ -4185,15 +3025,12 @@ rcMenu rc_matMenu
 			LPM_Fun.pruneArray theParent.mats theObj.leaf
 
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
 		)
 	)
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   objectMenu   -------------------------------------------------------------------------------------------------------
@@ -4219,15 +3056,12 @@ rcMenu rc_objectMenu
 			LPM_Fun.pruneArray theParent.nodes theObj.leaf
 
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
 		)
 	)
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   layerMenu   -------------------------------------------------------------------------------------------------------
@@ -4250,7 +3084,6 @@ rcMenu rc_layerMenu
 
 			LPM_Fun.pruneArray theParent.layers theObj.leaf
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4288,8 +3121,6 @@ rcMenu rc_layerMenu
 )
 
 
-
-
 -------------------------------------------------------------------------------------------------------   wildCardMenu   -------------------------------------------------------------------------------------------------------
 
 rcMenu rc_wildCardMenu
@@ -4311,15 +3142,12 @@ rcMenu rc_wildCardMenu
 
 			theParent.wildcard=(for i=1 to theParent.wildCard.count where i!=theObj.index collect theParent.wildCard[i])
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
 		)
 	)
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   namedSetMenu   -------------------------------------------------------------------------------------------------------
@@ -4336,7 +3164,6 @@ rcMenu rc_namedSetMenu
 
 			theParent.namedSet=(for i=1 to theParent.namedSet.count where i!=theObj.index collect theParent.namedSet[i])
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4346,7 +3173,6 @@ rcMenu rc_namedSetMenu
 
 
 -------------------------------------------------------------------------------------------------------   xrefObjMenu   -------------------------------------------------------------------------------------------------------
-
 
 rcMenu rc_xrefObj
 (
@@ -4371,7 +3197,6 @@ rcMenu rc_xrefObj
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4386,7 +3211,6 @@ rcMenu rc_xrefObj
 )
 
 -------------------------------------------------------------------------------------------------------   xrefSceneMenu   -------------------------------------------------------------------------------------------------------
-
 
 rcMenu rc_xrefScene
 (
@@ -4411,7 +3235,6 @@ rcMenu rc_xrefScene
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4423,46 +3246,6 @@ rcMenu rc_xrefScene
 	)
 
 )
-
-
-
-
--------------------------------------------------------------------------------------------------------   photoStudioMenu   -------------------------------------------------------------------------------------------------------
-
-rcMenu rc_photoStudioMenu
-(
-	menuItem	editItem "Edit..."
-	menuItem    copyAtm "Copy"
-	menuItem    remove "Delete"
-
-	on copyAtm picked do
-	(
-		LPM_treeview_rollout.copyNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-	)
-	on remove picked do
-	(
-		undo "LPM delete" on
-		(
-			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-			delete theNode
-			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
-			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
-		)
-	)
-	on editItem picked do
-	(
-		global active_PS_Prop=LPM_treeview_rollout.tv.selectedNode.tag.value
-		if(doesfileexist "$MAX/macroscripts/LPM/PhotoStudio_Ro_Pro.ms") then
-			filein "$MAX/macroscripts/LPM/PhotoStudio_Ro_Pro.ms"
-		else if(doesfileexist "$MAX/macroscripts/LPM/PhotoStudio_Ro_Demo.ms") then
-			filein "$MAX/macroscripts/LPM/PhotoStudio_Ro_Demo.ms"
-		else
-			messagebox "Photostudio Addon Not Installed" error:"Error"
-	)
-)
-
-
 
 
 -------------------------------------------------------------------------------------------------------   scriptMenu   -------------------------------------------------------------------------------------------------------
@@ -4483,7 +3266,6 @@ rcMenu rc_scriptMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4495,8 +3277,6 @@ rcMenu rc_scriptMenu
 	)
 
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   ModifierOverMenu   -------------------------------------------------------------------------------------------------------
@@ -4539,7 +3319,6 @@ rcMenu rc_ModifierOverMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4552,8 +3331,6 @@ rcMenu rc_ModifierOverMenu
 	)
 
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   atmPropsMenu   -------------------------------------------------------------------------------------------------------
@@ -4578,7 +3355,6 @@ rcMenu rc_atmPropsMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4587,7 +3363,7 @@ rcMenu rc_atmPropsMenu
 
 	on addByName picked do
 	(
-		createdialog atmRollout pos:(LPM_Fun.getRoPos  atmRollout.width)
+		createdialog LPM_atmRollout pos:(LPM_Fun.getRoPos  LPM_atmRollout.width)
 	)
 
 	on openEnvDialog picked do
@@ -4595,8 +3371,6 @@ rcMenu rc_atmPropsMenu
 		actionMan.executeAction 0 "40029"
 	)
 )
-
-
 
 
 -------------------------------------------------------------------------------------------------------   RenderPropsMenu   -------------------------------------------------------------------------------------------------------
@@ -4628,7 +3402,6 @@ rcMenu rc_RenderPropsMenu
 			theNode=LPM_treeview_rollout.tv.selectedNode.tag.value
 			delete theNode
 			LPM_treeview_rollout.tv.selectedNode.remove()
-			LPM_treeview_rollout.UpdateButtons LPM_treeview_rollout.tv.selectedNode
 			LPM_activeElement = LPM_treeview_rollout.tv.selectedNode
 
 			LPM_treeview_rollout.updateTV()
@@ -4670,5 +3443,3 @@ rcMenu rc_RenderPropsMenu
 
 	)
 )
-
-

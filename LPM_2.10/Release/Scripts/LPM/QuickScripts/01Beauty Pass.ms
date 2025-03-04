@@ -24,6 +24,7 @@
 		VRay_Matte_Enable = True
 		VRay_Secondary_Matte_Enable = false
 		VRay_Matte_Alpha = -1.000000
+		VRay_Matte_ReflectionAmount = 0
 		"
 		newSet.intP[9]=2
 
@@ -41,8 +42,12 @@
   		newSet.intP[4] = 3 -- invisible to camera
  		newSet.parent=thePass
 
+-- 		---- Environment Operator
+--		theSet=LPM_Fun.createVray6RenderElementsProps "vray6RenderElements"
+--		theSet.parent=thePass
+
  		---- Environment Operator
-		theSet=LPM_Fun.createVray5RenderElementsProps "vray5RenderElements"
+		theSet=LPM_Fun.createVrayRenderElementsProps "vrayRenderElements"
 		theSet.parent=thePass
 		
 		--All Lights Off

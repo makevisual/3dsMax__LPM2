@@ -139,16 +139,34 @@ struct elementsDefStr
 		return newElement 
 	),
 
-	function element_VRayOptionRE = 
+	function element_VRayOptionRe_Uncompressed = 
 	(
 		newElement = VRayOptionRE()
 
-		newElement.enabled 						= true 
-		newElement.elementName 					= "VRayOptionRE" 
+		newElement.enabled 						= false 
+		newElement.elementName 					= "VRayOptionRe_Uncompressed" 
+		newElement.vrayVFB 						= false 
+		newElement.exr_compression 				= 0
+		newElement.use_dwa_compression_level	= false
+		newElement.dwa_compression_level 		= 45.0
+		newElement.exr_multipart 				= true 
+		newElement.exr_metadata					= ""
+
+		return newElement 
+	),
+
+	function element_VRayOptionRe_Compressed = 
+	(
+		newElement = VRayOptionRE()
+
+		newElement.enabled 						= false 
+		newElement.elementName 					= "VRayOptionRE_Compressed" 
 		newElement.vrayVFB 						= false 
 		newElement.exr_compression 				= 9
 		newElement.use_dwa_compression_level	= true
 		newElement.dwa_compression_level 		= 45.0
+		newElement.exr_multipart 				= true 
+		newElement.exr_metadata					= ""
 
 		return newElement 
 	)

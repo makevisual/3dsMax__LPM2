@@ -1,24 +1,22 @@
+-- All of the libraries needed for LPM to run, and then call the main thread
 
 global LPM_Dir = trimright (getThisScriptFilename()) "Include.ms"
--- getFilenamePath( getThisScriptFilename() )
 
 filein (LPM_Dir+"Globals.ms")
-filein (LPM_Dir+"VersionNumber.ms")
+filein (LPM_Dir+"VersionNumber.ms") 	-- Added by Aaron Dabelow
 filein (LPM_Dir+"include.mcr")
 filein (LPM_Dir+"CA.ms")
-filein (LPM_Dir+"AltSpaceCheck.ms")
 filein (LPM_Dir+"functions.ms")
 filein (LPM_Dir+"render.ms")
 filein (LPM_Dir+"rcMenus.ms")
-filein (LPM_Dir+"LPM_SMTDSettings.ms") 	-- Dabelow
-filein (LPM_Dir+"NukeAPI.ms") 			-- Dabelow
+filein (LPM_Dir+"LPM_SMTDSettings.ms") 	-- Added by Aaron Dabelow
+filein (LPM_Dir+"NukeAPI.ms") 			-- Added by Aaron Dabelow
 filein (LPM_Dir+"treeView.ms")
-LPM_PluginFiles=getfiles(LPM_Dir+"plugins/*")
-for f in LPM_PluginFiles do filein f
 filein (LPM_Dir+"operatorsAPI.ms")
-filein (LPM_Dir+"MAKE_nukeem.ms")
-filein (LPM_Dir+"OperatorData.ms") 		-- Dabelow
+filein (LPM_Dir+"MAKE_nukeem.ms") 		-- Added by Aaron Dabelow
+filein (LPM_Dir+"OperatorData.ms") 		-- Added by Aaron Dabelow
 
-print LPM_VersionNumber
---Set Fileoutput Path Token String to default
-LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass\\$APass$Pass"
+LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$APass$Pass\\$APass$Pass" 		--Set Fileoutput Path Token String to default
+LPM_Root.renderType = 3 													-- Force to shots
+
+print ("LPM Version - " + ( LPM_VersionNumber as string ) )		

@@ -1,13 +1,5 @@
-/* 
-
-Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com/ )  2015
-	
-
- */
-
 		thePassNode=LPM_activeElement
 		thePass=LPM_activePass
-		
 		
 		if((LPM_Fun.firstChildByType thePass "renderProps")==undefined)and(thePassNode!=undefined) then
 		(
@@ -26,7 +18,6 @@ Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com
 					LPM_Treeview_Rollout.tv.selectedNode=newNode.nodes.item[j]
 				)
 			)
-			
 			
 		    LPM_treeview_rollout.tv.enabled=false
 			
@@ -50,7 +41,6 @@ Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com
 					
 					callbacks.addScript #tabbedDialogDeleted "LPM_renderer_closed()" id:#myscript_update
 				)
-				
 				on renderPicker doubleClicked item do
 				(
 					destroyDialog LPM_rendererPicker
@@ -59,10 +49,7 @@ Modified by grover_gol ( http://gg3dcg.ru/ ) for Altspace  ( http://altspace.com
 				(	
 					renderTypes=for it in RendererClass.classes  where (it!= RLF_Network_Renderer) and (it!=Missing_Renderer) collect it
 					renderPicker.items=for it in renderTypes collect (it as string)
-
-					print renderPicker.items 
 				)
 			)
 			createDialog LPM_rendererPicker pos:(LPM_Fun.GetRoPos LPM_rendererPicker.width)
-			
 		)
