@@ -31,7 +31,7 @@ struct LPM_deadlineInfoStr
 	dl_taskTimeoutSeconds 			= "300",
 	draft_templatesDir 				= "",
 	draft_templates 				= #(),
-	draft_templateChosen 			= "",
+--	draft_templateChosen 			= "",
 	draft_templateNames 			= #(),
 	sticky_holdOnSubmit 			= false,
 	sticky_frameBufferMode 			= 1,
@@ -118,8 +118,8 @@ struct LPM_DeadlineAPI
  				dropdownList ddl_OutOfOrderMethod 		"" 											width:200 height:21 												offset:[2,0]												visible:false 		items:#("First To Last (Forward)", "Every Nth, Then Forward", "Every Nth - Block Fill", "Every Nth - Half Raster Refine", "Last To First (Reverse)", "From Both Ends", "From Center", "From Both Ends And From Center", "Random")
  				spinner spn_outOfOrderStep 				"Nth:" 										width:70 height:16 range:[2,1000,10] type:#integer fieldwidth:40 	offset:[3,-25] 	enabled:false								visible:false
 
- 			GroupBox grp_integration "Integration"  align:#left width:304 height:48 							offset:[-7,15]																										visible:false
-				dropdownList ddl_autodraftSelection 	"" 								 width:289 height:21 											offset:[0 , ( ( grp_integration.height * -1 )  + 15 ) ]						visible:false  		items:#(" Error loading AUTODRAFT Templates " )
+-- 			GroupBox grp_integration "Integration"  align:#left width:304 height:48 							offset:[-7,15]																										visible:false
+--				dropdownList ddl_autodraftSelection 	"" 								 width:289 height:21 											offset:[0 , ( ( grp_integration.height * -1 )  + 15 ) ]						visible:false  		items:#(" Error loading AUTODRAFT Templates " )
 
  			GroupBox grp_utilities 	"Utilities" 	align:#left width:305 height:90 							offset:[-7,10]																					visible:false
  				button btn_idiotCheck 					"Perform Idiot Check" 			align:#left across:3 height:20 width:294 	offset:[0 , ( ( grp_utilities.height * -1 )  + 15 ) ] 						visible:false
@@ -253,8 +253,8 @@ struct LPM_DeadlineAPI
 					LPM_DeadlineSubmitRo.spn_chunkSize.visible = state
 					LPM_DeadlineSubmitRo.ddl_OutOfOrderMethod.visible = state
 					LPM_DeadlineSubmitRo.spn_outOfOrderStep.visible = state
-				LPM_DeadlineSubmitRo.grp_integration.visible = state
-					LPM_DeadlineSubmitRo.ddl_autodraftSelection.visible = state
+--				LPM_DeadlineSubmitRo.grp_integration.visible = state
+--					LPM_DeadlineSubmitRo.ddl_autodraftSelection.visible = state
 				LPM_DeadlineSubmitRo.grp_utilities.visible = state
 					LPM_DeadlineSubmitRo.btn_idiotCheck.visible = state
 					LPM_DeadlineSubmitRo.btn_removeMissingPlugins.visible = state
@@ -839,14 +839,14 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.dl_groupChosen = ""
 			)
 
-			-- updates UI draft templates dropdown
-			fn ui_update_draft_templateNames =
-			(
-				templatesPlusNone = join #("Choose AUTODRAFT preset ") LPM_deadlineInfo.draft_templateNames
-				ddl_autodraftSelection.items = templatesPlusNone
-				ddl_autodraftSelection.selection = 1
- 				LPM_deadlineInfo.draft_templateChosen = ""
-			)
+--			-- updates UI draft templates dropdown
+--			fn ui_update_draft_templateNames =
+--			(
+--				templatesPlusNone = join #("Choose AUTODRAFT preset ") LPM_deadlineInfo.draft_templateNames
+--				ddl_autodraftSelection.items = templatesPlusNone
+--				ddl_autodraftSelection.selection = 1
+-- 				LPM_deadlineInfo.draft_templateChosen = ""
+--			)
 
 			-- re - collects the renderable passes from LPM, and passes them to the submitter
  			fn ui_update_submit =
@@ -916,7 +916,7 @@ struct LPM_DeadlineAPI
 				ui_update_groups()
 
  				-- Update AUTODRAFT presets
- 				ui_update_draft_templateNames()
+-- 				ui_update_draft_templateNames()
 
 			)
 
@@ -1026,7 +1026,7 @@ struct LPM_DeadlineAPI
 				SMTDSettings.JobIsInterruptible 			= LPM_deadlineInfo.dl_interruptible
 				SMTDSettings.TaskTimeoutEnabled 			= LPM_deadlineInfo.dl_taskTimeoutEnabled
 				--SMTDSettings.TaskTimeout		 			= LPM_deadlineInfo.dl_taskTimeoutSeconds
-				SMTDSettings.DraftTemplate 					= LPM_deadlineInfo.draft_templateChosen
+--				SMTDSettings.DraftTemplate 					= LPM_deadlineInfo.draft_templateChosen
 				LPM_deadlineInfo.submit_recoveryHold		= LPM_deadlineInfo.sticky_holdOnSubmit
 
 				-- LPM_deadlineInfo.submit_viewToRenderLock = rendUseActiveView
@@ -1531,12 +1531,12 @@ struct LPM_DeadlineAPI
 				log_append ( " Limits were cleared from submission" ) 4
 			)
 
- 			-- Event handler for chosing autordraft preset
- 			on ddl_autodraftSelection selected item do
- 			(
- 				try ( LPM_deadlineInfo.draft_templateChosen = LPM_deadlineInfo.draft_templates[(item-1)])
- 				catch( LPM_deadlineInfo.draft_templateChosen = "" )
- 			)
+-- 			-- Event handler for chosing autordraft preset
+-- 			on ddl_autodraftSelection selected item do
+-- 			(
+-- 				try ( LPM_deadlineInfo.draft_templateChosen = LPM_deadlineInfo.draft_templates[(item-1)])
+-- 				catch( LPM_deadlineInfo.draft_templateChosen = "" )
+-- 			)
 
  			-- Event for custom name field changing
  			on lab_CustomNameField changed state do

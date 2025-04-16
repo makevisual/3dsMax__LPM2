@@ -1199,7 +1199,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	--Dabelow nukeExport
 	fn EditNukeExport =
 	(
-		createDialog nukeExportPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+		messagebox(" Feature not ready for production ")
+--		createDialog nukeExportPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)
 
 	--Dabelow aeExport
