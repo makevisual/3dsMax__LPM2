@@ -1,6 +1,6 @@
--- Dear whoever reads this, I inherited this pile of globals, and wish it was not this way.
+-- Dear whoever reads this, I inherited this pile of globals, and wish it was not this way, it keeps me up at night.
 -- I added a couple of my own, to be able to pass things between areas of the program out of shame, and confusion.
--- I at least was able to add LPM_ to the beginning of almost all of them, so they were not so egregious 
+-- I at least was able to add LPM_ to the beginning of almost all of them, so they were not so egregious. - Aaron Dabelow
 
 global LPM_renderAPI
 global LPM_NetworkPlugins=#()
@@ -15,7 +15,7 @@ global LPM_Data
 global LPM_Render
 global LPM_atmRollout
 global LPM_objectSetProps
-global lightSetProps 						-- Difficult to change name, used as class and constructor
+global lightSetProps 						-- Difficult to change name, used as class and constructor, I gave up trying to fix -- Dabelow
 global LPM_commonRollout
 global LPM_activePass
 global LPM_LoadingPreset

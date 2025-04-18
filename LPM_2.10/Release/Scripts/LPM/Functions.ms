@@ -1096,6 +1096,7 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 		)
 		theString
 	)
+
 	--Cameras----------------------------------------
 	cameraString="Active_Cam"
 	if(isValidNode LPM_Root.renderCamera) then
@@ -1230,11 +1231,19 @@ fn getPassPath theRoot thePass theShot:undefined previewMode:false RendPreviewMo
 	if(isUNC) then pathString="\\\\"+pathString
 
 	--filetype
+
+-- TODO: Fix Filetype Override
+
 	if(LPM_Root.fileType==undefined) then LPM_Root.fileType="exr"
 	theFileType=LPM_Root.fileType
-	cp=LPM_Fun.firstChildByType thePass "commonProps"
+
+	--cp=LPM_Fun.firstChildByType thePass "commonProps"
+	cp=LPM_Fun.firstChildByType theShot "commonProps"
 		if(cp!=undefined) and (cp.fileTypeTgl) then
 			theFileType=cp._fileType
+
+	try( print ("------------------------------------------ Filetype Override Portion "))catch()
+	try( print ("----------------------cp._fileType " + theFileType)						)catch()
 
 	if(theShot!=undefined) then
 	(

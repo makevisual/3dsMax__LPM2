@@ -541,9 +541,9 @@ struct LPM_RenderAPI
 					else(preRenderSettings=LPM_Fun.saveRenderPreset())
 
 					--preRenderSettings=renderers.current
---	???				try(LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate)
+					--	???	-- try(LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate)
 					LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate
--- ???				catch(LPM_Fun.loadRenderPreset theRenderProps[1].props)
+					--  ???	-- catch(LPM_Fun.loadRenderPreset theRenderProps[1].props)
 				)
 
 				if findstring ((classof renderers.current) as string) "V_RAY" != undefined then
@@ -561,7 +561,7 @@ struct LPM_RenderAPI
 				theDeadlineProps=for it in thePass.children where ((it.type=="Deadline") and (it.active)) collect it
 				if(theDeadlineProps[1] != undefined) then
 				(
-					print thePass
+--					print thePass
 					LPM_Fun.loadDeadlineSettings theDeadlineProps[1] isPreviewMode
 				)
 
@@ -1036,8 +1036,8 @@ struct LPM_RenderAPI
 
 				------------- DISPATCH START -------------
 				-- Render dispatch is an API added by Aaron Dabelow to make it easier to implement additional render engines and render
-				-- engine versions.  This pare collects the pass, and the type of render action requested, and then calls the dispatch
-				-- the dispatch identifies the current renderer, and then loads the appropriate dispatch plugin to execuate the code.
+				-- engine versions.  This part collects the pass, and the type of render action requested, and then calls the dispatch
+				-- the dispatch identifies the current renderer, and then loads the appropriate dispatch plugin to execute the code.
 
 				LPM_RenderDispatchThePass 	= thePass
 				LPM_RenderDispatchAction 	= #preRender
@@ -1413,7 +1413,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 	recoveryException = #none	
 	try(
 
-		-- Store if the render dialog is opened, and close it if it is
+		-- Store if the render dialog is opened, and close if open
 		RndDialogOpened = false
 		if renderSceneDialog.isopen() then
 		(
@@ -1433,7 +1433,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		LPM_Fun.init_LPM_renderProgress_Ro thePass theShot
 		if(isvalidnode theShot)
 		then( format "===== S:% P:% =====\n"  (LPM_Fun.getName theShot.name) (TmpPassName))
-		else(format "===== P:% =====\n" (TmpPassName))
+		else( format "===== P:% =====\n" (TmpPassName))
 
 		-- Pre render action
 		isPreviewMode = ((renderType==#preview) or (renderType==#previewHalf))
@@ -1443,6 +1443,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 		if(isPreviewMode) then
 		(
 			rendOutputFilename 	= LPM_Fun.getPreviewFile thePass
+
+			print( "================================== rendOutputFilename === " + rendOutputFilename)
 
 			makeDir ((getDir #preview)+"\\"+maxFileName+"_"+"\\") all:true
 			deleteFile rendOutputFilename
@@ -1456,17 +1458,12 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			)
 		)
 
-
-		-- TODO: put cameraOverscan in here?
-		-- print LPM_Root.renderCamera
-		
-
 		-- For testing recovery
 		-- throw(recoveryException = #prerender)
 	)
 	catch(recoveryException = #prerender)
 
-	try(
+--	try(
 		-- Render calls for #local and #preview
 		with defaultAction #logmsg
 		(
@@ -1477,7 +1474,59 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			(
 				SetQuietMode LPM_Root.quietMode
 				cp=LPM_Fun.firstChildByType theShot "commonProps"
-				render fromframe:cp._rendStart toframe:cp._rendEnd
+
+				-- TODO: Fix frame range by reading frame list from CP properties
+
+				if cp._rendTimeType == 1 then
+				(
+					-- print("Single")
+					render fromframe:currentTime toframe:currentTime
+				)
+				
+				if cp._rendTimeType == 2 then
+				(
+					-- print("Active Timeline")
+					render fromframe:animationRange.start toframe:animationRange.end
+				)
+				
+				if cp._rendTimeType == 3 then
+				(
+					-- print("Range")
+					render fromframe:( cp._rendStart) toframe:( cp._rendEnd )
+				)
+				
+				if cp._rendTimeType == 4 then
+				(
+					print("Frame List")
+
+				    frames = #()
+				    parts = filterString cp._rendPickupFrames "," -- split on commas
+				    
+				    for part in parts do
+				    (
+				        if findString part "-" != undefined then
+				        (
+				            rangeParts = filterString part "-"
+				            if rangeParts.count == 2 then
+				            (
+				                startVal 	= rangeParts[1] as integer
+				                endVal 		= rangeParts[2] as integer
+				                for i 		= startVal to endVal do append frames i
+				            )
+				        )
+				        else ( append frames (part as integer) )
+				    )
+				    
+				    -- Render each of the frames from the built list
+				    for frame in frames do ( render fromframe:(frame) toframe:(frame) )
+				)
+
+				print(cp._rendTimeType)
+				print(cp._rendStart)
+				print(cp._rendEnd)
+				print(cp._rendPickupFrames)
+
+				-- render fromframe:cp._rendStart toframe:cp._rendEnd
 			)
 			else()
 
@@ -1488,8 +1537,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			-- For testing recovery
 			--throw(recoveryException = #render)
 		)
-	)
-	catch(recoveryException = #render)
+--	)
+--	catch(recoveryException = #render)
 
 	if recoveryException != #none
 	then ( messagebox("An error has occured in LPM during "+ recoveryException + "\nAttempting to restore the scene."))

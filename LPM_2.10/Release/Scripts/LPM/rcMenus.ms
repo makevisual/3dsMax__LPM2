@@ -1320,7 +1320,9 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 	(
 		if(LPM_Root.fileType==undefined) then
 			LPM_Root.fileType="exr"
+		
 		thePath=getBitmapSaveFileName caption:"Enter the File Type" filename:("XXX."+LPM_Root.fileType)
+
 		if(thePath!=undefined) then
 		(
 			theType=getFilenameType thePath
@@ -1329,6 +1331,11 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 				theType=substring theType 2 -1
 				_fileType.text=theType
 			)
+
+
+		-- TODO: apply / store the filetype here?
+
+
 		)
 	)
 	on _rendStart changed val do ( _rendTimeType.state=3 )
@@ -3400,5 +3407,5 @@ rcMenu rc_RenderPropsMenu
 	)
 )
 
-DestroyDialog(LPM_commonRollout)
-createdialog(LPM_commonRollout)
+-- DestroyDialog(LPM_commonRollout)
+-- createdialog(LPM_commonRollout)

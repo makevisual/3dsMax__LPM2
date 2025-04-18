@@ -57,8 +57,7 @@ DLini = ( PROGRAMDATA + @"\Thinkbox\Deadline10\deadline.ini" )
 -- if doesFileExist DLini then ( LPM_deadlineInfo.dl_NetworkRoot = ( getinisetting dlini "Deadline" "NetworkRoot" ) )
 
 -- Back to hard coded because of locked and bad ini file from aws thinkbox
-LPM_deadlineInfo.dl_NetworkRoot = @"N:\DeadlineRepository10"
-
+LPM_deadlineInfo.dl_NetworkRoot = (getUserProp LPM_Root "DeadlineRepository")
 
 -- This used to be hard coded, now it runs off of the deadline ini file
 LPM_deadlineInfo.dl_fnScript = ( LPM_deadlineInfo.dl_NetworkRoot + @"\submission\3dsmax\Main\SubmitMaxToDeadline_Functions.ms" )
@@ -81,8 +80,12 @@ struct LPM_DeadlineAPI
 	  			edittext lab_CustomNameField 				""  							align:#left width:230 											offset:[60,-21 ]												visible:false
  				label lab_CustomComment 					"  Comment: "  					align:#left height:15 width:77									offset:[0, 0 ]  												visible:false
 				edittext lab_CustomCommentField 			""  							align:#left	width:230											offset:[60,-21 ]												visible:false
- 				label lab_CustomBatch 						"  Batch: "  					align:#left height:15 width:77									offset:[0, 0 ] 													visible:false
-				edittext lab_CustomBatchField 				""  							align:#left width:230 											offset:[60,-21 ]												visible:false
+				
+				-- TODO: In order to fix the BATCH Name submission, I need to find a different way of updating the SMTDSettings / Functions Interface
+				-- Currently I need to update the submitter every time I update Deadline which is problematic and troublesome. In the meantime I am
+				-- Disabling the "Batch" Name submission in the deadline submitter
+ 				label lab_CustomBatch 						"  Batch: "  					align:#left height:15 width:77									offset:[0, 0 ] 													visible:false  enabled:false
+				edittext lab_CustomBatchField 				""  							align:#left width:230 											offset:[60,-21 ]												visible:false  enabled:false
 				label lab_DeadlineUser 						"  User: "  					align:#left width:77 											offset:[0, 0 ]													visible:false
 	 			label lab_DeadlineUserField 				" Loading User... " 			style_sunkenedge:true  width:225 align:#left height:15 			offset:[64,-21 ]												visible:false
 
@@ -95,9 +98,9 @@ struct LPM_DeadlineAPI
   				button btn_setLimits 						"Set limits" 					align:#left width:88 enabled:true 								offset:[182,-27]												visible:false
 	  			button btn_setLimitsClear 					"X" 							align:#left width:20 enabled:true 								offset:[270,-26]												visible:false
 				checkbutton btn_submitSuspended 			"      Submit as SUSPENDED " 	align:#left width:291 height:18 								offset:[0, 0 ] 													visible:false
-  				checkbox chk_overrideFrameRange 			" Override Framerange:" 																		offset:[4,0]													visible:false
-	  			spinner spn_overrideFrameRange1 			"" 								range:[-10000,10000,0] type:#integer width:65 enabled:false 	offset:[-40,-18]												visible:false
-  				spinner spn_overrideFrameRange2 			"to " 							range:[-10000,10000,0] type:#integer width:65 enabled:false	 	offset:[48,-21] 												visible:false
+--  				checkbox chk_overrideFrameRange 			" Override Framerange:" 																		offset:[4,0]													visible:false
+--	  			spinner spn_overrideFrameRange1 			"" 								range:[-10000,10000,0] type:#integer width:65 enabled:false 	offset:[-40,-18]												visible:false
+--  				spinner spn_overrideFrameRange2 			"to " 							range:[-10000,10000,0] type:#integer width:65 enabled:false	 	offset:[48,-21] 												visible:false
  				dropdownList ddl_SubmitExternalFilesMode 	"" 								width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Do NOT copy Textures to Repository", " Copy LOCAL Textures to Repository", " Copy ALL Textures to Repository")
 
  				-- Frame buffer mode UI disabled for vray5
@@ -234,9 +237,9 @@ struct LPM_DeadlineAPI
 					LPM_DeadlineSubmitRo.btn_setLimits.visible = state
 					LPM_DeadlineSubmitRo.btn_setLimitsClear.visible = state
 					LPM_DeadlineSubmitRo.btn_submitSuspended.visible = state
-					LPM_DeadlineSubmitRo.chk_overrideFrameRange.visible = state
-					LPM_DeadlineSubmitRo.spn_overrideFrameRange1.visible = state
-					LPM_DeadlineSubmitRo.spn_overrideFrameRange2.visible = state
+--					LPM_DeadlineSubmitRo.chk_overrideFrameRange.visible = state
+--					LPM_DeadlineSubmitRo.spn_overrideFrameRange1.visible = state
+--					LPM_DeadlineSubmitRo.spn_overrideFrameRange2.visible = state
 					LPM_DeadlineSubmitRo.ddl_SubmitExternalFilesMode.visible = state
 					LPM_DeadlineSubmitRo.ddl_frameBufferMode.visible =false -- = state --TODO:Better way to handle this for vray5 pipeline?
 					LPM_DeadlineSubmitRo.chk_renderElementsExr.visible = state
@@ -719,26 +722,26 @@ struct LPM_DeadlineAPI
 			)
 
 			-- enables or disables the framerange override spinners
-			fn ui_update_frameRangeEnable arg =
-			(
-				spn_overrideFrameRange1.enabled 	= arg
-				spn_overrideFrameRange2.enabled 	= arg
-			)
+--			fn ui_update_frameRangeEnable arg =
+--			(
+--				spn_overrideFrameRange1.enabled 	= arg
+--				spn_overrideFrameRange2.enabled 	= arg
+--			)
 
-			-- updates the framerange override spinners to never make invalid numbers
-			fn ui_update_frameRangeVal arg_mode =
-			(
-				if arg_mode == 1 then
-				(
-					if ( spn_overrideFrameRange1.value >= spn_overrideFrameRange2.value ) then ( spn_overrideFrameRange2.value = spn_overrideFrameRange1.value )
-				)
-				if arg_mode == 2 then
-				(
-					if ( spn_overrideFrameRange2.value <= spn_overrideFrameRange1.value ) then ( spn_overrideFrameRange1.value = spn_overrideFrameRange2.value )
-				)
-
-				LPM_deadlineInfo.framerange_overrideRange = [ ( spn_overrideFrameRange1.value as integer ), ( spn_overrideFrameRange2.value as integer ) ]
-			)
+--			-- updates the framerange override spinners to never make invalid numbers
+--			fn ui_update_frameRangeVal arg_mode =
+--			(
+--				if arg_mode == 1 then
+--				(
+--					if ( spn_overrideFrameRange1.value >= spn_overrideFrameRange2.value ) then ( spn_overrideFrameRange2.value = spn_overrideFrameRange1.value )
+--				)
+--				if arg_mode == 2 then
+--				(
+--					if ( spn_overrideFrameRange2.value <= spn_overrideFrameRange1.value ) then ( spn_overrideFrameRange1.value = spn_overrideFrameRange2.value )
+--				)
+--
+--				LPM_deadlineInfo.framerange_overrideRange = [ ( spn_overrideFrameRange1.value as integer ), ( spn_overrideFrameRange2.value as integer ) ]
+--			)
 
 			-- updates UI batch field with name field
 			fn ui_update_nameToBatch =
@@ -994,7 +997,7 @@ struct LPM_DeadlineAPI
  					else ( idiotCheck_run() )
  	
 	 				-- Move Log to bottom of Dialog
-	 				submitLog.pos=[ 3 , 715 ]
+	 				submitLog.pos=[ 3 , 630 ]
 	 				submitLog.height=190
 	 				btn_connectCancel.visible = false
 
@@ -1005,7 +1008,7 @@ struct LPM_DeadlineAPI
 					ui_update_submit()
 
 					-- Resize Interface
-					LPM_DeadlineSubmitRo.height = 909
+					LPM_DeadlineSubmitRo.height = 825
  				)
  				else
  				(
@@ -1252,6 +1255,8 @@ struct LPM_DeadlineAPI
 								SMTDSettings.group = LPM_SMTDSettings.submitGroup
 							)
 
+							dl_batchName
+
 							if LPM_SMTDSettings.submitLimitsOn then
 							(
 								SMTDSettings.LimitGroupsToUse = LPM_SMTDSettings.submitLimits
@@ -1284,6 +1289,9 @@ struct LPM_DeadlineAPI
 					SMTDLPMInterface.prg_submitProgress2.value=30
 
 					-- Submit Deadline Job
+					-- TODO: In order to fix the BATCH Name submission, I need to find a different way of updating the SMTDSettings / Functions Interface
+					-- Currently I need to update the submitter every time I update Deadline which is problematic and troublesome. In the meantime I am
+					-- Disabling the "Batch" Name submission in the deadline submitter
 					local result = SMTDFunctions.SubmitJob()
 
 					if result != #success do
@@ -1498,19 +1506,19 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.dl_jobComment = lab_CustomCommentField.text
 			)
 
-			-- event handler for framerange override "from" field
-			on spn_overrideFrameRange1 changed state do
-			(
-
-				ui_update_frameRangeVal 1
-			)
+--			-- event handler for framerange override "from" field
+--			on spn_overrideFrameRange1 changed state do
+--			(
+--
+--				ui_update_frameRangeVal 1
+--			)
 
 			-- event handler for framerange override "to" field
-			on spn_overrideFrameRange2 changed state do
-			(
-
-				ui_update_frameRangeVal 2
-			)
+--			on spn_overrideFrameRange2 changed state do
+--			(
+--
+--				ui_update_frameRangeVal 2
+--			)
 
 			-- event handler for setting limits
 			on btn_setLimits pressed do
@@ -1628,14 +1636,14 @@ struct LPM_DeadlineAPI
 			)
 
 			-- event handler for framerange overrided toggle
-			on chk_overrideFrameRange changed state do
-			(
-
-				ui_update_frameRangeEnable state
-
-				LPM_deadlineInfo.framerange_overrideEnabled = state
-				LPM_deadlineInfo.framerange_overrideRange = [ spn_overrideFrameRange1.value, spn_overrideFrameRange2.value ]
-			)
+--			on chk_overrideFrameRange changed state do
+--			(
+--
+--				ui_update_frameRangeEnable state
+--
+--				LPM_deadlineInfo.framerange_overrideEnabled = state
+--				LPM_deadlineInfo.framerange_overrideRange = [ spn_overrideFrameRange1.value, spn_overrideFrameRange2.value ]
+--			)
 
 			on btn_optimizeScene pressed do
 			(

@@ -16,7 +16,11 @@ filein (LPM_Dir+"operatorsAPI.ms")
 filein (LPM_Dir+"MAKE_nukeem.ms") 		-- Added by Aaron Dabelow
 filein (LPM_Dir+"OperatorData.ms") 		-- Added by Aaron Dabelow
 
-LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$Pass\\$Pass" 		-- Set Fileoutput Path Token String to default
-LPM_Root.renderType = 3 										-- Force to shots
+LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$Pass\\$Pass" 				-- Set Fileoutput Path Token String to default
+LPM_Root.renderType = 3 												-- Force to shots
+setUserProp LPM_Root "DeadlineRepository" @"N:\DeadlineRepository10"    -- Set your deadline Repository
+setUserProp LPM_Root "LPM_VersionNumber" LPM_VersionNumber    			-- Set your LPM Version Number
 
-print ("LPM Version - " + ( LPM_VersionNumber as string ) )		
+clearListener()
+( getUserProp LPM_Root "LPM_VersionNumber" )
+("LPM Version - " + ( ( getUserProp LPM_Root "LPM_VersionNumber" ) as string ) )		
