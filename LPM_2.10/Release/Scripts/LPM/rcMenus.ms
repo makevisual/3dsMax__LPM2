@@ -1180,61 +1180,66 @@ rollout LPM_atmRollout "Env, Effects, Atmosphere" width:235 height:445
 )
 
 -------------------------------------------------------------------------------------------------------   LPM_commonRollout   -------------------------------------------------------------------------------------------------------
-rollout LPM_commonRollout "Common Properties" width:370 height:530
+rollout LPM_commonRollout "Common Properties" width:370 height:350
 (
-	GroupBox grp1 "Time Output" pos:[24,4] width:335 height:111 enabled:false
-	GroupBox grp2 "Output Size" pos:[24,112] width:336 height:88 enabled:false
-	GroupBox grp3 "Options" pos:[24,241] width:335 height:105 enabled:false
-	GroupBox grp4 "Advanced Lighting" pos:[24,347] width:335 height:54 enabled:false
-	GroupBox grp5 "File Type" pos:[24,401] width:154 height:43 enabled:false
-	GroupBox grp7 "Camera" pos:[23,452] width:336 height:42 enabled:false
+--	GroupBox grp3 "Options" pos:[24,241] width:335 height:105 enabled:false
+--	GroupBox grp4 "Advanced Lighting" pos:[24,347] width:335 height:54 enabled:false
 
-	checkbox timeOutputTgl "" pos:[4,9] width:15 height:16
-	checkbox outputSizeTgl "" pos:[4,120] width:15 height:16
-	checkbox optionsTgl "" pos:[4,246] width:15 height:16
-	checkbox advancedLightingTgl "" pos:[4,352] width:15 height:16
-	checkbox fileTypeTgl "" pos:[4,406] width:15 height:16
-	checkbox cameraTgl "" pos:[4,457] width:15 height:16
+--	checkbox optionsTgl "" pos:[4,246] width:15 height:16
+--	checkbox advancedLightingTgl "" pos:[4,352] width:15 height:16
 
-	radiobuttons _rendTimeType "" pos:[34,21] width:124 height:64 enabled:false labels:#("Single", "Active Time Segment", "Range", "Frames") columns:1
-	spinner _rendNThFrame "Every Nth Frame" pos:[232,20] width:117 height:16 enabled:false range:[1,99999,1] type:#integer
-	spinner _rendStart "" pos:[112,52] width:69 height:16 enabled:false range:[-1e+007,1e+007,0] type:#integer
-	spinner _rendEnd "" pos:[212,52] width:69 height:16 enabled:false range:[-1e+007,1e+007,0] type:#integer
-	spinner _rendFileNumberBase "File Number Base: " pos:[198,90] width:150 height:16 enabled:false range:[-99999,99999,0] type:#integer
-	spinner _renderWidth "" pos:[70,131] width:62 height:16 enabled:false range:[1,32768,1] type:#integer
-	spinner _renderHeight "" pos:[70,151] width:62 height:16 enabled:false range:[1,32768,1] type:#integer
-	checkbutton lockAspect "L" pos:[135,130] width:14 height:38 enabled:false checked:true
-	spinner aspect "" pos:[70,175] width:62 height:16 enabled:false
-	label aspectLabel "Aspect:" pos:[31,176] width:35 height:14 enabled:false
-	dropDownList presetDDL "" pos:[164,174] width:152 height:21 enabled:false tooltip:"Select a preset to load it"
-	button addPreset "+" pos:[317,176] width:16 height:16 enabled:false tooltip:"Add a preset"
-	button removePreset "-" pos:[336,176] width:16 height:16 enabled:false tooltip:"Delete the selected preset"
+	GroupBox 			grp1 "Time Output" pos:[24,4] width:335 height:111 enabled:false
+		checkbox 		timeOutputTgl 		"" pos:[4,9] width:15 height:16
+		radiobuttons 	_rendTimeType 		"" pos:[34,21] width:124 height:64 enabled:false labels:#("Single", "Active Timeline", "Range:", "Frame List:") columns:1
+		spinner 		_rendStart 			"Start" pos:[170,52] width:80 height:16 enabled:false range:[-1e+007,1e+007,0] type:#integer
+		spinner 		_rendEnd 			"End" pos:[272,52] width:80 height:16 enabled:false range:[-1e+007,1e+007,0] type:#integer
+		edittext 		_rendPickupFrames 	"" pos:[148,65] width:201 height:12 enabled:false
+		spinner 		_rendNThFrame 		"Every Nth Frame" pos:[95,90] width:80 height:16 enabled:false range:[1,99999,1] type:#integer
+		spinner 		_rendFileNumberBase "File Number Base: " pos:[268,91] width:80 height:16 enabled:false range:[-99999,99999,0] type:#integer
+--	label aspectLabel "Aspect:" pos:[31,176] width:35 height:14 enabled:false
+--	dropDownList presetDDL "" pos:[164,174] width:152 height:21 enabled:false tooltip:"Select a preset to load it"
+--	button addPreset "+" pos:[317,176] width:16 height:16 enabled:false tooltip:"Add a preset"
+--	button removePreset "-" pos:[336,176] width:16 height:16 enabled:false tooltip:"Delete the selected preset"
 
-	spinner _RendApertureWidth "" pos:[251,133] width:64 height:16 enabled:false range:[0.001,1000,1]
-	spinner _renderPixelAspect "" pos:[251,153] width:64 height:16 enabled:false range:[0.001,1000,1]
-	edittext _rendPickupFrames "" pos:[109,70] width:240 height:17 enabled:false
-	checkbox _rendAtmosphere "Atmospherics" pos:[31,254] width:95 height:19 enabled:false
-	checkbox _renderEffects "Effects" pos:[31,271] width:95 height:19 enabled:false
-	checkbox _renderDisplacements "Displacement" pos:[31,288] width:95 height:19 enabled:false
-	checkbox _rendColorCheck "Video Color Check" pos:[31,304] width:145 height:19 enabled:false
-	checkbox _rendFieldRender "Render To Fields" pos:[31,322] width:145 height:19 enabled:false
-	checkbox _rendHidden "Render Hidden Geometry" pos:[173,253] width:145 height:19 enabled:false
-	checkbox _rendSimplifyAreaLights "Area Lights/Shadows as Points" pos:[173,270] width:172 height:19 enabled:false
-	checkbox _rendForce2Side "Force 2-Sided" pos:[173,287] width:106 height:19 enabled:false
-	checkbox _rendSuperBlack "Super Black" pos:[173,304] width:96 height:19 enabled:false
-	checkbox _useAdvancedLighting "Use Advanced Lighting" pos:[33,362] width:143 height:15 enabled:false
-	checkbox _computeAdvancedLighting "Compute Advanced Lighting" pos:[33,377] width:143 height:15 enabled:false
+	GroupBox 			grp2 "Output Size" pos:[24,112] width:336 height:88 enabled:false
+		checkbox 		outputSizeTgl "" pos:[4,120] width:15 height:16
+		spinner 		_renderWidth 		"Width:" pos:[70,131] width:62 height:16 enabled:false range:[1,32768,1] type:#integer
+		spinner 		_renderHeight 		"Height:" pos:[70,151] width:62 height:16 enabled:false range:[1,32768,1] type:#integer
+		checkbutton 	lockAspect 			"L" pos:[135,130] width:14 height:38 enabled:false checked:true
+		spinner 		_RendApertureWidth "Aperture Width(mm):" pos:[285,133] width:64 height:16 enabled:false range:[0.001,1000,1]
+		spinner 		_renderPixelAspect "Pixel Aspect:" pos:[285,153] width:64 height:16 enabled:false range:[0.001,1000,1]
+		spinner 		aspect 				"Aspect:" pos:[288,175] width:62 height:16 enabled:false
+--	checkbox _rendAtmosphere "Atmospherics" pos:[31,254] width:95 height:19 enabled:false
+--	checkbox _renderEffects "Effects" pos:[31,271] width:95 height:19 enabled:false
+--	checkbox _renderDisplacements "Displacement" pos:[31,288] width:95 height:19 enabled:false
+--	checkbox _rendColorCheck "Video Color Check" pos:[31,304] width:145 height:19 enabled:false
+--	checkbox _rendFieldRender "Render To Fields" pos:[31,322] width:145 height:19 enabled:false
+--	checkbox _rendHidden "Render Hidden Geometry" pos:[173,253] width:145 height:19 enabled:false
+--	checkbox _rendSimplifyAreaLights "Area Lights/Shadows as Points" pos:[173,270] width:172 height:19 enabled:false
+--	checkbox _rendForce2Side "Force 2-Sided" pos:[173,287] width:106 height:19 enabled:false
+--	checkbox _rendSuperBlack "Super Black" pos:[173,304] width:96 height:19 enabled:false
+--	checkbox _useAdvancedLighting "Use Advanced Lighting" pos:[33,362] width:143 height:15 enabled:false
+--	checkbox _computeAdvancedLighting "Compute Advanced Lighting" pos:[33,377] width:143 height:15 enabled:false
 
-	dropdownList _CameraDdl "" pos:[31,467] width:270 height:21 enabled:false items:#("--") --120 width
-	checkbutton _CameraExport "Export" pos:[305,467] enabled:false check:true
-	edittext _fileType "" pos:[91,418] width:53 height:19 readOnly:true
-	button pickTypeButton "Pick" pos:[39,419] width:47 height:16 enabled:false
-	checkbutton chkbtn_enableDeepOutput "Enable Deep Output" pos:[158,405] width:200 height:40
-	checkbox autoUpdateName "Auto Update Name" pos:[8,501] width:115 height:15
-	checkbox disableFinalOutput "Disable Final Image Output" pos:[150, 501] width:170 height:15
-	GroupBox RenderTypeGroup "Render Type" pos:[24,202] width:335 height:37
-	checkbox renderTypeTgl "" pos:[4,209] width:15 height:16
-	dropdownList renderTypeDDL "" pos:[34,216] width:116 height:21 items:#("view", "region", "crop", "blowup")
+	GroupBox 			RenderTypeGroup "Render Type"	pos:[24,202] width:335 height:44
+		checkbox 		renderTypeTgl "" 				pos:[4,209] width:15 height:16
+		dropdownList 	renderTypeDDL "" 				pos:[34,216] width:315 height:21 items:#("view", "region", "crop", "blowup")
+
+	GroupBox 			grp5 "File Type Override" 		pos:[24,251] width:335 height:50 enabled:false
+		checkbox 		fileTypeTgl "" 					pos:[4,258] width:15 height:20
+		button 			pickTypeButton "Pick" 			pos:[30,270] width:60 height:20 enabled:false
+		edittext 		_fileType "" 					pos:[91,270] width:53 height:20 readOnly:true
+		checkbutton 	chkbtn_enableDeepOutput ".EXR Deep Output" pos:[160,270] width:190 height:20
+
+	GroupBox 			grp7 "Camera" 					pos:[23,300] width:336 height:44 enabled:false
+		checkbox 		cameraTgl "" 					pos:[4,307] width:15 height:20
+		dropdownList 	_CameraDdl "" 					pos:[31,315] width:320 height:20 enabled:false items:#("--") --270 width
+
+--	checkbutton _CameraExport "Export" pos:[305,467] enabled:false check:true
+
+--	GroupBox 			grp8 "Camera" 					pos:[23,300] width:336 height:44 enabled:false
+--		checkbox 		autoUpdateName "Auto Update Name" pos:[8,501] width:115 height:15
+--		checkbox 		disableFinalOutput "Disable Final Image Output" pos:[150, 501] width:170 height:15
 
 	local presetData=#()
 	local presetNames=#()
@@ -1261,82 +1266,55 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 			_renderPixelAspect.enabled=state
 			lockAspect.enabled=state
 			aspect.enabled=state
-			aspectLabel.enabled=state
-			presetDDL.enabled=state
-			addPreset.enabled=state
-			removePreset.enabled=state
+--			aspectLabel.enabled=state
+--			presetDDL.enabled=state
+--			addPreset.enabled=state
+--			removePreset.enabled=state
 
-			state=optionsTgl.checked
-			grp3.enabled=state
-			_rendAtmosphere.enabled=state
-			_renderEffects.enabled=state
-			_renderDisplacements.enabled=state
-			_rendColorCheck.enabled=state
-			_rendFieldRender.enabled=state
-			_rendHidden.enabled=state
-			_rendSimplifyAreaLights.enabled=state
-			_rendForce2Side.enabled=state
-			_rendSuperBlack.enabled=state
+--			state=optionsTgl.checked
+--			grp3.enabled=state
+--			_rendAtmosphere.enabled=state
+--			_renderEffects.enabled=state
+--			_renderDisplacements.enabled=state
+--			_rendColorCheck.enabled=state
+--			_rendFieldRender.enabled=state
+--			_rendHidden.enabled=state
+--			_rendSimplifyAreaLights.enabled=state
+--			_rendForce2Side.enabled=state
+--			_rendSuperBlack.enabled=state
 
-			state=advancedLightingTgl.checked
-			grp4.enabled=state
-			_useAdvancedLighting.enabled=state
-			_computeAdvancedLighting.enabled=state
+--			state=advancedLightingTgl.checked
+--			grp4.enabled=state
+--			_useAdvancedLighting.enabled=state
+--			_computeAdvancedLighting.enabled=state
 
 			state=fileTypeTgl.checked
 			grp5.enabled=state
 			pickTypeButton.enabled=state
+			_fileType.enabled=state
+			chkbtn_enableDeepOutput.enabled=state
 
 			state=cameraTgl.checked
 			grp7.enabled=state
 			_CameraDDl.enabled=state
 
-			_CameraExport.enabled=state
+--			_CameraExport.enabled=state
 
 			state=renderTypeTgl.checked
 			renderTypeDDL.enabled=state
 			RenderTypeGroup.enabled=state
 	)
-	on timeOutputTgl changed state do
-	(
-		toggleState()
-	)
-	on outputSizeTgl changed state do
-	(
-		toggleState()
-	)
-	on optionsTgl changed state do
-	(
-		toggleState()
-	)
-	on advancedLightingTgl changed state do
-	(
-		toggleState()
-	)
-	on fileTypeTgl changed state do
-	(
-		toggleState()
-	)
-	on filePathTgl changed state do
-	(
-		toggleState()
-	)
-	on cameraTgl changed state do
-	(
-		toggleState()
-	)
-	on renderTypeTgl changed state do
-	(
-		toggleState()
-	)
-	on editPreScript pressed do
-	(
-		try(edit preScript.text)catch()
-	)
-	on editPostScript pressed do
-	(
-		try(edit postScript.text)catch()
-	)
+
+	on timeOutputTgl changed state do (toggleState())
+	on outputSizeTgl changed state do (toggleState()) 
+--	on optionsTgl changed state do (toggleState()) 
+--	on advancedLightingTgl changed state do (toggleState()) 
+	on fileTypeTgl changed state do (toggleState()) 
+	on filePathTgl changed state do (toggleState())  
+	on cameraTgl changed state do  (toggleState())  
+	on renderTypeTgl changed state do (toggleState())  
+	on editPreScript pressed do ( try(edit preScript.text)catch() )
+	on editPostScript pressed do ( try(edit postScript.text)catch() )
 
 	on pickTypeButton pressed do
 	(
@@ -1353,20 +1331,12 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 			)
 		)
 	)
-	on _rendStart changed val do
-	(
-		 _rendTimeType.state=3
-
-	)
-	on _rendEnd changed valt  do
-	(
-		_rendTimeType.state=3
-	)
+	on _rendStart changed val do ( _rendTimeType.state=3 )
+	on _rendEnd changed valt  do ( _rendTimeType.state=3 )
 
 	fn updateAspect=
 	(
 		aspect.value=(_renderWidth.value) as float /(_renderHeight.value) as float
-
 	)
 
 	on _renderWidth changed val do
@@ -1374,11 +1344,11 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 		if(lockAspect.state) then
 		(
 			_renderHeight.value=(_renderWidth.value as float)/ (aspect.value as float)
-
 		)
 		else
 			updateAspect()
 	)
+
 	on aspect changed val do
 	(
 		_renderWidth.value=(_renderHeight.value as float)* (aspect.value as float)
@@ -1394,64 +1364,67 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 		else
 			updateAspect()
 	)
-	fn loadPresets=
-	(
-		--load preset data
-		it=LPM_Fun.getIni "Presets" "CommonPresets" string "#(#(640,480,1.0,36.0),#(1024,768,1.0,36.0))"
-		presetData=execute it
-		presetDDL.items=for it in presetData collect (it[1] as string)+"x"+(it[2] as string)+" "+(it[3] as string)+"px "+(it[4] as string)+"mm"
 
-	)
-	fn savePresets=
-	(
-		fn compareFN x y=
-		(
-			case of
-			(
-			(x[1]<y[1]): -1
-			(x[1]>y[1]): 1
-			default:0
-			)
-		)
+--	fn loadPresets=
+--	(
+--		--load preset data
+--		it=LPM_Fun.getIni "Presets" "CommonPresets" string "#(#(640,480,1.0,36.0),#(1024,768,1.0,36.0))"
+--		presetData=execute it
+--		presetDDL.items=for it in presetData collect (it[1] as string)+"x"+(it[2] as string)+" "+(it[3] as string)+"px "+(it[4] as string)+"mm"
+--
+--	)
 
-		qsort presetData compareFN
-		theData=presetData as string
-		LPM_Fun.setini "Presets" "CommonPresets" presetData
-	)
-
-	on addpreset pressed do
-	(
-
-		presetData+=#(#(_renderWidth.value,_renderHeight.value,_renderPixelAspect.value,_RendApertureWidth.value))
-		savePresets()
-		loadPresets()
-		presetDDL.selection=presetDDL.items.count
-
-	)
-	on removepreset pressed do
-	(
-		theItem=presetDDL.selection
-		if(theItem!=0) then
-		(
-			presetData=for i=1 to presetData.count where (i!= theItem )collect presetData[i]
-		)
-		savePresets()
-		loadPresets()
-		if(presetDDL.selection>presetDDL.items.count or presetDDL.selection==0) then
-			presetDDL.selection=presetDDL.items.count
-	)
-	on presetDDL selected item do
-	(
-		if(item!=0) then
-		(
-			_renderWidth.value=presetData[item][1]
-			_renderHeight.value=presetData[item][2]
-			_renderPixelAspect.value=presetData[item][3]
-			_RendApertureWidth.value=presetData[item][4]
-			updateAspect()
-		)
-
-	)
+--	fn savePresets=
+--	(
+--		fn compareFN x y=
+--		(
+--			case of
+--			(
+--			(x[1]<y[1]): -1
+--			(x[1]>y[1]): 1
+--			default:0
+--			)
+--		)
+--
+--		qsort presetData compareFN
+--		theData=presetData as string
+--		LPM_Fun.setini "Presets" "CommonPresets" presetData
+--	)
+--
+--	on addpreset pressed do
+--	(
+--
+--		presetData+=#(#(_renderWidth.value,_renderHeight.value,_renderPixelAspect.value,_RendApertureWidth.value))
+--		savePresets()
+--		loadPresets()
+--		presetDDL.selection=presetDDL.items.count
+--
+--	)
+--	on removepreset pressed do
+--	(
+--		theItem=presetDDL.selection
+--		if(theItem!=0) then
+--		(
+--			presetData=for i=1 to presetData.count where (i!= theItem )collect presetData[i]
+--		)
+--		savePresets()
+--		loadPresets()
+--		if(presetDDL.selection>presetDDL.items.count or presetDDL.selection==0) then
+--			presetDDL.selection=presetDDL.items.count
+--	)
+--	
+--	on presetDDL selected item do
+--	(
+--		if(item!=0) then
+--		(
+--			_renderWidth.value=presetData[item][1]
+--			_renderHeight.value=presetData[item][2]
+--			_renderPixelAspect.value=presetData[item][3]
+--			_RendApertureWidth.value=presetData[item][4]
+--			updateAspect()
+--		)
+--
+--	)
 
 
 	on LPM_commonRollout open do
@@ -1461,7 +1434,7 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 		theNode=LPM_treeview_rollout.tv.selectedNode
 
 
-		loadPresets()
+--		loadPresets()
 
 		cameraList=for i in $cameras where (superclassof i==camera) collect i
 		cameraNameList=for it in cameraList collect it.name
@@ -1479,27 +1452,27 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 		_RendApertureWidth.value=cp._RendApertureWidth
 		_renderPixelAspect.value=cp._renderPixelAspect
 		_rendPickupFrames.text=cp._rendPickupFrames
-		_rendAtmosphere.checked=cp._rendAtmosphere
-		_renderEffects.checked=cp._renderEffects
-		_renderDisplacements.checked=cp._renderDisplacements
-		_rendColorCheck.checked=cp._rendColorCheck
-		_rendFieldRender.checked=cp._rendFieldRender
-		_rendHidden.checked=cp._rendHidden
-		_rendSimplifyAreaLights.checked=cp._rendSimplifyAreaLights
-		_rendForce2Side.checked=cp._rendForce2Side
-		_rendSuperBlack.checked=cp._rendSuperBlack
-		_useAdvancedLighting.checked=cp._useAdvancedLighting
-		_computeAdvancedLighting.checked=cp._computeAdvancedLighting
+--		_rendAtmosphere.checked=cp._rendAtmosphere
+--		_renderEffects.checked=cp._renderEffects
+--		_renderDisplacements.checked=cp._renderDisplacements
+--		_rendColorCheck.checked=cp._rendColorCheck
+--		_rendFieldRender.checked=cp._rendFieldRender
+--		_rendHidden.checked=cp._rendHidden
+--		_rendSimplifyAreaLights.checked=cp._rendSimplifyAreaLights
+--		_rendForce2Side.checked=cp._rendForce2Side
+--		_rendSuperBlack.checked=cp._rendSuperBlack
+--		_useAdvancedLighting.checked=cp._useAdvancedLighting
+--		_computeAdvancedLighting.checked=cp._computeAdvancedLighting
 		timeOutputTgl.checked=cp.timeOutputTgl
 		outputSizeTgl.checked=cp.outputSizeTgl
-		optionsTgl.checked=cp.optionsTgl
-		advancedLightingTgl.checked=cp.advancedLightingTgl
+--		optionsTgl.checked=cp.optionsTgl
+--		advancedLightingTgl.checked=cp.advancedLightingTgl
 		fileTypeTgl.checked=cp.fileTypeTgl
 		_fileType.text=cp._fileType
 		chkbtn_enableDeepOutput.checked = cp.deepEXR
 
 
-		_CameraExport.checked=cp._CameraExport
+--		_CameraExport.checked=cp._CameraExport
 
 		for i=1 to renderTypeDDL.items.count where renderTypeDDL.items[i]==cp.renderType do
 			renderTypeDDL.selection=i
@@ -1512,8 +1485,8 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 				_cameraDDl.selection=x
 		)
 
-		autoUpdateName.checked=cp.autoUpdateName
-		disableFinalOutput.checked=cp.disableFinalOutput
+--		autoUpdateName.checked=cp.autoUpdateName
+--		disableFinalOutput.checked=cp.disableFinalOutput
 		toggleState()
 	)
 	on LPM_commonRollout close do
@@ -1532,30 +1505,30 @@ rollout LPM_commonRollout "Common Properties" width:370 height:530
 		cp._RendApertureWidth=_RendApertureWidth.value
 		cp._renderPixelAspect=_renderPixelAspect.value
 		cp._rendPickupFrames=_rendPickupFrames.text
-		cp._rendAtmosphere=_rendAtmosphere.checked
-		cp._renderEffects=_renderEffects.checked
-		cp._renderDisplacements=_renderDisplacements.checked
-		cp._rendColorCheck=_rendColorCheck.checked
-		cp._rendFieldRender=_rendFieldRender.checked
-		cp._rendHidden=_rendHidden.checked
-		cp._rendSimplifyAreaLights=_rendSimplifyAreaLights.checked
-		cp._rendForce2Side=_rendForce2Side.checked
-		cp._rendSuperBlack=_rendSuperBlack.checked
-		cp._useAdvancedLighting=_useAdvancedLighting.checked
-		cp._computeAdvancedLighting=_computeAdvancedLighting.checked
+--		cp._rendAtmosphere=_rendAtmosphere.checked
+--		cp._renderEffects=_renderEffects.checked
+--		cp._renderDisplacements=_renderDisplacements.checked
+--		cp._rendColorCheck=_rendColorCheck.checked
+--		cp._rendFieldRender=_rendFieldRender.checked
+--		cp._rendHidden=_rendHidden.checked
+--		cp._rendSimplifyAreaLights=_rendSimplifyAreaLights.checked
+--		cp._rendForce2Side=_rendForce2Side.checked
+--		cp._rendSuperBlack=_rendSuperBlack.checked
+--		cp._useAdvancedLighting=_useAdvancedLighting.checked
+--		cp._computeAdvancedLighting=_computeAdvancedLighting.checked
 		cp.timeOutputTgl=timeOutputTgl.checked
 		cp.outputSizeTgl=outputSizeTgl.checked
-		cp.optionsTgl=optionsTgl.checked
-		cp.advancedLightingTgl=advancedLightingTgl.checked
+--		cp.optionsTgl=optionsTgl.checked
+--		cp.advancedLightingTgl=advancedLightingTgl.checked
 		cp.fileTypeTgl=fileTypeTgl.checked
 		cp._fileType=_fileType.text
 		cp.renderTypeTgl=renderTypeTgl.checked
 		cp.renderType=renderTypeDDL.selected
 		cp.deepEXR=chkbtn_enableDeepOutput.checked
-		cp.autoUpdateName=autoUpdateName.checked
-		cp.disableFinalOutput=disableFinalOutput.checked
+--		cp.autoUpdateName=autoUpdateName.checked
+--		cp.disableFinalOutput=disableFinalOutput.checked
 		cp.cameraTgl=cameraTgl.checked
-		cp._CameraExport=_CameraExport.checked
+--		cp._CameraExport=_CameraExport.checked
 
 		if(cameraTgl.checked) then
 		(
@@ -1707,7 +1680,7 @@ rcMenu rc_MainMenu
 		menuItem nukeSceneGenerate "Build scene from Nuke Script"
 		seperator s1
 		menuitem elementGenerate "Generate Default Elements"
-		menuItem elementAOSet "Set AO Element Size"
+--		menuItem elementAOSet "Set AO Element Size"
 	)
 
 	subMenu		"Help"
@@ -1738,10 +1711,10 @@ rcMenu rc_MainMenu
 		)
 	)
 
-	on elementAOSet picked do
-	(
-		utilityTools.rollout_setAOprops_Function()
-	)
+--	on elementAOSet picked do
+--	(
+--		utilityTools.rollout_setAOprops_Function()
+--	)
 
 	on quickScripts picked do
 	(
@@ -2654,9 +2627,9 @@ rcMenu rc_commonPropsMenu
 	menuItem copyProps "Copy"
 
 	seperator sp1
-	menuItem grabTime "Grab Active Time"
-	menuItem grabCamera "Grab Active Camera"
-	seperator sp2
+--	menuItem grabTime "Grab Active Time"
+--	menuItem grabCamera "Grab Active Camera"
+--	seperator sp2
 	menuItem selectCamera "Select Camera"
 	seperator sp68
 	menuItem   removeProps "Delete"
@@ -2681,28 +2654,28 @@ rcMenu rc_commonPropsMenu
 	(
 		createDialog LPM_commonRollout pos:(LPM_Fun.getRoPos  LPM_commonRollout.width)
 	)
-	on grabtime picked do
-	(
-
-		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
-		cp.timeOutputTgl=true
-		cp._rendTimeType=3
-		cp._rendStart=animationRange.start
-		cp._rendEnd=animationRange.end
-		LPM_treeview_rollout.tv.selectedNode.text=LPM_Fun.generateCommonPropName cp
-	)
-	on grabCamera picked do
-	(
-		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
-		if(getActiveCamera()!=undefined) then
-		(
-			cp.cameraTgl=true
-			cp._Camera=getActiveCamera()
-			LPM_treeview_rollout.tv.selectedNode.text=LPM_Fun.generateCommonPropName cp
-		)
-		else
-			messagebox "The active node is not a camera"
-	)
+--	on grabtime picked do
+--	(
+--
+--		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
+--		cp.timeOutputTgl=true
+--		cp._rendTimeType=3
+--		cp._rendStart=animationRange.start
+--		cp._rendEnd=animationRange.end
+--		LPM_treeview_rollout.tv.selectedNode.text=LPM_Fun.generateCommonPropName cp
+--	)
+--	on grabCamera picked do
+--	(
+--		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
+--		if(getActiveCamera()!=undefined) then
+--		(
+--			cp.cameraTgl=true
+--			cp._Camera=getActiveCamera()
+--			LPM_treeview_rollout.tv.selectedNode.text=LPM_Fun.generateCommonPropName cp
+--		)
+--		else
+--			messagebox "The active node is not a camera"
+--	)
 	on selectCamera picked do
 	(
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
@@ -3410,14 +3383,8 @@ rcMenu rc_RenderPropsMenu
 	on loadDefault picked do
 	(
 		theProp=LPM_treeview_rollout.tv.selectedNode.tag.value
-		try
-		(
-			theProp.propsAlternate=LPM_Fun.saveRenderPresetNew()
-		)
-		catch
-		(
-			theProp.props=LPM_Fun.saveRenderPreset()
-		)
+		try ( theProp.propsAlternate=LPM_Fun.saveRenderPresetNew() )
+		catch( theProp.props=LPM_Fun.saveRenderPreset()	)
 
 		theProp.initialized=true
 	)
@@ -3426,20 +3393,12 @@ rcMenu rc_RenderPropsMenu
 		theProp=LPM_treeview_rollout.tv.selectedNode.tag.value
 		if(theProp.initialized) then
 		(
-			try
-			(
-				LPM_Fun.loadRenderPresetNew theProp.propsAlternate
-			)
-			catch
-			(
-				LPM_Fun.loadRenderPreset theProp.props
-			)
-
+			try ( LPM_Fun.loadRenderPresetNew theProp.propsAlternate )
+			catch ( LPM_Fun.loadRenderPreset theProp.props )
 		)
-		else
-		(
-			messagebox "The selected prop has no render settings stored."
-		)
-
+		else ( messagebox "The selected prop has no render settings stored." )
 	)
 )
+
+DestroyDialog(LPM_commonRollout)
+createdialog(LPM_commonRollout)

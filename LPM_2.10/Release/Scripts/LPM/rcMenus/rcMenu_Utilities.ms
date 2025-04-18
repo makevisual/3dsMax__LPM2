@@ -17,7 +17,7 @@ struct UtilityTools_Def
 
 	  	result = curPropsStr()
 	  	return result
-	),
+	)
 
 --	function rollout_setAOprops_Function =
 --	(
