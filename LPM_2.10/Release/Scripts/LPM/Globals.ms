@@ -20,7 +20,6 @@ global LPM_commonRollout
 global LPM_activePass
 global LPM_LoadingPreset
 global LPM_Operators
-global LPM_VersionNumber
 global LPM_activeElement
 global LPM_doubleClick 
 global LPM_oldRenderSettings
@@ -31,7 +30,9 @@ global LPM_LightSetPropsBuff
 global LPM_iconPath = LPM_Dir + "icons/"
 global LPM_BackColor 					
 global LPM_FontColor
+global LPM_ContinueLoad
 
+global LPM_VersionNumber 					-- Dabelow	
 global LPM_SMTDSettings 					-- Dabelow
 global LPM_NukeAPI 							-- Dabelow
 global LPM_RenderDispatchThePass 			-- Dabelow Render Dispatch ( future renderer compatable )

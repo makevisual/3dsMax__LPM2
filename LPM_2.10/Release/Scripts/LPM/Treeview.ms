@@ -8,7 +8,10 @@ callbacks.addScript #systemPostNew LPM_Callback id:#closeLPM
 callbacks.addScript #systemPostReset LPM_Callback id:#closeLPM
 try(destroyDialog LPM_treeview_rollout)catch()
 
-LPM_Root = $LPM_Root
+-- Moved this to the version check
+--LPM_Root = $LPM_Root
+
+--filein (LPM_Dir+"versionCheck.ms")
 
 try
 (
