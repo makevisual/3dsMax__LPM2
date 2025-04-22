@@ -1182,12 +1182,6 @@ rollout LPM_atmRollout "Env, Effects, Atmosphere" width:235 height:445
 -------------------------------------------------------------------------------------------------------   LPM_commonRollout   -------------------------------------------------------------------------------------------------------
 rollout LPM_commonRollout "Common Properties" width:370 height:350
 (
---	GroupBox grp3 "Options" pos:[24,241] width:335 height:105 enabled:false
---	GroupBox grp4 "Advanced Lighting" pos:[24,347] width:335 height:54 enabled:false
-
---	checkbox optionsTgl "" pos:[4,246] width:15 height:16
---	checkbox advancedLightingTgl "" pos:[4,352] width:15 height:16
-
 	GroupBox 			grp1 "Time Output" pos:[24,4] width:335 height:111 enabled:false
 		checkbox 		timeOutputTgl 		"" pos:[4,9] width:15 height:16
 		radiobuttons 	_rendTimeType 		"" pos:[34,21] width:124 height:64 enabled:false labels:#("Single", "Active Timeline", "Range:", "Frame List:") columns:1
@@ -1196,10 +1190,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 		edittext 		_rendPickupFrames 	"" pos:[148,65] width:201 height:12 enabled:false
 		spinner 		_rendNThFrame 		"Every Nth Frame" pos:[95,90] width:80 height:16 enabled:false range:[1,99999,1] type:#integer
 		spinner 		_rendFileNumberBase "File Number Base: " pos:[268,91] width:80 height:16 enabled:false range:[-99999,99999,0] type:#integer
---	label aspectLabel "Aspect:" pos:[31,176] width:35 height:14 enabled:false
---	dropDownList presetDDL "" pos:[164,174] width:152 height:21 enabled:false tooltip:"Select a preset to load it"
---	button addPreset "+" pos:[317,176] width:16 height:16 enabled:false tooltip:"Add a preset"
---	button removePreset "-" pos:[336,176] width:16 height:16 enabled:false tooltip:"Delete the selected preset"
 
 	GroupBox 			grp2 "Output Size" pos:[24,112] width:336 height:88 enabled:false
 		checkbox 		outputSizeTgl "" pos:[4,120] width:15 height:16
@@ -1209,17 +1199,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 		spinner 		_RendApertureWidth "Aperture Width(mm):" pos:[285,133] width:64 height:16 enabled:false range:[0.001,1000,1]
 		spinner 		_renderPixelAspect "Pixel Aspect:" pos:[285,153] width:64 height:16 enabled:false range:[0.001,1000,1]
 		spinner 		aspect 				"Aspect:" pos:[288,175] width:62 height:16 enabled:false
---	checkbox _rendAtmosphere "Atmospherics" pos:[31,254] width:95 height:19 enabled:false
---	checkbox _renderEffects "Effects" pos:[31,271] width:95 height:19 enabled:false
---	checkbox _renderDisplacements "Displacement" pos:[31,288] width:95 height:19 enabled:false
---	checkbox _rendColorCheck "Video Color Check" pos:[31,304] width:145 height:19 enabled:false
---	checkbox _rendFieldRender "Render To Fields" pos:[31,322] width:145 height:19 enabled:false
---	checkbox _rendHidden "Render Hidden Geometry" pos:[173,253] width:145 height:19 enabled:false
---	checkbox _rendSimplifyAreaLights "Area Lights/Shadows as Points" pos:[173,270] width:172 height:19 enabled:false
---	checkbox _rendForce2Side "Force 2-Sided" pos:[173,287] width:106 height:19 enabled:false
---	checkbox _rendSuperBlack "Super Black" pos:[173,304] width:96 height:19 enabled:false
---	checkbox _useAdvancedLighting "Use Advanced Lighting" pos:[33,362] width:143 height:15 enabled:false
---	checkbox _computeAdvancedLighting "Compute Advanced Lighting" pos:[33,377] width:143 height:15 enabled:false
 
 	GroupBox 			RenderTypeGroup "Render Type"	pos:[24,202] width:335 height:44
 		checkbox 		renderTypeTgl "" 				pos:[4,209] width:15 height:16
@@ -1234,12 +1213,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 	GroupBox 			grp7 "Camera" 					pos:[23,300] width:336 height:44 enabled:false
 		checkbox 		cameraTgl "" 					pos:[4,307] width:15 height:20
 		dropdownList 	_CameraDdl "" 					pos:[31,315] width:320 height:20 enabled:false items:#("--") --270 width
-
---	checkbutton _CameraExport "Export" pos:[305,467] enabled:false check:true
-
---	GroupBox 			grp8 "Camera" 					pos:[23,300] width:336 height:44 enabled:false
---		checkbox 		autoUpdateName "Auto Update Name" pos:[8,501] width:115 height:15
---		checkbox 		disableFinalOutput "Disable Final Image Output" pos:[150, 501] width:170 height:15
 
 	local presetData=#()
 	local presetNames=#()
@@ -1256,7 +1229,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 			_rendEnd.enabled=state
 			_rendFileNumberBase.enabled=state
 			_rendPickupFrames.enabled=state
-			-- lbl1.enabled=state
 
 			state=outputSizeTgl.checked
 			grp2.enabled=state
@@ -1266,27 +1238,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 			_renderPixelAspect.enabled=state
 			lockAspect.enabled=state
 			aspect.enabled=state
---			aspectLabel.enabled=state
---			presetDDL.enabled=state
---			addPreset.enabled=state
---			removePreset.enabled=state
-
---			state=optionsTgl.checked
---			grp3.enabled=state
---			_rendAtmosphere.enabled=state
---			_renderEffects.enabled=state
---			_renderDisplacements.enabled=state
---			_rendColorCheck.enabled=state
---			_rendFieldRender.enabled=state
---			_rendHidden.enabled=state
---			_rendSimplifyAreaLights.enabled=state
---			_rendForce2Side.enabled=state
---			_rendSuperBlack.enabled=state
-
---			state=advancedLightingTgl.checked
---			grp4.enabled=state
---			_useAdvancedLighting.enabled=state
---			_computeAdvancedLighting.enabled=state
 
 			state=fileTypeTgl.checked
 			grp5.enabled=state
@@ -1298,8 +1249,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 			grp7.enabled=state
 			_CameraDDl.enabled=state
 
---			_CameraExport.enabled=state
-
 			state=renderTypeTgl.checked
 			renderTypeDDL.enabled=state
 			RenderTypeGroup.enabled=state
@@ -1307,8 +1256,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 
 	on timeOutputTgl changed state do (toggleState())
 	on outputSizeTgl changed state do (toggleState()) 
---	on optionsTgl changed state do (toggleState()) 
---	on advancedLightingTgl changed state do (toggleState()) 
 	on fileTypeTgl changed state do (toggleState()) 
 	on filePathTgl changed state do (toggleState())  
 	on cameraTgl changed state do  (toggleState())  
@@ -1331,11 +1278,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 				theType=substring theType 2 -1
 				_fileType.text=theType
 			)
-
-
-		-- TODO: apply / store the filetype here?
-
-
 		)
 	)
 	on _rendStart changed val do ( _rendTimeType.state=3 )
@@ -1372,81 +1314,15 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 			updateAspect()
 	)
 
---	fn loadPresets=
---	(
---		--load preset data
---		it=LPM_Fun.getIni "Presets" "CommonPresets" string "#(#(640,480,1.0,36.0),#(1024,768,1.0,36.0))"
---		presetData=execute it
---		presetDDL.items=for it in presetData collect (it[1] as string)+"x"+(it[2] as string)+" "+(it[3] as string)+"px "+(it[4] as string)+"mm"
---
---	)
-
---	fn savePresets=
---	(
---		fn compareFN x y=
---		(
---			case of
---			(
---			(x[1]<y[1]): -1
---			(x[1]>y[1]): 1
---			default:0
---			)
---		)
---
---		qsort presetData compareFN
---		theData=presetData as string
---		LPM_Fun.setini "Presets" "CommonPresets" presetData
---	)
---
---	on addpreset pressed do
---	(
---
---		presetData+=#(#(_renderWidth.value,_renderHeight.value,_renderPixelAspect.value,_RendApertureWidth.value))
---		savePresets()
---		loadPresets()
---		presetDDL.selection=presetDDL.items.count
---
---	)
---	on removepreset pressed do
---	(
---		theItem=presetDDL.selection
---		if(theItem!=0) then
---		(
---			presetData=for i=1 to presetData.count where (i!= theItem )collect presetData[i]
---		)
---		savePresets()
---		loadPresets()
---		if(presetDDL.selection>presetDDL.items.count or presetDDL.selection==0) then
---			presetDDL.selection=presetDDL.items.count
---	)
---	
---	on presetDDL selected item do
---	(
---		if(item!=0) then
---		(
---			_renderWidth.value=presetData[item][1]
---			_renderHeight.value=presetData[item][2]
---			_renderPixelAspect.value=presetData[item][3]
---			_RendApertureWidth.value=presetData[item][4]
---			updateAspect()
---		)
---
---	)
-
-
 	on LPM_commonRollout open do
 	(
 		LPM_treeview_rollout.FreezeWindow()
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
 		theNode=LPM_treeview_rollout.tv.selectedNode
 
-
---		loadPresets()
-
 		cameraList=for i in $cameras where (superclassof i==camera) collect i
 		cameraNameList=for it in cameraList collect it.name
 		_cameraDDl.items=cameraNameList
-
 		_rendTimeType.state=cp._rendTimeType
 		_rendNThFrame.value=cp._rendNThFrame
 		_rendStart.value=cp._rendStart
@@ -1454,32 +1330,17 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 		_rendFileNumberBase.value=cp._rendFileNumberBase
 		_renderHeight.value=cp._renderHeight
 		_renderWidth.value=cp._renderWidth
+
 		updateAspect()
 
 		_RendApertureWidth.value=cp._RendApertureWidth
 		_renderPixelAspect.value=cp._renderPixelAspect
 		_rendPickupFrames.text=cp._rendPickupFrames
---		_rendAtmosphere.checked=cp._rendAtmosphere
---		_renderEffects.checked=cp._renderEffects
---		_renderDisplacements.checked=cp._renderDisplacements
---		_rendColorCheck.checked=cp._rendColorCheck
---		_rendFieldRender.checked=cp._rendFieldRender
---		_rendHidden.checked=cp._rendHidden
---		_rendSimplifyAreaLights.checked=cp._rendSimplifyAreaLights
---		_rendForce2Side.checked=cp._rendForce2Side
---		_rendSuperBlack.checked=cp._rendSuperBlack
---		_useAdvancedLighting.checked=cp._useAdvancedLighting
---		_computeAdvancedLighting.checked=cp._computeAdvancedLighting
 		timeOutputTgl.checked=cp.timeOutputTgl
 		outputSizeTgl.checked=cp.outputSizeTgl
---		optionsTgl.checked=cp.optionsTgl
---		advancedLightingTgl.checked=cp.advancedLightingTgl
 		fileTypeTgl.checked=cp.fileTypeTgl
 		_fileType.text=cp._fileType
 		chkbtn_enableDeepOutput.checked = cp.deepEXR
-
-
---		_CameraExport.checked=cp._CameraExport
 
 		for i=1 to renderTypeDDL.items.count where renderTypeDDL.items[i]==cp.renderType do
 			renderTypeDDL.selection=i
@@ -1492,8 +1353,6 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 				_cameraDDl.selection=x
 		)
 
---		autoUpdateName.checked=cp.autoUpdateName
---		disableFinalOutput.checked=cp.disableFinalOutput
 		toggleState()
 	)
 	on LPM_commonRollout close do
@@ -1512,30 +1371,14 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 		cp._RendApertureWidth=_RendApertureWidth.value
 		cp._renderPixelAspect=_renderPixelAspect.value
 		cp._rendPickupFrames=_rendPickupFrames.text
---		cp._rendAtmosphere=_rendAtmosphere.checked
---		cp._renderEffects=_renderEffects.checked
---		cp._renderDisplacements=_renderDisplacements.checked
---		cp._rendColorCheck=_rendColorCheck.checked
---		cp._rendFieldRender=_rendFieldRender.checked
---		cp._rendHidden=_rendHidden.checked
---		cp._rendSimplifyAreaLights=_rendSimplifyAreaLights.checked
---		cp._rendForce2Side=_rendForce2Side.checked
---		cp._rendSuperBlack=_rendSuperBlack.checked
---		cp._useAdvancedLighting=_useAdvancedLighting.checked
---		cp._computeAdvancedLighting=_computeAdvancedLighting.checked
 		cp.timeOutputTgl=timeOutputTgl.checked
 		cp.outputSizeTgl=outputSizeTgl.checked
---		cp.optionsTgl=optionsTgl.checked
---		cp.advancedLightingTgl=advancedLightingTgl.checked
 		cp.fileTypeTgl=fileTypeTgl.checked
 		cp._fileType=_fileType.text
 		cp.renderTypeTgl=renderTypeTgl.checked
 		cp.renderType=renderTypeDDL.selected
 		cp.deepEXR=chkbtn_enableDeepOutput.checked
---		cp.autoUpdateName=autoUpdateName.checked
---		cp.disableFinalOutput=disableFinalOutput.checked
 		cp.cameraTgl=cameraTgl.checked
---		cp._CameraExport=_CameraExport.checked
 
 		if(cameraTgl.checked) then
 		(
@@ -1579,10 +1422,7 @@ rollout setPicker "Pick the Set"
 )
 
 
-
-
 -------------------------------------------------------------------------------------------------------   matPickerRollout   -------------------------------------------------------------------------------------------------------
-
 rollout matPicker "Pick the Material"
 (
 	dropDownList theSets
@@ -1687,7 +1527,6 @@ rcMenu rc_MainMenu
 		menuItem nukeSceneGenerate "Build scene from Nuke Script"
 		seperator s1
 		menuitem elementGenerate "Generate Default Elements"
---		menuItem elementAOSet "Set AO Element Size"
 	)
 
 	subMenu		"Help"
@@ -1718,28 +1557,12 @@ rcMenu rc_MainMenu
 		)
 	)
 
---	on elementAOSet picked do
---	(
---		utilityTools.rollout_setAOprops_Function()
---	)
-
-	on quickScripts picked do
-	(
-		LPM_Fun.quickScripts()
-	)
-
-	on helpMenuNew picked do
-	(
-		shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" ""
-	)
-
-	on renderDialog picked do
-	(
-		filein (LPM_Dir + "RenderRO.ms")
+	on quickScripts picked do( LPM_Fun.quickScripts() )
+	on helpMenuNew picked do( shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" "" )
+	on renderDialog picked do( filein (LPM_Dir + "RenderRO.ms")
 
 	)
 )
-
 
 -------------------------------------------------------------------------------------------------------   RootMenu   -------------------------------------------------------------------------------------------------------
 
@@ -1764,17 +1587,11 @@ rcMenu rc_RootMenu
 
 		for itGroup in LPM_Root.children where itGroup.type=="passGroup" do
 		(
-			for it in itGroup.children where it.type=="pass" do
-			(
-				it.active = true
-			)
+			for it in itGroup.children where it.type=="pass" do ( it.active = true)
 		)
 
+		for it in LPM_Root.children where it.type=="pass" do ( it.active = true	)
 
-		for it in LPM_Root.children where it.type=="pass" do
-		(
-			it.active = true
-		)
 		LPM_treeview_rollout.updateTV()
 
 	)
@@ -1784,17 +1601,10 @@ rcMenu rc_RootMenu
 
 		for itGroup in LPM_Root.children where itGroup.type=="passGroup" do
 		(
-			for it in itGroup.children where it.type=="pass" do
-			(
-				it.active = false
-			)
+			for it in itGroup.children where it.type=="pass" do ( it.active = false )
 		)
 
-
-		for it in LPM_Root.children where it.type=="pass" do
-		(
-			it.active = false
-		)
+		for it in LPM_Root.children where it.type=="pass" do ( it.active = false )
 		LPM_treeview_rollout.updateTV()
 
 	)
@@ -2116,47 +1926,6 @@ rcMenu rc_shotMenu
 		shellLaunch curPath ""
 	)
 
---	on viewRamPlayer picked do
---	(
---		rollout LPM_shotPicker "Ram Player"
---		(
---			local passArray=#()
---			local theShot
---
---			label shotLabel align:#left
---			dropdownlist passDDL
---
---			on LPM_shotPicker open do
---			(
---				theShot=LPM_treeview_rollout.tv.selectedNode.tag.value
---				shotLabel.text="Shot: "+(LPM_Fun.getName theShot.name)
---				passArray=for it in (LPM_FUn.getallchildren LPM_Root) where it.type=="pass" collect it
---				passDDL.items=for it in passArray collect
---				(
---
---					thePath=LPM_Fun.getPassPath LPM_Root it theShot:theShot elementName:"Beauty"
---
---					fileList= getfiles ((getFilenamePath thePath) + (getFileNameFile thePath) + "*" + (getFileNametype thePath))
---
---					if(fileList.count==0) then
---						(LPM_Fun.getname it.name) + " (Missing)"
---					else
---						(LPM_Fun.getname it.name)
---
---				)
---
---			)
---			on passDDL selected item do
---			(
---				thePath=LPM_Fun.getPassPath LPM_Root passArray[item] theShot:theShot elementName:"Beauty"
---				LPM_Fun.viewRamplayer thePath
---
---			)
---		)
---		createDialog LPM_shotPicker pos:(LPM_Fun.getRoPos LPM_shotPicker.width)
---
---	)
-
 	on selectPasses picked do
 	(
 		filein (LPM_Dir + "IncludePassesRO.ms")
@@ -2217,7 +1986,6 @@ rcMenu rc_shotMenu
 
 )
 
-
 -------------------------------------------------------------------------------------------------------   shotPassMenu   -------------------------------------------------------------------------------------------------------
 
 rcmenu rc_shotPassMenu
@@ -2239,9 +2007,7 @@ rcmenu rc_shotPassMenu
 	)
 )
 
-
 -------------------------------------------------------------------------------------------------------   PassMenu   -------------------------------------------------------------------------------------------------------
-
 rcMenu rc_PassMenu
 (
 	menuItem    previewThisPass "Render Preview 100%"
@@ -2632,11 +2398,7 @@ rcMenu rc_commonPropsMenu
 (
 	menuItem	editProps	"Edit..."
 	menuItem copyProps "Copy"
-
 	seperator sp1
---	menuItem grabTime "Grab Active Time"
---	menuItem grabCamera "Grab Active Camera"
---	seperator sp2
 	menuItem selectCamera "Select Camera"
 	seperator sp68
 	menuItem   removeProps "Delete"
@@ -2657,39 +2419,13 @@ rcMenu rc_commonPropsMenu
 			LPM_treeview_rollout.updateTV()
 		)
 	)
-	on editProps picked do
-	(
-		createDialog LPM_commonRollout pos:(LPM_Fun.getRoPos  LPM_commonRollout.width)
-	)
---	on grabtime picked do
---	(
---
---		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
---		cp.timeOutputTgl=true
---		cp._rendTimeType=3
---		cp._rendStart=animationRange.start
---		cp._rendEnd=animationRange.end
---		LPM_treeview_rollout.tv.selectedNode.text=LPM_Fun.generateCommonPropName cp
---	)
---	on grabCamera picked do
---	(
---		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
---		if(getActiveCamera()!=undefined) then
---		(
---			cp.cameraTgl=true
---			cp._Camera=getActiveCamera()
---			LPM_treeview_rollout.tv.selectedNode.text=LPM_Fun.generateCommonPropName cp
---		)
---		else
---			messagebox "The active node is not a camera"
---	)
+	on editProps picked do ( createDialog LPM_commonRollout pos:(LPM_Fun.getRoPos  LPM_commonRollout.width) )
+
 	on selectCamera picked do
 	(
 		cp=LPM_treeview_rollout.tv.selectedNode.tag.value
-		if(isvalidnode cp._Camera) then
-			select cp._Camera
+		if(isvalidnode cp._Camera) then(select cp._Camera)
 	)
-
 )
 
 rcMenu rc_AutoMaskMenu
@@ -2699,10 +2435,7 @@ rcMenu rc_AutoMaskMenu
 	seperator sp66re
 	menuItem    removeAutoMask "Delete"
 
-	on copyAutoMask picked do
-	(
-		LPM_treeview_rollout.copyNode = LPM_treeview_rollout.tv.selectedNode.tag.value
-	)
+	on copyAutoMask picked do ( LPM_treeview_rollout.copyNode = LPM_treeview_rollout.tv.selectedNode.tag.value )
 
 	on removeAutoMask picked do
 	(
@@ -2717,19 +2450,12 @@ rcMenu rc_AutoMaskMenu
 		)
 	)
 
-	on EditAutoMask picked do
-	(
-		LPM_treeview_rollout.EditAutoMask()
-	)
+	on EditAutoMask picked do ( LPM_treeview_rollout.EditAutoMask() )
 )
 
-
-
 -------------------------------------------------------------------------------------------------------   ObjectSetMenu   -------------------------------------------------------------------------------------------------------
-
 rcMenu rc_ObjectSetMenu
 (
-
 	menuItem   editSet "Edit..."
 	menuItem   editVraySet "Edit Vray..."
 	menuItem	copySet	"Copy"
@@ -2774,16 +2500,10 @@ rcMenu rc_ObjectSetMenu
 			(
 				TempLayer = LayerManager.newLayerFromName "VrPropertiesOverrideTempLayer"
 
-				if TempLayer == undefined then
-				(
-					TempLayer = LayerManager.getLayerFromName "VrPropertiesOverrideTempLayer"
-
-				)
+				if TempLayer == undefined then ( TempLayer = LayerManager.getLayerFromName "VrPropertiesOverrideTempLayer" )
 
 				theObjectSet=LPM_treeview_rollout.tv.selectedNode.tag.value
-
 				theBuffer=theObjectSet.userProp
-
 				newBox=box()
 				TempLayer.addnode newBox
 				newBox.name=theObjectSet.name + " Properties Override"
@@ -2797,22 +2517,14 @@ rcMenu rc_ObjectSetMenu
 				delete newBox
 				LayerManager.deleteLayerByName "VrPropertiesOverrideTempLayer"
 
-
 				theObjectSet.intP[9]=2
 			)
 		)
-
 	)
 
-	on copySetProps picked do
-	(
-		LPM_treeview_rollout.CopySetProps()
-	)
+	on copySetProps picked do ( LPM_treeview_rollout.CopySetProps() )
 
-	on PasteSetProps picked do
-	(
-		LPM_treeview_rollout.PasteSetProps()
-	)
+	on PasteSetProps picked do ( LPM_treeview_rollout.PasteSetProps() )
 
 	on clearAll picked do
 	(
@@ -2884,41 +2596,14 @@ rcMenu rc_ObjectSetMenu
 		)
 	)
 
-	on rc_ObjectSetMenu open do
-	(
-		addNamedSet.enabled=getNumNamedSelSets()>0
-	)
-
-	on addLayers picked do
-	(
-		LPM_treeview_rollout.addVisibleLayers()
-	)
-	on addMats picked do
-	(
-		LPM_treeview_rollout.addMats()
-	)
-
-	on addWildCard picked do
-	(
-		LPM_treeview_rollout.addWildCard()
-	)
-	on addNamedSet picked do
-	(
-		LPM_treeview_rollout.addNamedSet()
-	)
-
-	on addObjects picked do
-	(
-		LPM_treeview_rollout.addSelectedObjects()
-	)
-	on copySet picked do
-	(
-		LPM_treeview_rollout.copyNode=LPM_treeview_rollout.tv.selectedNode.tag.value
-	)
-	on addGroups picked do
-	(
-		LPM_treeview_rollout.addSelectedGroups()
-	)
+	on rc_ObjectSetMenu 	open 	do ( addNamedSet.enabled=getNumNamedSelSets()>0 )
+	on addLayers 			picked 	do ( LPM_treeview_rollout.addVisibleLayers() )
+	on addMats 				picked 	do ( LPM_treeview_rollout.addMats())
+	on addWildCard 			picked 	do ( LPM_treeview_rollout.addWildCard())
+	on addNamedSet 			picked 	do ( LPM_treeview_rollout.addNamedSet())
+	on addObjects 			picked 	do ( LPM_treeview_rollout.addSelectedObjects() )
+	on copySet 				picked 	do ( LPM_treeview_rollout.copyNode=LPM_treeview_rollout.tv.selectedNode.tag.value	)
+	on addGroups 			picked 	do ( LPM_treeview_rollout.addSelectedGroups() )
 
 	on deleteSet picked do
 	(
@@ -2962,22 +2647,18 @@ rcMenu rc_ObjectSetMenu
 
 		join tmpCollection objSet.nodes
 
-		if(objSet.type=="objectSet") then
-			theSelection=for it in tmpCollection where ((((superClassof it) ==geometryClass) or ((superClassof it) ==shape)) and (not (iskindof it particleGroup)))  collect it
-		else
-			theSelection=for it in tmpCollection where (((superClassof it) ==light) and(not(iskindof it target)))collect it
-
+		if(objSet.type=="objectSet")
+		then( theSelection=for it in tmpCollection where ((((superClassof it) ==geometryClass) or ((superClassof it) ==shape)) and (not (iskindof it particleGroup)))  collect it )
+		else( theSelection=for it in tmpCollection where (((superClassof it) ==light) and(not(iskindof it target)))collect it)
 
 		try (select theSelection) catch()
 	)
 
 	on editSet picked do
 	(
-		if(LPM_treeview_rollout.tv.selectedNode.tag.value.type=="objectSet")then
-			createDialog LPM_objectSetProps 194 403 pos:(LPM_Fun.getRoPos  194)
-		else
-			createDialog lightSetProps  pos:(LPM_Fun.getRoPos  194)
-
+		if(LPM_treeview_rollout.tv.selectedNode.tag.value.type=="objectSet")
+		then(createDialog LPM_objectSetProps 194 403 pos:(LPM_Fun.getRoPos  194))
+		else(createDialog lightSetProps  pos:(LPM_Fun.getRoPos  194))
 	)
 )
 
@@ -3075,10 +2756,7 @@ rcMenu rc_layerMenu
 		theLayer=LayerManager.getLayerFromName theLayerName
 
 		theSelection=getCurrentSelection()
-		for it in theSelection do
-		(
-			theLayer.addNode it
-		)
+		for it in theSelection do ( theLayer.addNode it )
 	)
 	on makeActiveLayer picked do
 	(
@@ -3092,14 +2770,8 @@ rcMenu rc_layerMenu
 		theLayerName=(LPM_treeview_rollout.tv.selectedNode.tag.value).leaf
 		theLayer=LayerManager.getLayerFromName theLayerName
 		theLayer.select on
-		--print (refs.dependents theLayer)
-		--select
-
-
-
 	)
 )
-
 
 -------------------------------------------------------------------------------------------------------   wildCardMenu   -------------------------------------------------------------------------------------------------------
 
@@ -3108,10 +2780,7 @@ rcMenu rc_wildCardMenu
 	menuItem edit "Edit..."
 	menuItem	removeLayer	"Delete"
 
-	on edit picked do
-	(
-		createDialog wildCardRO pos:(LPM_Fun.getRoPos  wildCardRO.width)
-	)
+	on edit picked do ( createDialog wildCardRO pos:(LPM_Fun.getRoPos  wildCardRO.width))
 
 	on removeLayer picked do
 	(

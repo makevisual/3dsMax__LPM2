@@ -32,6 +32,7 @@ global LPM_BackColor
 global LPM_FontColor
 global LPM_ContinueLoad
 
+global LPM_IdiotChecksEnabled 				-- Dabelow	
 global LPM_VersionNumber 					-- Dabelow	
 global LPM_SMTDSettings 					-- Dabelow
 global LPM_NukeAPI 							-- Dabelow

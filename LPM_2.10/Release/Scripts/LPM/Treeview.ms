@@ -111,6 +111,16 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	struct leafType (type, leaf, index, active)
 
+	local processorList = #(
+	"Render - Local",
+	"Render - Submit to Deadline 10",
+	"Render - Submit to Deadline 10 - Skip Checks",
+	"Render - TyPreview",
+	"Export - Bake 3dsMax Files",
+	"Export - Nuke Scene",
+	"Export - After Effects Camera"
+	)
+
 	edittext 		passDDL pos:[-3,2] width:50 height:30 readonly:true
 	checkbutton 	chkbtn_HideRFW "" height:10 width:15 pos:[120,22] tooltip:"Hide Rendered Frame Window" visible:LPM_ShowSkipButton  images:#(LPM_iconPath+"HideFrameWindow_btn.bmp",undefined,1,1,1,1,1,true)
 	checkbutton 	chkbtn_SkipExistingImages "" height:10 width:15 pos:[135,22] tooltip:"Skip Existing Images" visible:LPM_ShowSkipButton  images:#(LPM_iconPath+"Skip_existing_btn.bmp",undefined,1,1,1,1,1,true)
@@ -120,18 +130,23 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
  	dropDownList 	previewSizeDDL "" pos:[160,32] items:#("10","25","50","75","100","150","200") width:45 -- visible:false-----------------------------------------------------------------------------------------------
 	dropDownList 	previewTypeDDL pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp") -- visible:false--------------------------------------------------------------------------------------
  	dropDownList 	cameraDDL "" pos:[0,32] width:100 items:#("-----------------------") -- visible:false----------------------------------------------------------------------------------------------------------------
-	button 			tyPreviewButton "TyPreview" pos:[40,200] height:22 width:60 enabled:false tooltip:"TODO:"
-	button 			nukeRenderButton "NukeFile" pos:[40,200] height:22 width:55 enabled:false tooltip:"TODO:"
-	button 			maxFileRenderButton "Bake Files" pos:[40,200] height:22 width:55 enabled:true tooltip:"TODO:"
-	button 			localRenderButton "Local" pos:[40,200] height:22 width:55 enabled:true tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
-	button 			networkRenderButton "Deadline" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
-	checkbutton 	skipIdiotChecks "Skip IC" pos:[165,200] height:22 width:40 tooltip:"When enabled, Idiot checks will be skipped with a time penalty"
+
+	dotNetControl 	tv "TreeView"  pos:[0,54] align:#left
+	dotNetControl 	editBox "TextBox"  pos:[0,70] height:20 width:120
+	dotNetControl 	OutputPathDDL "TextBox"  pos:[0,60] align:#left
 	button 			setRenderDirButton "Set" pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
 	button 			openRenderDirButton "..." pos:[202,200] height:21 width:17 tooltip:"Opens the render directory"
 
-	dotNetControl tv "TreeView"  pos:[0,54] align:#left
-	dotNetControl editBox "TextBox"  pos:[0,70] height:20 width:120
-	dotNetControl OutputPathDDL "TextBox"  pos:[0,60] align:#left
+	dropDownList    ddl_selectProcessor "" items:processorList pos:[40,200] width:200
+	button 			btn_execute 		" Execute " pos:[40,200] width:120
+
+--	button 			tyPreviewButton "TyPreview" pos:[40,200] height:22 width:60 enabled:false tooltip:"TODO:"
+--	button 			nukeRenderButton "NukeFile" pos:[40,200] height:22 width:55 enabled:false tooltip:"TODO:"
+--	button 			maxFileRenderButton "Bake Files" pos:[40,200] height:22 width:55 enabled:true tooltip:"TODO:"
+--	button 			localRenderButton "Local" pos:[40,200] height:22 width:55 enabled:true tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+--	button 			networkRenderButton "Deadline" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
+--	checkbutton 	skipIdiotChecks "Skip IC" pos:[165,200] height:22 width:40 tooltip:"When enabled, Idiot checks will be skipped with a time penalty"
+
 
 	fn FreezeWindow =
 	(
@@ -144,9 +159,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- TODO: Turn these back on when functionality added
 		-- tyPreviewButton.enabled = false
 		-- nukeRenderButton.enabled = false 
-		maxFileRenderButton.enabled = false 
-		localRenderButton.enabled = false
-		networkRenderButton.enabled = false
+		-- maxFileRenderButton.enabled = false 
+		-- localRenderButton.enabled = false
+		-- networkRenderButton.enabled = false
 	)
 
 	fn UnFreezeWindow =
@@ -160,17 +175,17 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		-- TODO: Turn these back on when functionality added
 		-- tyPreviewButton.enabled = true 
 		-- nukeRenderButton.enabled = true
-		maxFileRenderButton.enabled = true
-		localRenderButton.enabled = true
-		networkRenderButton.enabled = true
+		-- maxFileRenderButton.enabled = true
+		-- localRenderButton.enabled = true
+		-- networkRenderButton.enabled = true
 
-		case LPM_Root.renderType of
-		(
-			1: networkRenderButton.enabled=true
-			2: networkRenderButton.enabled=false
-			3: networkRenderButton.enabled=true
-			4: networkRenderButton.enabled=false
-		)
+		-- case LPM_Root.renderType of
+		-- (
+		-- 	1: networkRenderButton.enabled=true
+		-- 	2: networkRenderButton.enabled=false
+		-- 	3: networkRenderButton.enabled=true
+		-- 	4: networkRenderButton.enabled=false
+		-- )
 	)
 
 	fn initTreeView tv=
@@ -807,17 +822,17 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		tv.endUpdate()
 	)
 
-	fn updateRenderButtonsState=
-	(
-
-		case LPM_Root.renderType of
-		(
-			1: networkRenderButton.enabled=true
-			2: networkRenderButton.enabled=false
-			3: networkRenderButton.enabled=true
-			4: networkRenderButton.enabled=false
-		)
-	)
+--	fn updateRenderButtonsState=
+--	(
+--
+--		case LPM_Root.renderType of
+--		(
+--			1: networkRenderButton.enabled=true
+--			2: networkRenderButton.enabled=false
+--			3: networkRenderButton.enabled=true
+--			4: networkRenderButton.enabled=false
+--		)
+--	)
 
 	fn updateRFWandSkip =
 	(
@@ -1109,16 +1124,21 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		xSize=((theSize.x))
 		yPos=((theSize.y - 48) as integer)
 
-		tyPreviewButton.pos=[xSize-340,yPos+25]
-		nukeRenderButton.pos=[xSize-280,yPos+25]
-		maxFileRenderButton.pos=[xSize-225,yPos+25]
-		localRenderButton.pos=[xSize-170,yPos+25]
-		networkRenderButton.pos=[xSize-110,yPos+25]
-		skipIdiotChecks.pos=[xSize-40,yPos+25]
+--		tyPreviewButton.pos=[xSize-340,yPos+25]
+--		nukeRenderButton.pos=[xSize-280,yPos+25]
+--		maxFileRenderButton.pos=[xSize-225,yPos+25]
+--		localRenderButton.pos=[xSize-170,yPos+25]
+--		networkRenderButton.pos=[xSize-110,yPos+25]
+--		skipIdiotChecks.pos=[xSize-40,yPos+25]
 
-		openRenderDirButton.pos=[xSize-17,yPos+1]
-		setRenderDirButton.pos=[xSize-38,yPos+1]
-		OutputPathDDL.width=xSize-40
+		ddl_selectProcessor.pos=[0,yPos+25]
+		ddl_selectProcessor.width=(xSize-123)
+
+		btn_execute.pos=[(xSize-123),(yPos+25)]
+
+		openRenderDirButton.pos=[xSize-20,yPos+1]
+		setRenderDirButton.pos=[xSize-40,yPos+1]
+		OutputPathDDL.width=xSize-42
 		OutputPathDDL.pos = [0,yPos]
 
 		passDDL.width=xSize-32
@@ -1437,11 +1457,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		LPM_Fun.QuickScripts();
 	)
 
-	on localRenderButton pressed do
-	(
-		LPM_Fun.setWhoToRenderByRenderType()
-		LPM_Fun.localRenderSubmit()
-	)
 
 	on setRenderDirButton pressed do
 	(
@@ -1456,17 +1471,80 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		shellLaunch LPM_Root.rootDir ""
 	)
 
-	on networkRenderButton pressed do
+
+
+	-- TOOD: Change this to a dropdown selection
+
+	on btn_execute pressed do 
 	(
-		LPM_Fun.setWhoToRenderByRenderType()
-		filein (LPM_Dir+@"plugins\Deadline10.0.ms")
+		curMode = ddl_selectProcessor.selected
+		print( curMode )
+
+		if curMode == "Render - Local"
+		then
+		(
+			LPM_Fun.setWhoToRenderByRenderType()
+			LPM_Fun.localRenderSubmit()
+		)
+
+		if curMode == "Render - Submit to Deadline 10"
+		then
+		(
+			LPM_IdiotChecksEnabled = True
+			LPM_Fun.setWhoToRenderByRenderType()
+			filein (LPM_Dir+@"plugins\Deadline10.0.ms")
+		)
+
+		if curMode == "Render - Submit to Deadline 10 - Skip Checks"
+		then
+		(
+			LPM_IdiotChecksEnabled = False
+			LPM_Fun.setWhoToRenderByRenderType()
+			filein (LPM_Dir+@"plugins\Deadline10.0.ms")
+		)
+
+		if curMode == "Render - TyPreview"
+		then
+		(
+			messagebox(" Typreview not implemented yet")
+		)
+
+		if curMode == "Export - Bake 3dsMax Files"
+		then
+		(
+			LPM_Fun.setWhoToRenderByRenderType()
+			filein (LPM_Dir+@"plugins\maxFileSubmit.ms")
+		)
+
+		if curMode == "Export - Nuke Scene"
+		then
+		(
+			messagebox(" Nuke Export not implemented yet")
+		)
+
+		if curMode == "Export - After Effects Camera"		
+		then
+		(
+			messagebox(" AE Export not implemented yet")
+		)
 	)
 
-	on maxFileRenderButton pressed do
-	(
-		LPM_Fun.setWhoToRenderByRenderType()
-		filein (LPM_Dir+@"plugins\maxFileSubmit.ms")
-	)
+--	on localRenderButton pressed do
+--	(
+--		LPM_Fun.setWhoToRenderByRenderType()
+--		LPM_Fun.localRenderSubmit()
+--	)
+--	on networkRenderButton pressed do
+--	(
+--		LPM_Fun.setWhoToRenderByRenderType()
+--		filein (LPM_Dir+@"plugins\Deadline10.0.ms")
+--	)
+--	on maxFileRenderButton pressed do
+--	(
+--		LPM_Fun.setWhoToRenderByRenderType()
+--		filein (LPM_Dir+@"plugins\maxFileSubmit.ms")
+--	)
+
 
 	on chkbtn_HideRFW changed state do
 	(
@@ -2740,7 +2818,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			)
 		)
 
-		updateRenderButtonsState()
+--		updateRenderButtonsState()
 		updateRFWandSkip()
 		LPM_Resize (getDialogSize LPM_Treeview_Rollout)
 	)

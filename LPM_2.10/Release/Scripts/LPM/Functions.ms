@@ -2059,31 +2059,6 @@ fn getPreviewFile thePass=
 ),
 
 
---fn viewRamPlayer thePath=
---(
---	try(
---
---		if(thePath!=undefined) then
---		(
---			fileList= getfiles ((getFilenamePath thePath) + (getFileNameFile thePath) + "*" + (getFileNametype thePath))
---			if(fileList.count!= 0) then
---			(
---				out=createFile ((getdir #preview) + "\\LPM_IFL.ifl")
---				if(out!=undefined) then
---				(
---					for it in fileList do format "%\n" it to:out
---					close out
---					ramplayer ((getdir #preview) + "\\LPM_IFL.ifl") ""
---				)
---			)
---			else
---			(
---				throw "Files not found."
---			)
---		)
---	) catch (messagebox (getcurrentexception()) title:"RamPlayer Load")
---),
-
 fn quickScripts=
 (
 	global LPM_QuickScripts

@@ -1,7 +1,4 @@
---print ( timestamp() )
-
 global SMTDSettings, SMTDFunctions, SMTDIdiotCheck, SMTDLPMInterface, LPM_deadlineInfo
-
 
 -- This used to only be a part of the LPM Deadline submitter, but now it is making its way around a bit more, need to figure out a better solution
 -- Currently it in Deadline10.0.ms in LPM and P4DS_deadlineInfoClass.ms 
@@ -98,12 +95,7 @@ struct LPM_DeadlineAPI
   				button btn_setLimits 						"Set limits" 					align:#left width:88 enabled:true 								offset:[182,-27]												visible:false
 	  			button btn_setLimitsClear 					"X" 							align:#left width:20 enabled:true 								offset:[270,-26]												visible:false
 				checkbutton btn_submitSuspended 			"      Submit as SUSPENDED " 	align:#left width:291 height:18 								offset:[0, 0 ] 													visible:false
---  				checkbox chk_overrideFrameRange 			" Override Framerange:" 																		offset:[4,0]													visible:false
---	  			spinner spn_overrideFrameRange1 			"" 								range:[-10000,10000,0] type:#integer width:65 enabled:false 	offset:[-40,-18]												visible:false
---  				spinner spn_overrideFrameRange2 			"to " 							range:[-10000,10000,0] type:#integer width:65 enabled:false	 	offset:[48,-21] 												visible:false
  				dropdownList ddl_SubmitExternalFilesMode 	"" 								width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Do NOT copy Textures to Repository", " Copy LOCAL Textures to Repository", " Copy ALL Textures to Repository")
-
- 				-- Frame buffer mode UI disabled for vray5
 				dropdownList ddl_frameBufferMode 			""						 		width:289 height:21 											offset:[0,0] 													visible:false 			items:#(" Use CURRENT frame buffer ", " Use VRAY Frame Buffer ", " Use 3DSMAX Frame Buffer ")
  				checkbox chk_renderElementsExr				" Encode Elements in .EXR" 			checked:true			offset:[-1,-20]		visible:false 	enabled:false
 				checkbox chk_IgnoreFiles 					" Ignore Missing External Files"	width:166 height:15 	offset:[-1,0]		visible:false
@@ -120,9 +112,6 @@ struct LPM_DeadlineAPI
  				spinner spn_chunkSize 					"" 											width:50 height:16 range:[1,1000,1] type:#integer 					offset:[50,-20]												visible:false
  				dropdownList ddl_OutOfOrderMethod 		"" 											width:200 height:21 												offset:[2,0]												visible:false 		items:#("First To Last (Forward)", "Every Nth, Then Forward", "Every Nth - Block Fill", "Every Nth - Half Raster Refine", "Last To First (Reverse)", "From Both Ends", "From Center", "From Both Ends And From Center", "Random")
  				spinner spn_outOfOrderStep 				"Nth:" 										width:70 height:16 range:[2,1000,10] type:#integer fieldwidth:40 	offset:[3,-25] 	enabled:false								visible:false
-
--- 			GroupBox grp_integration "Integration"  align:#left width:304 height:48 							offset:[-7,15]																										visible:false
---				dropdownList ddl_autodraftSelection 	"" 								 width:289 height:21 											offset:[0 , ( ( grp_integration.height * -1 )  + 15 ) ]						visible:false  		items:#(" Error loading AUTODRAFT Templates " )
 
  			GroupBox grp_utilities 	"Utilities" 	align:#left width:305 height:90 							offset:[-7,10]																					visible:false
  				button btn_idiotCheck 					"Perform Idiot Check" 			align:#left across:3 height:20 width:294 	offset:[0 , ( ( grp_utilities.height * -1 )  + 15 ) ] 						visible:false
@@ -161,13 +150,13 @@ struct LPM_DeadlineAPI
 				SMTDSettings.SubmitAsSuspended 					= LPM_Fun.GetIni "Deadline Settings" "SubmitAsSuspended" booleanClass false
 				SMTDSettings.IgnoreMissingExternalFiles 		= LPM_Fun.GetIni "Deadline Settings" "IgnoreMissingExternalFiles" booleanClass true
 				SMTDSettings.IgnoreMissingDLLs 					= LPM_Fun.GetIni "Deadline Settings" "IgnoreMissingDLLs" booleanClass false
+
 				-- CUSTOM SETTINGS
 				LPM_deadlineInfo.sticky_holdOnSubmit 			= LPM_Fun.GetIni "Deadline Settings" "HoldOnSubmit" booleanClass false
 				LPM_deadlineInfo.sticky_frameBufferMode			= LPM_Fun.GetIni "Deadline Settings" "FrameBufferMode" integer 1
 				LPM_deadlineInfo.sticky_renderElementsExr	 	= LPM_Fun.GetIni "Deadline Settings" "RenderElementsToEXR" booleanClass true
-				-- Removed Submit as Suspended as sticky upon user consensus 
-				LPM_deadlineInfo.sticky_submitAsSuspended 		= false
-				-- LPM_deadlineInfo.sticky_submitAsSuspended 		= LPM_Fun.GetIni "Deadline Settings" "SubmitAsSuspended" booleanClass false
+				LPM_deadlineInfo.sticky_submitAsSuspended 		= false 				-- Removed Submit as Suspended as sticky upon user consensus 
+
 				-- UI UPDATES
 				spn_chunkSize.value 							= SMTDSettings.ChunkSize
 				local theVal 									= findItem #(#normal, #nth, #NthBlock, #NthRasterRefine, #reverse, #fromBothEnds, #FromCenter, #fromBothEndsAndCenter, #random) SMTDSettings.OutOfOrderMethod
@@ -182,8 +171,6 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.submit_recoveryHold			= LPM_deadlineInfo.sticky_holdOnSubmit
 				ddl_frameBufferMode.selection 					= LPM_deadlineInfo.sticky_frameBufferMode
 				chk_renderElementsExr.checked 					= true
-				-- Removed Submit as Suspended as sticky upon user consensus 
-				-- btn_submitSuspended.checked 					= LPM_deadlineInfo.sticky_submitAsSuspended
 				btn_submitSuspended.checked 					= false
 			)
 
@@ -237,9 +224,6 @@ struct LPM_DeadlineAPI
 					LPM_DeadlineSubmitRo.btn_setLimits.visible = state
 					LPM_DeadlineSubmitRo.btn_setLimitsClear.visible = state
 					LPM_DeadlineSubmitRo.btn_submitSuspended.visible = state
---					LPM_DeadlineSubmitRo.chk_overrideFrameRange.visible = state
---					LPM_DeadlineSubmitRo.spn_overrideFrameRange1.visible = state
---					LPM_DeadlineSubmitRo.spn_overrideFrameRange2.visible = state
 					LPM_DeadlineSubmitRo.ddl_SubmitExternalFilesMode.visible = state
 					LPM_DeadlineSubmitRo.ddl_frameBufferMode.visible =false -- = state --TODO:Better way to handle this for vray5 pipeline?
 					LPM_DeadlineSubmitRo.chk_renderElementsExr.visible = state
@@ -256,8 +240,6 @@ struct LPM_DeadlineAPI
 					LPM_DeadlineSubmitRo.spn_chunkSize.visible = state
 					LPM_DeadlineSubmitRo.ddl_OutOfOrderMethod.visible = state
 					LPM_DeadlineSubmitRo.spn_outOfOrderStep.visible = state
---				LPM_DeadlineSubmitRo.grp_integration.visible = state
---					LPM_DeadlineSubmitRo.ddl_autodraftSelection.visible = state
 				LPM_DeadlineSubmitRo.grp_utilities.visible = state
 					LPM_DeadlineSubmitRo.btn_idiotCheck.visible = state
 					LPM_DeadlineSubmitRo.btn_removeMissingPlugins.visible = state
@@ -461,14 +443,11 @@ struct LPM_DeadlineAPI
 			)
 
 			-- Prompts user to delete missing maps
-
 			fn RemoveMissingMaps =
 			(
 
 				ATSOps.CheckNetworkPaths = true -- Turns on status checking for network filepaths
-
 				atsops.Refresh() -- Updates Asset Tracker
-
 				ATSOps.GetFilesByFileSystemStatus #Missing &nullList -- Builds list of assets with "Missing" Status in Asset Tracker
 
 				if nullList.count > 0 do
@@ -499,12 +478,9 @@ struct LPM_DeadlineAPI
 				)
 			)
 
-
-
 			-- Collect mmissing plugin instances
 			fn collectMissingPluginInstances =
 			(
-
 		 		LPM_deadlineInfo.plugins_missingClasses		= getMissingPluginClasses()
 		 		LPM_deadlineInfo.plugins_missingInstances	= getMissingPluginInstances()
 			)
@@ -592,14 +568,11 @@ struct LPM_DeadlineAPI
 							)
 							else ()
 
-
 							append resultsArray result
 						)
 					)
 
 					-- TODO: Find a better saftey net around failed checks
-
-					--log_append curCheckResult[4] 3
 					try ( log_append curCheckResult[4] 3 )
 					catch ( log_append "Error running idiot check" 4 )
 				)
@@ -611,7 +584,6 @@ struct LPM_DeadlineAPI
 				-- Store for later and return the checks
 				LPM_SMTDSettings.idiotCheckReports = resultsArray
 				return resultsArray
-
 			)
 
 			-- Adds a time penalty to skipping the idiot checks
@@ -721,28 +693,6 @@ struct LPM_DeadlineAPI
 		 		)
 			)
 
-			-- enables or disables the framerange override spinners
---			fn ui_update_frameRangeEnable arg =
---			(
---				spn_overrideFrameRange1.enabled 	= arg
---				spn_overrideFrameRange2.enabled 	= arg
---			)
-
---			-- updates the framerange override spinners to never make invalid numbers
---			fn ui_update_frameRangeVal arg_mode =
---			(
---				if arg_mode == 1 then
---				(
---					if ( spn_overrideFrameRange1.value >= spn_overrideFrameRange2.value ) then ( spn_overrideFrameRange2.value = spn_overrideFrameRange1.value )
---				)
---				if arg_mode == 2 then
---				(
---					if ( spn_overrideFrameRange2.value <= spn_overrideFrameRange1.value ) then ( spn_overrideFrameRange1.value = spn_overrideFrameRange2.value )
---				)
---
---				LPM_deadlineInfo.framerange_overrideRange = [ ( spn_overrideFrameRange1.value as integer ), ( spn_overrideFrameRange2.value as integer ) ]
---			)
-
 			-- updates UI batch field with name field
 			fn ui_update_nameToBatch =
 			(
@@ -842,15 +792,6 @@ struct LPM_DeadlineAPI
 				LPM_deadlineInfo.dl_groupChosen = ""
 			)
 
---			-- updates UI draft templates dropdown
---			fn ui_update_draft_templateNames =
---			(
---				templatesPlusNone = join #("Choose AUTODRAFT preset ") LPM_deadlineInfo.draft_templateNames
---				ddl_autodraftSelection.items = templatesPlusNone
---				ddl_autodraftSelection.selection = 1
--- 				LPM_deadlineInfo.draft_templateChosen = ""
---			)
-
 			-- re - collects the renderable passes from LPM, and passes them to the submitter
  			fn ui_update_submit =
 			(
@@ -900,27 +841,12 @@ struct LPM_DeadlineAPI
 			-- Updates various UI items
  			fn ui_update =
  			(
- 				-- Update job name
  				ui_update_jobName()
-
- 				-- Update job comment
  				ui_update_jobComment()
-
- 				-- Update job batch name
 				ui_update_jobBatchName()
-
- 				-- Update user
  				ui_update_user()
-
- 				-- Update priority
 				ui_update_priority()
-
- 				-- Update groups
 				ui_update_groups()
-
- 				-- Update AUTODRAFT presets
--- 				ui_update_draft_templateNames()
-
 			)
 
  			-- Creates a rollout that sets the active limits
@@ -992,9 +918,13 @@ struct LPM_DeadlineAPI
 	 				ui_update()
 
 	 				-- Perform Idiot checks, or skip if enabled
-	 				if LPM_treeview_rollout.skipIdiotChecks.checked
+	 				if LPM_IdiotChecksEnabled = False
 	 				then ( idiotCheck_skip() )
  					else ( idiotCheck_run() )
+ 					
+--	 				if LPM_treeview_rollout.skipIdiotChecks.checked
+--	 				then ( idiotCheck_skip() )
+-- 					else ( idiotCheck_run() )
  	
 	 				-- Move Log to bottom of Dialog
 	 				submitLog.pos=[ 3 , 630 ]
@@ -1028,11 +958,7 @@ struct LPM_DeadlineAPI
 				SMTDSettings.SubmitAsSuspended 				= LPM_deadlineInfo.sticky_submitAsSuspended
 				SMTDSettings.JobIsInterruptible 			= LPM_deadlineInfo.dl_interruptible
 				SMTDSettings.TaskTimeoutEnabled 			= LPM_deadlineInfo.dl_taskTimeoutEnabled
-				--SMTDSettings.TaskTimeout		 			= LPM_deadlineInfo.dl_taskTimeoutSeconds
---				SMTDSettings.DraftTemplate 					= LPM_deadlineInfo.draft_templateChosen
 				LPM_deadlineInfo.submit_recoveryHold		= LPM_deadlineInfo.sticky_holdOnSubmit
-
-				-- LPM_deadlineInfo.submit_viewToRenderLock = rendUseActiveView
 
 				-- Set override range hold
 				if LPM_deadlineInfo.framerange_overrideEnabled
@@ -1042,15 +968,6 @@ struct LPM_DeadlineAPI
 					animEnd 	= (animationRange.end as integer)/TicksPerFrame
 					LPM_deadlineInfo.framerange_overrideRange_HOLD	= #( animStart, animEnd)
 				)
- 			)
-
- 			fn optimize_manually =
- 			(
-				--lb_objects = getclassinstances leafblower
-				--for lb_object in lb_objects do
-				--(
-				--	lb_object.globals_enable = ( theDrop.selection - 1 )
-				--)
  			)
 
  			-- Function to try and recover the scene if LPM crashed on submission, and if not, it reports it to the user
@@ -1101,13 +1018,11 @@ struct LPM_DeadlineAPI
 
  			fn submit_preOptimize =
  			(
-
  				-- print "Submit Pre Optimze"
  			)
 
 			fn submit_preAction =
 			(
-
 				-- print "Submit Pre Action"
 
 				-- Set Timestamp and Alert to starting submission
@@ -1128,7 +1043,6 @@ struct LPM_DeadlineAPI
 				-- There is sometimes an error when launching LPM and skipping the IC before ever doing a deadline render, that can cause a crash - hence the try catch
 				try( idiotCheck_logReports LPM_SMTDSettings.idiotCheckReports ) catch()
 
-
 				-- Perform a hold if desired
 				if LPM_deadlineInfo.submit_recoveryHold then
 				(
@@ -1136,7 +1050,6 @@ struct LPM_DeadlineAPI
 					holdMaxFile()
 				)
 				else()
-
 
 				SMTDLPMInterface.prg_submitProgress.value = 0
 				--rendUseActiveView = true
@@ -1163,50 +1076,16 @@ struct LPM_DeadlineAPI
 					--Pre render action
 					SMTDLPMInterface.prg_submitProgress2.value=10
 
-					-- TODO: This is where to start looking for the LOCAL RENDER button frame range fix
 					LPM_Render.fnPreRenderAction renderCollect[i][1] renderCollect[i][2]
 					thePass=renderCollect[i][1]
 					theShot=renderCollect[i][2]
-
-					--local reMgr = maxOps.getCurRenderElementMgr()
-					--stickyElementsActive = reMgr.GetElementsActive()
-
 					stickySMTDSettings = copy SMTDSettings
-
 					SMTDLPMInterface.prg_submitProgress2.value=20
 
-					-- Modify pass for any deadline specific overrides
 					try
 					(
-						-- Name the Job
 						TmpPass = renderCollect[i][1]
-
-						-- Disabled the nuke camera export in here, and moved it into the nukeExport operator TODO:
-						-- try
-						-- (
-						-- 	if theShot.children[1].commonProps.cameraTgl == True then
-						-- 	(
-						-- 		if theShot.children[1].commonProps._CameraExport == true then
-						-- 		(
-						-- 			nukeEm_GetSettings theShot
-						-- 			nukeEm_CameraExport (LPM_Fun.getName renderCollect[i][2].name)
-						-- 			SMTDLPMInterface.log_append ("Exporting Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 4
-						-- 			if theShot.children[1].commonProps._rendTimrreType == 4 then
-						-- 			(
-						-- 				SMTDLPMInterface.log_append ("Cannot Render in \"Frames\". Using \"Range\" Instead ") 1
-						--
-						-- 			)
-						-- 		)
-						-- 	)
-						-- )
-						-- catch(SMTDLPMInterface.log_append ("Failed to Export Nuke Camera: " + (LPM_Fun.getName renderCollect[i][2].name)) 1)
-
 						TmpPassName = (LPM_Fun.getName TmpPass.name)
-
---						if TmpPass.isAdjustment and (TmpPass.AdjustmentFor != undefined) then
---						(
---							TmpPassName = "["+(LPM_Fun.getName (TmpPass.AdjustmentFor.name)) + "]" + TmpPassName
---						)
 
 						if (theShot==undefined) then
 						(
@@ -1218,7 +1097,6 @@ struct LPM_DeadlineAPI
 						)
 
 						-- Deadline LPM OVERRIDE settings
-
 						if LPM_SMTDSettings.active then
 						(
 							-- Priority Override
@@ -1313,9 +1191,7 @@ struct LPM_DeadlineAPI
 
 					SMTDLPMInterface.prg_submitProgress2.value=100
 					log_append  ("time (s) " +((timeStamp() - ts2)/1000.000) as string ) 4
-					
 				)
-
 
 				try
 				(
@@ -1331,25 +1207,17 @@ struct LPM_DeadlineAPI
 
 				)
 				catch()
-				-- 				try(destroydialog LPM_DeadlineSubmitRo)catch()
 			)
-
-
 
  			fn submit_postOptimize =
  			(
-
  				-- print "Submit Post Optimze"
-
  			)
-
 
  			-- Restore the scene to pre Submission state
 			fn submit_postAction =
 			(
 				-- print "Submit Post Action"
-
-				-- rendUseActiveView = LPM_deadlineInfo.submit_viewToRenderLock
 
 				log_append "Perfoming Scene post submit actions" 4
 
@@ -1391,10 +1259,7 @@ struct LPM_DeadlineAPI
 
 				-- Re-Enable viepowrts and editing
 				SMTDLPMInterface.submit_postAction()
-
 			)
-
-
 
 			-- Event handler for removing missing plugins
 			on btn_removeMissingPlugins pressed do
@@ -1411,7 +1276,6 @@ struct LPM_DeadlineAPI
 				RemoveMissingMaps()
 			)
 
-
 			-- Event handler for running the idiot checks
 			on btn_idiotCheck pressed do
 			(
@@ -1422,21 +1286,18 @@ struct LPM_DeadlineAPI
 			-- Event handler for re-evaluating the tasks from LPM
 			on btn_submitReEval pressed do
 			(
-
 				ui_update_submit()
 			)
 
 			-- Event handler for setting if max restarts between tasks
 			on chk_RestartMax changed state do
 			(
-
 				SMTDSettings.RestartMax = state
 			)
 
 			-- Event handler for setting task size ( in frames )
 			on spn_chunkSize changed state do
 			(
-
 				SMTDSettings.ChunkSize = state
 			)
 
@@ -1465,7 +1326,6 @@ struct LPM_DeadlineAPI
 			-- Event handler for enabling or disabling task timeout
  			on chk_autoStartupTimeout changed state do
  			(
-
 				LPM_deadlineInfo.dl_taskTimeoutEnabled = state
 				spn_autoStartupTimeout.enabled = state
  			)
@@ -1473,14 +1333,12 @@ struct LPM_DeadlineAPI
  			-- Event handler for setting the task startup timeout duration
 	 		on spn_autoStartupTimeout changed state do
 	 		(
-
 	 			LPM_deadlineInfo.dl_taskTimeoutSeconds = ( state as string )
 	 		)
 
 			-- Event handler for setting if the job is interuptable or not
 			on chk_interruptable changed state do
 			(
-
 				LPM_deadlineInfo.dl_interruptible = state
 				spn_interruptablePercent.enabled = state
 			)
@@ -1488,37 +1346,20 @@ struct LPM_DeadlineAPI
 			-- Event handler for setting the interruptable percentage
 			on spn_interruptablePercent changed state do
 			(
-
 				LPM_deadlineInfo.dl_interruptiblePercentage = state
 			)
 
 			-- Event handler for selecting the group you want to submit to
 			on ddl_group selected arg do
 			(
-
 				LPM_deadlineInfo.dl_groupChosen = LPM_deadlineInfo.dl_groups[arg]
 			)
 
 			-- event handler for comment field update
 			on lab_CustomCommentField changed state do
 			(
-
 				LPM_deadlineInfo.dl_jobComment = lab_CustomCommentField.text
 			)
-
---			-- event handler for framerange override "from" field
---			on spn_overrideFrameRange1 changed state do
---			(
---
---				ui_update_frameRangeVal 1
---			)
-
-			-- event handler for framerange override "to" field
---			on spn_overrideFrameRange2 changed state do
---			(
---
---				ui_update_frameRangeVal 2
---			)
 
 			-- event handler for setting limits
 			on btn_setLimits pressed do
@@ -1539,17 +1380,9 @@ struct LPM_DeadlineAPI
 				log_append ( " Limits were cleared from submission" ) 4
 			)
 
--- 			-- Event handler for chosing autordraft preset
--- 			on ddl_autodraftSelection selected item do
--- 			(
--- 				try ( LPM_deadlineInfo.draft_templateChosen = LPM_deadlineInfo.draft_templates[(item-1)])
--- 				catch( LPM_deadlineInfo.draft_templateChosen = "" )
--- 			)
-
  			-- Event for custom name field changing
  			on lab_CustomNameField changed state do
  			(
-
  				LPM_deadlineInfo.dl_jobName = state
  				LPM_deadlineInfo.dl_batchName = state
  				lab_CustomBatchField.text = state
@@ -1557,35 +1390,30 @@ struct LPM_DeadlineAPI
 
  			on lab_CustomBatchField changed state do
  			(
-
  				LPM_deadlineInfo.dl_batchName = state
  			)
 
  			-- Button: close on failed launch
  			on btn_connectCancel pressed do
  			(
-
  				destroyDialog LPM_DeadlineSubmitRo
  			)
 
  			-- Event handler for changing the priority via the priority slider
 			on sld_priority clicked value do
 			(
-
 				SMTDSettings.Priority= (ui_update_priorityGang value)
 			)
 
 			-- Event handler for changing the priority via the priority spinner
 			on spn_priority changed value do
 			(
-
 				SMTDSettings.Priority= (ui_update_priorityGang value)
 			)
 
 			-- Event handler for submission hold
 			on btn_holdOnSub changed state do
 			(
-
 				LPM_deadlineInfo.sticky_holdOnSubmit = state
 				LPM_deadlineInfo.submit_recoveryHold = state
 			)
@@ -1593,16 +1421,12 @@ struct LPM_DeadlineAPI
 			-- Event handler for chosing your frame buffer mode
 			on ddl_frameBufferMode selected state do
 			(
-
 				LPM_deadlineInfo.sticky_frameBufferMode	= state
-
-
 			)
 
 			-- event handler for submit as suspended
 			on chk_renderElementsExr changed state do
 			(
-
 			--	LPM_deadlineInfo.sticky_renderElementsExr  = state
 			)
 
@@ -1635,50 +1459,34 @@ struct LPM_DeadlineAPI
 				SMTDSettings.SubmitExternalFilesMode = ddl_SubmitExternalFilesMode.selection
 			)
 
-			-- event handler for framerange overrided toggle
---			on chk_overrideFrameRange changed state do
---			(
---
---				ui_update_frameRangeEnable state
---
---				LPM_deadlineInfo.framerange_overrideEnabled = state
---				LPM_deadlineInfo.framerange_overrideRange = [ spn_overrideFrameRange1.value, spn_overrideFrameRange2.value ]
---			)
-
 			on btn_optimizeScene pressed do
 			(
-
 				-- print("Not Connected")
 			)
 
 			-- Event handler for controling if submission is optimized or not
 			on btn_optimizeSubmit changed state do
 			(
-
 				LPM_deadlineInfo.optimize_enabled = state
 			)
 
 			-- event handler for submitting your job
  			on btn_submit pressed do
  			(
-
  				submit()
  			)
 
  			-- Event for the rollout opening
  			on LPM_DeadlineSubmitRo open do
 			(
-
 				init()
  			)
 
 			-- Event for rollout closing
  			on LPM_DeadlineSubmitRo close do
  			(
-
  				ui_saveStickySettings()
  			)
-
  		)
 
 		-- Try to destroy and preious versions of the dialog
