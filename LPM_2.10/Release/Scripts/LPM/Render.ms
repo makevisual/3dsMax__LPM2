@@ -292,6 +292,8 @@ struct LPM_RenderAPI
 				)
 				catch()
 
+
+				-- TODO: This is where the V-Ray Light is being modified, needs to be restored
 				try
 				(
 					case lightSetArray[i].pVrayInvisible of
@@ -460,11 +462,8 @@ struct LPM_RenderAPI
 				)
 
 				-- rendOutputFilename
-				--------- THIS IS WHERE THE FILENAME IS MADE -------------
-				--rendOutputFilename=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewMode:false RendPreviewMode:isPreviewMode elementName:""
-
--- New Output path Handling - Dabelow
-rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewMode:false RendPreviewMode:isPreviewMode elementName:""
+				-- New Output path Handling - Dabelow
+				rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewMode:false RendPreviewMode:isPreviewMode elementName:""
 
 				--Save current renderer settings
 				AdjpreRenderSettings=undefined
@@ -486,10 +485,7 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 					)
 					else(preRenderSettings=LPM_Fun.saveRenderPreset())
 
-					--preRenderSettings=renderers.current
-					--	???	-- try(LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate)
 					LPM_Fun.loadRenderPresetNew theRenderProps[1].propsAlternate
-					--  ???	-- catch(LPM_Fun.loadRenderPreset theRenderProps[1].props)
 				)
 
 				if findstring ((classof renderers.current) as string) "V_RAY" != undefined then
@@ -507,7 +503,7 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 				theDeadlineProps=for it in thePass.children where ((it.type=="Deadline") and (it.active)) collect it
 				if(theDeadlineProps[1] != undefined) then
 				(
---					print thePass
+					-- print thePass
 					LPM_Fun.loadDeadlineSettings theDeadlineProps[1] isPreviewMode
 				)
 
@@ -547,7 +543,7 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 					tmp=#(it)
 
 					-- Need to populate this array out with information to have properties for the correct indecies
-					for i=2 to 21 do(tmp[i] = undefined)
+					for i=2 to 22 do(tmp[i] = undefined)
 
 					-- Default paramaters
 					tmp[2]=it.on
@@ -568,7 +564,10 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 						tmp[9]=it.baseObject.texmap  				
 						tmp[18]=it.baseObject.texmap_on 			
 						tmp[13]=it.baseObject.castShadows 			
-						tmp[19]=it.baseObject.color_mode 			
+						tmp[19]=it.baseObject.color_mode
+						tmp[22]=it.baseObject.invisible
+
+						
 					)
 					else
 					(
@@ -989,10 +988,8 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 				LPM_RenderDispatchAction 	= #preRender
 				if isPreviewMode == true then ( LPM_RenderDispatchAction = #PreviewRender )
 
-
 				-- TODO: finish other implementations here
-				-- TODO: Actually each of these may be better handled in the renderer specific functions
-				
+				-- TODO: Actually each of these may be better handled in the renderer specific functions				
 
 				-- cameraOverscan Hook --
 				-- TODO: finish the camera hooks
@@ -1013,16 +1010,10 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 					)
 				)
 
-
-
-
-
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
 				filein (LPM_Dir+"renderer_dispatch.ms")
 
 				------------- DISPATCH END -------------
-
-
 
 				-- final prepare
 				rendUseNet=false
@@ -1143,6 +1134,7 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 						theNode.baseObject.affect_reflections=it[8]
 						theNode.baseObject.texmap=it[9]
 						theNode.baseObject.texmap_on=it[18]
+						theNode.baseObject.invisible=it[22]
 					)
 					else 
 					(
@@ -1152,7 +1144,6 @@ rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass 
 					-- Default paramaters
 					theNode.baseObject.affectDiffuse=it[14]
 					theNode.baseObject.affectSpecular=it[15]
-
 				)
 
 				--Generic Nodes
@@ -1420,65 +1411,10 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			if(renderType==#local)
 			then
 			(
-
 				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
 				LPM_RenderDispatchTheShot 	= theShot
 				LPM_RenderDispatchAction 	= #LocalRender
 				filein (LPM_Dir+"renderer_dispatch.ms")
-
---				SetQuietMode LPM_Root.quietMode
---				cp=LPM_Fun.firstChildByType theShot "commonProps"
---
---				if cp._rendTimeType == 1 then
---				(
---					-- print("Single")
---					render fromframe:currentTime toframe:currentTime
---				)
---				
---				if cp._rendTimeType == 2 then
---				(
---					-- print("Active Timeline")
---					render fromframe:animationRange.start toframe:animationRange.end
---				)
---				
---				if cp._rendTimeType == 3 then
---				(
---					-- print("Range")
---					render fromframe:( cp._rendStart) toframe:( cp._rendEnd )
---				)
---				
---				if cp._rendTimeType == 4 then
---				(
---					print("Frame List")
---
---				    frames = #()
---				    parts = filterString cp._rendPickupFrames "," -- split on commas
---				    
---				    for part in parts do
---				    (
---				        if findString part "-" != undefined then
---				        (
---				            rangeParts = filterString part "-"
---				            if rangeParts.count == 2 then
---				            (
---				                startVal 	= rangeParts[1] as integer
---				                endVal 		= rangeParts[2] as integer
---				                for i 		= startVal to endVal do append frames i
---				            )
---				        )
---				        else ( append frames (part as integer) )
---				    )
---				    
---				    -- Render each of the frames from the built list
---				    for frame in frames do ( render fromframe:(frame) toframe:(frame) )
---				)
---
---				print(cp._rendTimeType)
---				print(cp._rendStart)
---				print(cp._rendEnd)
---				print(cp._rendPickupFrames)
-
-				-- render fromframe:cp._rendStart toframe:cp._rendEnd
 			)
 			else()
 

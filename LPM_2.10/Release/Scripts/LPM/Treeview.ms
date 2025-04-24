@@ -1283,6 +1283,12 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on btn_openRenderDir pressed do ( shellLaunch LPM_Root.rootDir "" )
 
+	on ddl_selectProcessor selected state do 
+	(
+		LPM_Root.processorActive = state
+		-- print( LPM_Root.processorActive as string )
+	)
+
 	on btn_execute pressed do 
 	(
 		curMode = ddl_selectProcessor.selected
@@ -2341,6 +2347,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			if (renderType==(ddl_previewType.items[i] as name)) then(ddl_previewType.selection=i)
 		)
+
+		-- Select the last active processor was stored, set it to active in the UI
+		if LPM_Root.processorActive >= 0 and LPM_Root.processorActive < ddl_selectProcessor.Items.Count do
+		(
+    		ddl_selectProcessor.selection = LPM_Root.processorActive
+		)
+
 
 		LPM_Resize (getDialogSize LPM_Treeview_Rollout)
 	)

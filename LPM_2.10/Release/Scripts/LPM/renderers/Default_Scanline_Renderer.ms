@@ -2,7 +2,6 @@
 -- Included the depreciated function for any possible future use
 -- 04/24/2025 Aaron Dabelow theonlyaaron@gmail.com
 
-
 ---------- CLASSES ----------
 
 -- Object to hold all the restore data
@@ -14,9 +13,7 @@ struct scanline_RestoreDataStr
     caboose                 = undefined
 )
 
-
 ---------- GLOBAL SWITCHES ----------
-
 ---- Prerender Globals
 -- When rendering Production, these settings are applied
 function preRenderAction_ProductionGlobals =
@@ -24,6 +21,7 @@ function preRenderAction_ProductionGlobals =
     -- Fetch the global variable and assign the current state to it
     scanline_RestoreData                      	= LPM_RenderDispatchRestoreData
 
+    -- Store the properties that will be modified
     scanline_RestoreData.matEditor_open       	= MatEditor.isOpen() 
     scanline_RestoreData.fullFileOutputPath 	= rendOutputFilename	
     scanline_RestoreData.saveFileOption  		= rendSaveFile 	
@@ -38,7 +36,6 @@ function preRenderAction_ProductionGlobals =
 
     -- Set the properties to their desired values
     rendSaveFile          	= true                
-    --print( "-- rendOutputFilename -- " + rendOutputFilename   )
 )
 
 ---- Postrender Globals
@@ -48,15 +45,13 @@ function postRenderAction_ProductionGlobals =
     -- Get the restore data from global variable
     scanline_RestoreData = LPM_RenderDispatchRestoreData
 
-    -- Restore the previous data
+    -- Restore the previously modified data
     if scanline_RestoreData.matEditor_open then (MatEditor.Open())
     rendOutputFilename 	= scanline_RestoreData.fullFileOutputPath
     rendSaveFile 		= scanline_RestoreData.saveFileOption 
 )
 
-
 ---------- PROGRAM FLOW ---------- 
-
 ---- Pre-Render Action for Production
 function preRenderAction_Production =
 (
@@ -85,30 +80,16 @@ function postRenderAction_Production =
 
 function localRenderAction =
 (
-    clearListener()
-
-    print( "-- rendOutputFilename -- " + rendOutputFilename   )
-
     theShot = LPM_RenderDispatchTheShot
-
     SetQuietMode LPM_Root.quietMode
     cp=LPM_Fun.firstChildByType theShot "commonProps"
 
-    -- TODO: Add extra "." to the filename before the index when finishing up this part
-
---    setting_outputfile  = @"U:\users\AD\Software_Testing\3dsMax2024\VRay_7.00.04\LPM2_VRay7\Scenes\Layout\Shot_v005\Beauty\Beauty.exr"
-    
-    
-
+    -- Load the settings for the render
     setting_outputfile  = LPM_Root.fullOutputPath
-    setting_camera      = cp._camera -- Will need some handling around scenes with no camera eventually.
+    setting_camera      = cp._camera                -- TODO: Will need some handling around scenes with no camera eventually.
     setting_frameBuffer = true 
 
-    print("setting_outputfile  - " + (setting_outputfile ) as string )
-    print("setting_camera      - " + (setting_camera     ) as string )
-    print("setting_frameBuffer - " + (setting_frameBuffer) as string )
-
-
+    -- Invoke the proper render based on shot settings
     if cp._rendTimeType == 1 then
     (
         -- print("Single")
@@ -152,15 +133,9 @@ function localRenderAction =
         -- Render each of the frames from the built list
         for frame in frames do ( render fromframe:(frame) toframe:(frame) outputfile:setting_outputfile vfb:setting_frameBuffer camera:setting_camera )
     )
-
-    -- print(cp._rendTimeType)
-    -- print(cp._rendStart)
-    -- print(cp._rendEnd)
-    -- print(cp._rendPickupFrames)
 )
 
 ---------- API HOOKS ---------- 
-
 -- Cases for each of the methods a dispatch can be called.
 if LPM_RenderDispatchAction == #preRender then preRenderAction_Production()
 if LPM_RenderDispatchAction == #PreviewRender then  preRenderAction_Preview()
