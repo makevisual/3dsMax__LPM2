@@ -106,7 +106,12 @@ function preRenderAction_ProductionGlobals =
     renderers.current.output_on             = true                           -- force vray frame buffer on
 
     -- NOTE: Forcing .exr filetype over other filetypes for compatability with the VRAY Frame buffer memory management benefits
-    renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
+    --renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
+    -- TODO: Activly Fixing filetype override
+    print ( "---------rendOutputFilename - " + rendOutputFilename)
+    renderers.current.output_rawFileName    = (rendOutputFilename)   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
+
+
     renderers.current.output_saveRawFile    = true                           -- enable saving the file
     renderers.current.output_splitgbuffer   = true                           -- enable render elements to be stored in the output ??????
     renderers.current.output_genpreview     = true                           -- Not sure if this needs to be on or not

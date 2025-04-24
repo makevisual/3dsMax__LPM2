@@ -23,8 +23,10 @@ then (
 	filein (LPM_Dir+"OperatorData.ms") 		-- Added by Aaron Dabelow
 
 	-- Set some common properties in an easy place
-	LPM_Fun.SetIni "LPM Render" "Path"  "$Shot\\$Pass\\$Pass" 				-- Set Fileoutput Path Token String to default
+
+	--LPM_Root.pathString = "$Shot\\$Pass\\$Pass" 							-- Set Fileoutput Path Token String to default
 	LPM_Root.renderType = 3 												-- Force to shots
+	--LPM_Root.fileType = 
 	setUserProp LPM_Root "DeadlineRepository" @"N:\DeadlineRepository10"    -- Set your deadline Repository
 	setUserProp LPM_Root "LPM_VersionNumber" LPM_VersionNumber    			-- Set your LPM Version Number
 )

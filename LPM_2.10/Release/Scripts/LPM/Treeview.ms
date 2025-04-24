@@ -8,11 +8,6 @@ callbacks.addScript #systemPostNew LPM_Callback id:#closeLPM
 callbacks.addScript #systemPostReset LPM_Callback id:#closeLPM
 try(destroyDialog LPM_treeview_rollout)catch()
 
--- Moved this to the version check
---LPM_Root = $LPM_Root
-
---filein (LPM_Dir+"versionCheck.ms")
-
 try
 (
 	if LPM_Root.LastActivePass != "" then
@@ -35,7 +30,6 @@ LPM_RendButttonSize = 30
 if (LPM_Fun.getIni "Settings" "ShowSkipButton" booleanClass false) then
 (
 	LPM_ShowSkipButton = true
-
 	LPM_RendButttonSize = 20
 )
 
@@ -49,10 +43,7 @@ fn CheckUIColor =
 (
 	CurUIColor = "Light"
 	CurUIColorCol = colorMan.getColor #timeSliderBg
-	if CurUIColorCol[1] < 0.6 then
-	(
-		CurUIColor = "Dark"
-	)
+	if CurUIColorCol[1] < 0.6 then ( CurUIColor = "Dark" )
 	CurUIColor
 )
 
@@ -72,7 +63,6 @@ fn InitColorUI =
 (
 	LPM_BackColor = dotNetColor (color 85 85 85)
 	LPM_FontColor = dotNetColor (color 200 200 200)
-	--LPM_iconPath += "IconsDark/"
 )
 
 InitColorUI()
@@ -96,8 +86,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	local shotRoot
 	local shotRootTV
 	local prevSelection
-
-	local proMode=false
 	local stopper
 	local LPM_doubleClick=false
 	local rNode=undefined
@@ -121,81 +109,39 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	"Export - After Effects Camera"
 	)
 
-	edittext 		passDDL pos:[-3,2] width:50 height:30 readonly:true
-	checkbutton 	chkbtn_HideRFW "" height:10 width:15 pos:[120,22] tooltip:"Hide Rendered Frame Window" visible:LPM_ShowSkipButton  images:#(LPM_iconPath+"HideFrameWindow_btn.bmp",undefined,1,1,1,1,1,true)
-	checkbutton 	chkbtn_SkipExistingImages "" height:10 width:15 pos:[135,22] tooltip:"Skip Existing Images" visible:LPM_ShowSkipButton  images:#(LPM_iconPath+"Skip_existing_btn.bmp",undefined,1,1,1,1,1,true)
-	button 			colorButton "tgl" pos:[100,2] images:#(LPM_iconPath+"colorOn.bmp",undefined,1,1,1,1,1) tooltip:"Click to color pass, shift click to restore" visible:false----------------------------------------- INVISIBLE
-	checkbutton 	hideButton "rdr" pos:[180,2] images:#(LPM_iconPath+"eyeOpen.bmp",undefined,1,1,1,1,1) tooltip:"Hide by category floater." visible:false----------------------------------------------------
-	button 			quickScriptsButton "QS" pos:[180,25] tooltip:"Quick Scripts" height:30 width:30 images:#(LPM_iconPath+"Quick_Scripts.bmp",undefined,1,1,1,1,1,true)
- 	dropDownList 	previewSizeDDL "" pos:[160,32] items:#("10","25","50","75","100","150","200") width:45 -- visible:false-----------------------------------------------------------------------------------------------
-	dropDownList 	previewTypeDDL pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp") -- visible:false--------------------------------------------------------------------------------------
- 	dropDownList 	cameraDDL "" pos:[0,32] width:100 items:#("-----------------------") -- visible:false----------------------------------------------------------------------------------------------------------------
-
-	dotNetControl 	tv "TreeView"  pos:[0,54] align:#left
-	dotNetControl 	editBox "TextBox"  pos:[0,70] height:20 width:120
-	dotNetControl 	OutputPathDDL "TextBox"  pos:[0,60] align:#left
-	button 			setRenderDirButton "Set" pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
-	button 			openRenderDirButton "..." pos:[202,200] height:21 width:17 tooltip:"Opens the render directory"
-
-	dropDownList    ddl_selectProcessor "" items:processorList pos:[40,200] width:200
-	button 			btn_execute 		" Execute " pos:[40,200] width:120
-
---	button 			tyPreviewButton "TyPreview" pos:[40,200] height:22 width:60 enabled:false tooltip:"TODO:"
---	button 			nukeRenderButton "NukeFile" pos:[40,200] height:22 width:55 enabled:false tooltip:"TODO:"
---	button 			maxFileRenderButton "Bake Files" pos:[40,200] height:22 width:55 enabled:true tooltip:"TODO:"
---	button 			localRenderButton "Local" pos:[40,200] height:22 width:55 enabled:true tooltip:"Submits all passes/shots to this computer.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
---	button 			networkRenderButton "Deadline" pos:[95,200] height:22 width:70 tooltip:"Submits all passes/shots to the network.  Depends on 'Only Active Passes / Shots' in the render dialog and on the Render Mode."
---	checkbutton 	skipIdiotChecks "Skip IC" pos:[165,200] height:22 width:40 tooltip:"When enabled, Idiot checks will be skipped with a time penalty"
-
+ 	dropDownList 		ddl_previewSize 		"" 			pos:[160,32] items:#("10","25","50","75","100","150","200") width:45 -- visible:false-----------------------------------------------------------------------------------------------
+		dropDownList 	ddl_previewType 					pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp") -- visible:false--------------------------------------------------------------------------------------
+ 		dropDownList 	ddl_camera 				"" 			pos:[0,32] width:100 items:#("-----------------------") -- visible:false----------------------------------------------------------------------------------------------------------------
+	dotNetControl 		tv 						"TreeView"  pos:[0,(54-33)] align:#left
+	dotNetControl 		dnc_textBoxOutputPath 	"TextBox" 	pos:[0,60] align:#left
+		button 			btn_setRenderDir 		"Set" 		pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
+		button 			btn_openRenderDir 		"..." 		pos:[202,200] height:21 width:17 tooltip:"Opens the render directory"
+	dropDownList    	ddl_selectProcessor 	"" 			pos:[40,200] items:processorList width:200
+		button 			btn_execute 			" Execute " pos:[40,200] width:120
 
 	fn FreezeWindow =
 	(
-		tv.enabled = false
-		chkbtn_HideRFW.enabled = false
-		chkbtn_SkipExistingImages.enabled = false
-		quickScriptsButton.enabled = false
-		openRenderDirButton.enabled = false
-
-		-- TODO: Turn these back on when functionality added
-		-- tyPreviewButton.enabled = false
-		-- nukeRenderButton.enabled = false 
-		-- maxFileRenderButton.enabled = false 
-		-- localRenderButton.enabled = false
-		-- networkRenderButton.enabled = false
+		tv.enabled 							= false
+		btn_openRenderDir.enabled 			= false
+		ddl_selectProcessor.enabled 		= false
+		btn_execute.enabled 				= false
 	)
 
 	fn UnFreezeWindow =
 	(
-		tv.enabled = true
-		chkbtn_HideRFW.enabled = true
-		chkbtn_SkipExistingImages.enabled = true
-		quickScriptsButton.enabled = true
-		openRenderDirButton.enabled = true
-		
-		-- TODO: Turn these back on when functionality added
-		-- tyPreviewButton.enabled = true 
-		-- nukeRenderButton.enabled = true
-		-- maxFileRenderButton.enabled = true
-		-- localRenderButton.enabled = true
-		-- networkRenderButton.enabled = true
-
-		-- case LPM_Root.renderType of
-		-- (
-		-- 	1: networkRenderButton.enabled=true
-		-- 	2: networkRenderButton.enabled=false
-		-- 	3: networkRenderButton.enabled=true
-		-- 	4: networkRenderButton.enabled=false
-		-- )
+		tv.enabled 							= true
+		btn_openRenderDir.enabled 			= true
+		ddl_selectProcessor.enabled 		= true
+		btn_execute.enabled 				= true
 	)
 
 	fn initTreeView tv=
 	(
 		-- In the tv init function
 		tmpcol = ((colorMan.getColor #timeSliderBg)*255) as color
-		OutputPathDDL.BackColor = dotNetColor tmpcol
-		OutputPathDDL.ForeColor = LPM_FontColor
-		OutputPathDDL.ReadOnly = true
-		editBox.BackColor = dotNetColor (color 245 245 245)
+		dnc_textBoxOutputPath.BackColor = dotNetColor tmpcol
+		dnc_textBoxOutputPath.ForeColor = LPM_FontColor
+		dnc_textBoxOutputPath.ReadOnly = true
 		tv.BackColor = LPM_BackColor
 		tv.AllowDrop = true -- allow DragandDrop for the Treeview
 
@@ -279,32 +225,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		tv.imageList = ilTv
 	)
 
-	fn updatePassDDL =
-	(
-		if isvalidnode(LPM_ActivePass) then
-		(
-			passDDL.text = LPM_Fun.generatePassName LPM_ActivePass
-			try(LPM_Root.LastActivePass = LPM_Fun.generatePassName LPM_ActivePass)catch()
-		)
-		else
-			passDDL.text="No Pass Active"
-
-		if maxfilepath != "" then
-		(
-			ProjRenderPath = LPM_Root.rootDir
-			--if ProjRenderPath != "" then(OutputPathDDL.text=LPM_Root.rootDir=getProjRenderPath())
-
-			if ProjRenderPath != "" then(OutputPathDDL.text=LPM_Root.rootDir)
-			else(OutputPathDDL.text=LPM_Root.rootDir)
-		)
-		else
-		(
-			OutputPathDDL.text=LPM_Root.rootDir
-		)
-
-		openRenderDirButton.tooltip = "Open render dir: " + OutputPathDDL.text
-	)
-
 	fn deleteSelectedPass tv =
 	(
 		theNode=tv.selectedNode
@@ -351,7 +271,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			)
 		)
 		
-		)catch() --TODO:
+		)catch() 
 	)
 
 	fn createTVnode nodeRoot theNode nodeType:"LPM_node" =
@@ -359,14 +279,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		nodeName = ""
 		case nodeType of
 		(
-			"leaf": nodeName = theNode.leaf
-			"leafObject": nodeName = theNode.leaf.name
-			"leafXref": nodeName = ((getFilenameFile theNode.leaf[1])+(getFilenameType theNode.leaf[1]))
-			"commonProps": nodeName = (LPM_Fun.generateCommonPropName theNode)
-			"vrayProps": nodeName = (LPM_Fun.generateVrayPropName theNode)
-			"passRoot": nodeName = (	if(proMode==false) then "Passes (Maximum of 3)" else "Passes" )
-			"shotRoot": nodeName = (	if(proMode==false) then "Shots (Maximum of 2)" else "Shots" )
-
+			"leaf": 				nodeName = theNode.leaf
+			"leafObject": 			nodeName = theNode.leaf.name
+			"leafXref": 			nodeName = ((getFilenameFile theNode.leaf[1])+(getFilenameType theNode.leaf[1]))
+			"commonProps": 			nodeName = (LPM_Fun.generateCommonPropName theNode)
+			"vrayProps": 			nodeName = (LPM_Fun.generateVrayPropName theNode)
+			"passRoot": 			nodeName = ( "Passes" )
+			"shotRoot": 			nodeName = ( "Shots" )
 			"Deadline": 			nodeName = (LPM_Fun.generateDeadlineName theNode) 				-- Dabelow
 			"vray6RenderElements": 	nodeName = (LPM_Fun.generateVray6RenderElementsName theNode) 	-- Dabelow Vray6
 			"vray6": 				nodeName = (LPM_Fun.generateVray6PropName theNode) 				-- Dabelow Vray6
@@ -591,7 +510,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 			opTVNode.ForeColor = LPM_FontColor
 			opTVNode.BackColor = LPM_BackColor
-			--makeItalic opTVNode
 		)
 
 		for Modif in pmPass.children where Modif.type=="ModifierOver" do
@@ -642,10 +560,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			makeItalic newVray6
 		)
 
-		if(pmPass.expanded) then
-		(
-			newPass.Expand()
-		)
+		if(pmPass.expanded) then ( newPass.Expand() )
 	)
 
 	fn createShotTv shotNode=
@@ -766,15 +681,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			newPG = createPassGroupTv pg
 
-
 			for pmPass in pg.children where pmPass.type=="pass" do
 			(
-				count+=1
-				if(count < 4) or (proMode) then
-				(
-					newPass=createPassTv pmPass newPG
-					addPassTv newPass
-				)
+				newPass=createPassTv pmPass newPG
+				addPassTv newPass
 			)
 			if(pg.expanded) then
 				newPG.expand()
@@ -782,67 +692,28 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		for pmPass in LPM_Root.children where pmPass.type=="pass" do
 		(
-			count+=1
-			if(count < 4) or (proMode) then
-			(
-				newPass = createPassTv pmPass tvRoot
-
-				newPass.ForeColor = LPM_FontColor
-				newPass.BackColor = LPM_BackColor
-				addPassTv newPass
-			)
+			newPass = createPassTv pmPass tvRoot
+			newPass.ForeColor = LPM_FontColor
+			newPass.BackColor = LPM_BackColor
+			addPassTv newPass
 		)
 
 		shotRoot=(LPM_Fun.firstChildByType LPM_Root "shotRoot")
-
 		shotRootTV = createTVnode tv (LPM_Fun.firstChildByType LPM_Root "shotRoot") nodeType:"shotRoot"
-
 		shotRootTV.ForeColor = LPM_FontColor
 		shotRootTV.BackColor = LPM_BackColor
 
 		--add the shots
-
 		count=0
 		for pmShot in shotRoot.children where pmShot.type=="shot" do
 		(
-
-			count+=1
-			if(count < 3) or (proMode) then
-			(
-				newShot=createShotTv pmShot
-				addShotTv newShot
-			)
+			newShot=createShotTv pmShot
+			addShotTv newShot
 		)
 
 		tvRoot.Expand()
-		if(shotRoot.expanded) then
-			shotRootTv.expand()
-		updatePassDDL()
-
+		if(shotRoot.expanded) then ( shotRootTv.expand() )
 		tv.endUpdate()
-	)
-
---	fn updateRenderButtonsState=
---	(
---
---		case LPM_Root.renderType of
---		(
---			1: networkRenderButton.enabled=true
---			2: networkRenderButton.enabled=false
---			3: networkRenderButton.enabled=true
---			4: networkRenderButton.enabled=false
---		)
---	)
-
-	fn updateRFWandSkip =
-	(
-		try
-		(
-			chkbtn_HideRFW.state = LPM_Fun.getIni "Settings" "HideRFW" booleanClass false
-			chkbtn_SkipExistingImages.state = LPM_Fun.getIni "Settings" "SkipExistingImages" booleanClass false
-		)
-		catch()
-
 	)
 
 	fn hideByPass thePass=
@@ -1097,68 +968,52 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		if(isvalidnode LPM_activePass) then(hideByPass  LPM_activePass)
 	)
 
-	fn updateCameraDDL =
+	fn updateddl_camera =
 	(
 		--camera
 		cameraList=#(("Active Viewport:"+(substring (viewport.getType() as string) 6 -1)))
 		curCameras = cameras as array
 		for i in curCameras where (classof i!=Targetobject) do append cameraList i.name
-		cameraDDl.items=cameraList
+		ddl_camera.items=cameraList
 
 		if(isvalidNode LPM_Root.renderCamera) then
 		(
-			x=(findItem  cameraDDl.items LPM_Root.renderCamera.name)
+			x=(findItem  ddl_camera.items LPM_Root.renderCamera.name)
 			if (x!=0) then
-			cameraDDl.selection=x
+			ddl_camera.selection=x
 		)
 	)
 
 	fn LPM_Resize theSize=
 	(
-		ySize=((theSize.y - 104) as integer)
-		if(ySize<0) then
-			ysize=0
-		dotNetSize=dotNetObject "System.Drawing.Size" theSize.x ySize
+		-- Control for minimum size
+		ySize 		= ((theSize.y - (104 - 34  ) ) as integer)
+		if(ySize<0) then(ysize=0)
 
-		tv.size=dotNetSize
-		xSize=((theSize.x))
-		yPos=((theSize.y - 48) as integer)
+		-- make some useful numbers
+		dotNetSize 	= dotNetObject "System.Drawing.Size" theSize.x ySize
+		xSize 		= ((theSize.x))
+		yPos 		= ((theSize.y - 48) as integer)
 
---		tyPreviewButton.pos=[xSize-340,yPos+25]
---		nukeRenderButton.pos=[xSize-280,yPos+25]
---		maxFileRenderButton.pos=[xSize-225,yPos+25]
---		localRenderButton.pos=[xSize-170,yPos+25]
---		networkRenderButton.pos=[xSize-110,yPos+25]
---		skipIdiotChecks.pos=[xSize-40,yPos+25]
+		-- Place each of the objects
+		ddl_camera.pos 					= [0,0]
+		ddl_camera.width 				= amax #(20, (xSize-103))
+		ddl_previewType.pos 			= [ xSize-104, 	ddl_camera.pos[2] ]
+		ddl_previewSize.pos 			= [ xSize-45, 	ddl_camera.pos[2] ]
 
-		ddl_selectProcessor.pos=[0,yPos+25]
-		ddl_selectProcessor.width=(xSize-123)
+		tv.size 						= dotNetSize
 
-		btn_execute.pos=[(xSize-123),(yPos+25)]
+		dnc_textBoxOutputPath.pos 		= [0,yPos+2]
+		dnc_textBoxOutputPath.width 	= xSize-42
+		btn_setRenderDir.pos 			= [xSize-40,yPos+2]
+		btn_openRenderDir.pos 			= [xSize-20,yPos+2]
 
-		openRenderDirButton.pos=[xSize-20,yPos+1]
-		setRenderDirButton.pos=[xSize-40,yPos+1]
-		OutputPathDDL.width=xSize-42
-		OutputPathDDL.pos = [0,yPos]
-
-		passDDL.width=xSize-32
-		hideButton.pos=[xSize-22, hideButton.pos[2]]
-		previewSizeDDL.pos=[xSize-45, previewSizeDDL.pos[2]]
-		previewTypeDDL.pos=[xSize-104, previewSizeDDL.pos[2]]
-
-		colorButton.pos=[xSize-102, colorButton.pos[2]]
-		chkbtn_HideRFW.pos=[xSize-120, chkbtn_HideRFW.pos[2]]
-		chkbtn_SkipExistingImages.pos=[xSize-105, chkbtn_SkipExistingImages.pos[2]]
-
-		cameraDDL.width=amax #(20, (xSize-103))
-		quickScriptsButton.pos.x=(passDDL.width+2)
-		quickScriptsButton.pos.y=2
+		ddl_selectProcessor.pos 		= [0,yPos+25]
+		ddl_selectProcessor.width 		= (xSize-123)
+		btn_execute.pos 				= [(xSize-123),(yPos+25)]
 	)
 
-	fn collapseAlltree =
-	(
-		tv.CollapseAll()
-	)
+	fn collapseAlltree = ( tv.CollapseAll() )
 
 	fn updateTV=
 	(
@@ -1223,7 +1078,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	fn EditNukeExport =
 	(
 		messagebox(" Feature not ready for production ")
---		createDialog nukeExportPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
+		-- createDialog nukeExportPropsRoll pos:(LPM_Fun.getRoPos  250) style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing)
 	)
 
 	--Dabelow aeExport
@@ -1296,37 +1151,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		createDialog matPicker pos:(LPM_Fun.getRoPos matPicker.width)
 	)
 
-	fn hideEditBox=
-	(
-		editBox.visible = false
-		tv.enabled = true
-		tv.refresh()
-		tv.focus()
-	)
-
-	fn showEditBox=
-	(
-		if(rNode==undefined) then
-			return false
-		tv.enabled = false
-		editBox.pos = [tv.pos.x+rNode.bounds.x,tv.pos.y+rNode.bounds.y]
-		if rNode.tag.value.type == "pass" then
-		(
-			editBox.text = LPM_Fun.getName rNode.tag.value.name
-		)
-		else
-		(
-			editBox.text = rNode.text
-		)
-
-		editBox.visible = true
-		editBox.focus()
-	)
-
 	fn renameNode iNode=
 	(
 		rNode=iNode
-		showEditBox()
 	)
 
 	fn hideBySet theSet=
@@ -1354,13 +1181,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 	)
 
-
-	fn LPM_ReadLicense=
-	(
-		true
-	)
-
- --reparents the nodes of the selected type
+ 	-- reparents the nodes of the selected type
 	 fn tvReparent tvParent nodeType=
 	(
 		 nodes=tvParent.nodes
@@ -1452,28 +1273,15 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		LPM_treeview_rollout.updateTV()
 	)
 
-	on quickScriptsButton pressed do
-	(
-		LPM_Fun.QuickScripts();
-	)
-
-
-	on setRenderDirButton pressed do
+	on btn_setRenderDir pressed do
 	(
 		result = LPM_fun.pickOutputRoot()
 		if result != undefined
-		then (OutputPathDDL.text = result)
+		then (dnc_textBoxOutputPath.text = result)
 		else()
 	)
 
-	on openRenderDirButton pressed do
-	(
-		shellLaunch LPM_Root.rootDir ""
-	)
-
-
-
-	-- TOOD: Change this to a dropdown selection
+	on btn_openRenderDir pressed do ( shellLaunch LPM_Root.rootDir "" )
 
 	on btn_execute pressed do 
 	(
@@ -1529,190 +1337,16 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 	)
 
---	on localRenderButton pressed do
---	(
---		LPM_Fun.setWhoToRenderByRenderType()
---		LPM_Fun.localRenderSubmit()
---	)
---	on networkRenderButton pressed do
---	(
---		LPM_Fun.setWhoToRenderByRenderType()
---		filein (LPM_Dir+@"plugins\Deadline10.0.ms")
---	)
---	on maxFileRenderButton pressed do
---	(
---		LPM_Fun.setWhoToRenderByRenderType()
---		filein (LPM_Dir+@"plugins\maxFileSubmit.ms")
---	)
-
-
-	on chkbtn_HideRFW changed state do
+	on ddl_previewType selected item do
 	(
-		LPM_Fun.setIni "Settings" "HideRFW" ( state)
+		setRenderType (ddl_previewType.selected as name)
+		type=ddl_previewType.selected
+		if( type== "Region")or(type=="Crop") or(type=="BlowUp") then ( try(EditRenderRegion.EditRegion())catch() )
 	)
 
-	on chkbtn_SkipExistingImages changed state do
+	on ddl_previewSize selected item do
 	(
-		LPM_Fun.setIni "Settings" "SkipExistingImages" ( state)
-	)
-
-	on previewTypeDDL selected item do
-	(
-		setRenderType (previewTypeDDL.selected as name)
-		type=previewTypeDDL.selected
-		if( type== "Region")or(type=="Crop") or(type=="BlowUp") then
-			(
-				try(EditRenderRegion.EditRegion())catch()
-			)
-	)
-
-	on previewSizeDDL selected item do
-	(
-		LPM_Root.previewSize=PreviewSizeDDL.selected as integer
-	)
-
-	--hides and colors the nodes
-	on colorButton pressed do
-	(
-		--restore
-		if (keyboard.shiftPressed) then
-		(
-			if(colorBackup!=undefined) then
-			(
-				for item in colorBackup do try(item[1].wirecolor=item[2])catch()
-				displayColor.wireframe=displayColorWire
-				displayColor.shaded=displayColorShaded
-			)
-		)
-		else
-		(
-
-			if(isvalidnode LPM_activePass) then
-			(
-				if (colorBackup==undefined) then
-				(	colorBackup=(for it in $objects collect #(it, it.wireColor))
-					displayColorWire=displayColor.wireframe
-					displayColorShaded=displayColor.shaded
-				)
-				displayColor.wireframe=#object
-				displayColor.shaded=#object
-
-
-				for it in objects where ((superclassof it)==geometryClass) do it.wireColor=white
-
-				--collect object nodes array
-				objNodes=#()
-				objSetArray=#()
-				LPM_Fun.getObjectSetArrays LPM_activePass "objectSet" &objNodes &objSetArray
-
-				for i=1 to objNodes.count do
-				(
-
-					theColor=objSetArray[i].pColor
-
-					for theNode in objNodes[i] do
-					(
-						theNode.wireColor=theColor
-					)
-				)
-			)
-		)
-	)
-
-	on hideButton changed state do
-	(
-		rollout displayRollout "Display"
-		(
-			group "Hide by Category"
-			(
-				checkbox GeometryChk "Geometry" align:#left
-				checkbox ShapesChk "Shapes" align:#left
-				checkbox LightsChk "Lights" align:#left
-				checkbox CamerasChk "Cameras" align:#left
-				checkbox HelpersChk "Helpers" align:#left
-				checkbox spacewarpsChk "Space Warps" align:#left
-				checkbox particlesChk "Particle Systems" align:#left
-				checkbox bonesChk "Bone Objects" align:#left
-				button allBut "Hide All" align:#left
-				button noneBut "Hide None" align:#left
-				button invertBut "Invert" align:#left
-
-			)
-
-			on GeometryChk changed state do
-				hideByCategory.geometry=state
-			on shapesChk changed state do
-				hideByCategory.shapes=state
-			on lightsChk changed state do
-				hideByCategory.lights=state
-			on camerasChk changed state do
-				hideByCategory.cameras=state
-			on helpersChk changed state do
-				hideByCategory.helpers=state
-			on spacewarpsChk changed state do
-				hideByCategory.spacewarps=state
-			on particlesChk changed state do
-				hideByCategory.particles=state
-			on bonesChk changed state do
-				hideByCategory.bones=state
-			on allBut pressed do
-			(
-				hideByCategory.all()
-				GeometryChk.state=true
-				ShapesChk.state=true
-				LightsChk.state=true
-				CamerasChk.state=true
-				HelpersChk.state=true
-				spacewarpsChk.state=true
-				particlesChk.state=true
-				bonesChk.state=true
-			)
-			on noneBut pressed do
-			(
-				hideByCategory.none()
-				GeometryChk.state=false
-				ShapesChk.state=false
-				LightsChk.state=false
-				CamerasChk.state=false
-				HelpersChk.state=false
-				spacewarpsChk.state=false
-				particlesChk.state=false
-				bonesChk.state=false
-			)
-			on invertBut pressed do
-			(
-
-				GeometryChk.state=hideByCategory.geometry=not GeometryChk.state
-				ShapesChk.state=hideByCategory.Shapes=not ShapesChk.state
-				LightsChk.state=hideByCategory.Lights=not LightsChk.state
-				CamerasChk.state=hideByCategory.Cameras=not CamerasChk.state
-				HelpersChk.state=hideByCategory.Helpers=not HelpersChk.state
-				spacewarpsChk.state=hideByCategory.spacewarps=not spacewarpsChk.state
-				particlesChk.state=hideByCategory.particles=not particlesChk.state
-				bonesChk.state=hideByCategory.bones=not bonesChk.state
-			)
-			on displayRollout open do
-			(
-				GeometryChk.state=hideByCategory.geometry
-				ShapesChk.state=hideByCategory.Shapes
-				LightsChk.state=hideByCategory.Lights
-				CamerasChk.state=hideByCategory.Cameras
-				HelpersChk.state=hideByCategory.Helpers
-				spacewarpsChk.state=hideByCategory.spacewarps
-				particlesChk.state=hideByCategory.particles
-				bonesChk.state=hideByCategory.bones
-			)
-			on displayRollout close do
-			(
-				hideButton.checked=false
-			)
-
-		)
-
-		if(state) then
-			createDialog displayRollout pos:(LPM_Fun.getRoPos displayRollout.width)
-		else
-			try (destroyDialog displayRollout)catch()
+		LPM_Root.previewSize=ddl_previewSize.selected as integer
 	)
 
 	on tv drawNode arg do
@@ -1728,60 +1362,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on tv textChanged arg do()
 
-	on editBox lostFocus e do
-	(
-		hideEditBox()
-	)
-
-	on editBox MouseWheel e do
-	(
-		hideEditBox()
-	)
-
-	on editBox keyUp e do
-	(
-		case e.keycode.tostring() of
-		(
-			"Return":
-			(
-				theNode=rNode
-				type = theNode.tag.value.type
-				word=editBox.text
-				if(type=="shot" or type=="pass") then word=LPM_Fun.removeBadChars word
-
-				theNode.text = word
-				case type of
-				(
-					"wildcard": (	theNode.Parent.tag.value.wildCard[theNode.tag.value.index]=word)
-					"shot":
-					(
-						pos=findstring word "[["
-						if(pos!=undefined) then
-							theNode.tag.value.name="LPM_"+(substring word 1 pos)
-						else
-							theNode.tag.value.name="LPM_"+word
-						theNode.text=LPM_Fun.getShotName theNode.tag.value
-					)
-					"pass":
-					(
-						theNode.tag.value.name="LPM_"+word
-						theNode.text = LPM_Fun.generatePassName theNode.tag.value
-						updatePassDDL()
-					)
-					default:	(try(theNode.tag.value.name="LPM_"+word)catch())
-
-				)
-				hideEditBox()
-
-				LPM_treeview_rollout.updateTV()
-			)
-			"Escape":
-			(
-				hideEditBox()
-			)
-		)
-	)
-
 	on tv keyDown e do
 	(
 		if (keyboard.controlpressed)and ((e.keycode.tostring())=="Z") then
@@ -1789,8 +1369,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			max undo
 			LPM_treeview_rollout.updateTV()
 		)
-
-
 	)
 
 	on tv keyUp e do
@@ -1801,8 +1379,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		theNode=tv.selectedNode
 
 		TheNodeType = undefined
-		try(TheNodeType = LPM_activeElement.tag.value.type)
-		catch()
+		try(TheNodeType = LPM_activeElement.tag.value.type)catch()
 
 		case e.keycode.tostring() of
 		(
@@ -1989,16 +1566,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						(
 							theObj=LPM_treeview_rollout.tv.selectedNode.tag.value
 							theParent=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
 							LPM_Fun.pruneArray theParent.nodes theObj.leaf
-
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
 						"light":
 						(
 							theObj=LPM_treeview_rollout.tv.selectedNode.tag.value
 							theParent=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
 							LPM_Fun.pruneArray theParent.nodes theObj.leaf
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
@@ -2006,7 +1580,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						(
 							theObj=LPM_treeview_rollout.tv.selectedNode.tag.value
 							theParent=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
 							LPM_Fun.pruneArray theParent.layers theObj.leaf
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
@@ -2014,7 +1587,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						(
 							theObj=LPM_treeview_rollout.tv.selectedNode.tag.value
 							theParent=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
 							theParent.wildcard=(for i=1 to theParent.wildCard.count where i!=theObj.index collect theParent.wildCard[i])
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
@@ -2022,7 +1594,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						(
 							theObj=LPM_treeview_rollout.tv.selectedNode.tag.value
 							theParent=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
 							theParent.namedSet=(for i=1 to theParent.namedSet.count where i!=theObj.index collect theParent.namedSet[i])
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
@@ -2030,9 +1601,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						(
 							theObj=LPM_treeview_rollout.tv.selectedNode.tag.value
 							theParent=LPM_treeview_rollout.tv.selectedNode.parent.tag.value
-
 							LPM_Fun.pruneArray theParent.mats theObj.leaf
-
 							LPM_treeview_rollout.tv.selectedNode.remove()
 						)
 					)
@@ -2050,11 +1619,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			arg.Cancel = true
 			preventExpand = false
 		)
-		else
-		(
-			arg.node.tag.value.expanded=true
-		)
-
+		else( arg.node.tag.value.expanded=true )
 	)
 
 	on tv BeforeCollapse Arg do
@@ -2064,17 +1629,13 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			arg.Cancel = true
 			preventExpand = false
 		)
-		else
-		(
-			arg.node.tag.value.expanded=false
-		)
+		else ( arg.node.tag.value.expanded=false )
 	)
 
 	on tv MouseDown arg do
 	(
-		tmpDelta = (timestamp()) - lastMouseDown
-
-		lastMouseDown = timestamp()
+		tmpDelta 		= (timestamp()) - lastMouseDown
+		lastMouseDown 	= timestamp()
 
 		if (tmpDelta<500)and(TmpSelNode == tv.GetNodeAt arg.location) then
 		(
@@ -2082,21 +1643,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 			if hitNode != undefined then
 			(
 				local level = hitNode.level
-				if ((15+level*20) < (arg.x)) then
-				(
-					preventExpand = true
-				)
+				if ((15+level*20) < (arg.x)) then ( preventExpand = true )
 			)
-			else
-			(
-				preventExpand = false
-			)
+			else ( preventExpand = false )
 		)
-
-		else
-		(
-			preventExpand = false
-		)
+		else ( preventExpand = false )
 
 		TmpSelNode = tv.GetNodeAt arg.location
 	)
@@ -2115,8 +1666,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		(
 			LPM_activePass=newActive
 		)
-
-		updatePassDDL()
 
 		if hitNode==undefined then
 		(
@@ -2287,7 +1836,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 						hitNode.tag.value.active= not hitNode.tag.value.active
 						LPM_Fun.setIcon hitNode
 					)
-
 				)
 
 				if(button=="Middle") then
@@ -2316,7 +1864,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 								if(isvalidnode hitNode.tag.value.displayPass) then
 								(
 									LPM_ActivePass=hitNode.tag.value.displayPass
-									updatePassDDL()
 									hideByActivePass()
 								)
 								cp=LPM_Fun.firstChildByType (hitNode.tag.value) "commonProps"
@@ -2761,65 +2308,40 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 	)
 
-	on cameraDDL selected it do
+	on ddl_camera selected it do
 	(
 		if(selected==1) then
 			LPM_Root.renderCamera=undefined
 		else
-			LPM_Root.renderCamera=getNodeByName cameraDDL.items[it]
-		updateCameraDDL()
+			LPM_Root.renderCamera=getNodeByName ddl_camera.items[it]
+		updateddl_camera()
 	)
 
 	on LPM_treeview_rollout resized theSize do
 	(
-		if theSize[1] < 345 then
-		(
-			LPM_treeview_rollout.width = 345
-		)
-		if theSize[2] < 240 then
-		(
-			LPM_treeview_rollout.height = 240
-		)
+		if theSize[1] < 345 then ( LPM_treeview_rollout.width = 345 )
+		if theSize[2] < 240 then ( LPM_treeview_rollout.height = 240 )
 		LPM_Resize [LPM_treeview_rollout.width,LPM_treeview_rollout.height]
 	)
 
 	on LPM_treeview_rollout open do
 	(
+		print(LPM_Root.rootDir)
+		dnc_textBoxOutputPath.text = LPM_Root.rootDir
+
 		lpm_fun.preFileOpenCallback_Add()
-
-		editBox.visible = false
-		editBox.borderStyle = (dotNetClass "BorderStyle").FixedSingle
-
-		proMode=LPM_ReadLicense()
-
-		if(proMode) then LPM_Treeview_Rollout.title+=""
-		else
-		(
-			LPM_Treeview_Rollout.title+=" DEMO"
-			if(LPM_AdPopUp==undefined) then
-			(
-				purchase()
-				global LPM_AdPopUp=false
-			)
-		)
-
 		initTreeView tv
 		fillInTreeView tv
-		for i=1 to previewSizeDDL.items.count do
-			if((LPM_root.previewSize as string)==previewSizeDDL.items[i]) do
-				previewSizeDDL.selection=i
-		updateCameraDDL()
+		for i=1 to ddl_previewSize.items.count do
+			if((LPM_root.previewSize as string)==ddl_previewSize.items[i]) do
+				ddl_previewSize.selection=i
+		updateddl_camera()
 		renderType=getRenderType()
-		for i=1 to previewTypeDDL.items.count do
+		for i=1 to ddl_previewType.items.count do
 		(
-			if (renderType==(previewTypeDDL.items[i] as name)) then
-			(
-				previewTypeDDL.selection=i
-			)
+			if (renderType==(ddl_previewType.items[i] as name)) then(ddl_previewType.selection=i)
 		)
 
---		updateRenderButtonsState()
-		updateRFWandSkip()
 		LPM_Resize (getDialogSize LPM_Treeview_Rollout)
 	)
 
@@ -2841,75 +2363,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		LPM_Fun.setIni "LPM Window" "Y_Size" (LPM_treeview_rollout.height as string)
 		LPM_Fun.destroyAllDialogs()
 	)
-
-	on OutputPathDDL MouseDoubleClick arg do
-	(
-		if OutputPathDDL.readonly then
-		(
-			OutputPathDDL.readonly = false
-			OutputPathDDL.BackColor = LPM_BackColor
-		)
-	)
-
-
-	on OutputPathDDL keyUp e do
-	(
-		case e.keycode.tostring() of
-		(
-			"Escape":
-			(
-				OutputPathDDL.readonly = true
-				tmpcol = ((colorMan.getColor #timeSliderBg)*255) as color
-				OutputPathDDL.BackColor = dotNetColor tmpcol
-				OutputPathDDL.text = LPM_Root.rootDir
-			)
-			"Return":
-			(
-				if OutputPathDDL.readonly then
-				(
-					OutputPathDDL.readonly = false
-					OutputPathDDL.BackColor = LPM_BackColor
-				)
-				else
-				(
-					OutputPathDDL.readonly = true
-					tmpcol = ((colorMan.getColor #timeSliderBg)*255) as color
-					OutputPathDDL.BackColor = dotNetColor tmpcol
-
-					pathString = OutputPathDDL.text
-					isUNC=false
-					if(pathString[1]=="\\" and pathString[2]=="\\") then
-						isUNC=true
-
-					theArray=filterString pathString "\\"
-					pathString=""
-					for i=1 to (theArray.count - 1) do
-						pathString+=theArray[i]+"\\"
-
-					pathString+=theArray[theArray.count]
-					if(isUNC) then pathString="\\\\"+pathString
-
-					pathString+="\\"
-
-					if doesFileExist pathString then
-					(
-						LPM_Root.rootDir = OutputPathDDL.text = pathString
-					)
-					else
-					(
-						if (makeDir pathString) then
-						(
-							LPM_Root.rootDir = OutputPathDDL.text = pathString
-						)
-						else
-						(
-							OutputPathDDL.text = LPM_Root.rootDir
-						)
-					)
-				)
-			)
-		)
-	)
 )
 
 freshOpen = undefined
@@ -2919,21 +2372,11 @@ if(not (isvalidNode LPM_Root)) then
 	( freshOpen = true )
 
 	LPM_Root=LPM_Fun.createNode "Root" "root"
-	if(maxfilePath!="") then
-	(
-		LPM_Root.rootdir = LPM_Fun.autoSetRenderOutput()
-	)
-	else
-
-	LPM_Root.rootdir=(getDir #renderoutput )+"\\"
-	LPM_Root.fileType=LPM_Fun.getIni "Settings" "Default Format" string "exr"
-
-	filein (LPM_Dir+@"makeRenderElements.ms")
+	if(maxfilePath!="") then ( LPM_Root.rootdir = LPM_Fun.autoSetRenderOutput() )
+	else()
 )
-else ( freshOpen = false )
 
-if(LPM_Root.pathString==undefined) then
-	LPM_Root.pathString=LPM_Fun.getIni "LPM Render" "Path" string "$Shot\\$APass$Pass\\$APass$Pass"
+else ( freshOpen = false )
 
 if(	(LPM_Fun.FirstChildByType LPM_Root "shotRoot")==undefined) then
 (
@@ -2941,58 +2384,60 @@ if(	(LPM_Fun.FirstChildByType LPM_Root "shotRoot")==undefined) then
 	shotRoot.parent=LPM_Root
 )
 
-if ((getProperty LPM_Root #version)<2) then
+--check/set the name format of all the nodes
+if( not LPM_Root.namesUpdated) then
 (
-	x=queryBox "Unfortunately versions below 0.86 Beta and below are not compatible with versions 0.90 Beta and above.  Fortunately such code breaks such code breaks should not occur in the future.  Delete old LPM Data Yes/No?"
-	if(x)==true then
+	theNodes=LPM_Fun.getAllChildren LPM_Root
+	for it in theNodes do
 	(
-		delete $LPM_Root...*
-		messageBox "Old Data Cleared, please relaunch LPM, thank you!"
+		if((substring it.name 1 4)!="LPM_") then
+			it.name="LPM_"+it.name
+	)
+	LPM_Root.namesUpdated=true
+)
+--update user props from version 0099
+if(LPM_Root.id <= 0099) then
+(
+	theNodes=LPM_Fun.getAllChildren LPM_Root
+	for it in theNodes where it.type=="objectSet" do
+	(
+		if(it.userProp=="") then it.userProp=getUserPropBuffer it
 	)
 )
-else
+
+xPos=LPM_Fun.getIni "LPM Window" "X_Position" integer 0
+yPos=LPM_Fun.getIni "LPM Window" "Y_Position" integer 0
+sizeX=LPM_Fun.getIni "LPM Window" "X_Size"  integer 200
+sizeY=LPM_Fun.getIni "LPM Window" "Y_Size"  integer 430
+
+if(sizeX==0) then sizeX=200
+if(sizeY==0) then sizeY=430
+
+
+-- Only run if this is the first time LPM was launched in this scene
+if freshOpen then
 (
-	--check/set the name format of all the nodes
-	if( not LPM_Root.namesUpdated) then
-	(
-		theNodes=LPM_Fun.getAllChildren LPM_Root
-		for it in theNodes do
-		(
-			if((substring it.name 1 4)!="LPM_") then
-				it.name="LPM_"+it.name
-		)
-		LPM_Root.namesUpdated=true
-	)
-	--update user props from version 0099
-	if(LPM_Root.id <= 0099) then
-	(
-		theNodes=LPM_Fun.getAllChildren LPM_Root
-		for it in theNodes where it.type=="objectSet" do
-		(
-			if(it.userProp=="") then it.userProp=getUserPropBuffer it
-		)
-	)
+	-- Create Defualt Render elements
+	filein (LPM_Dir+@"makeRenderElements.ms")
 
-	xPos=LPM_Fun.getIni "LPM Window" "X_Position" integer 0
-	yPos=LPM_Fun.getIni "LPM Window" "Y_Position" integer 0
-	sizeX=LPM_Fun.getIni "LPM Window" "X_Size"  integer 200
-	sizeY=LPM_Fun.getIni "LPM Window" "Y_Size"  integer 430
+	-- Set studio defaults
+	LPM_Root.pathString = "$Shot\\$Pass\\$Pass" 								-- Set Fileoutput Path Token String to default
+	LPM_Root.renderType = 3 													-- Force to shots
+	LPM_Root.rootdir=(getDir #renderoutput )+"\\"
+	LPM_Root.fileType=LPM_Fun.getIni "Settings" "Default Format" string "exr" 	-- Set default filetype
+)
 
-	if(sizeX==0) then sizeX=200
-	if(sizeY==0) then sizeY=430
+createDialog LPM_treeview_rollout pos:[xPos,yPos] height:SizeY width:sizeX menu:rc_MainMenu    style:#(#style_toolwindow, #style_sysmenu,#style_resizing) lockHeight:false lockWidth:false -- 	  style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing,#style_minimizebox)
 
-	createDialog LPM_treeview_rollout pos:[xPos,yPos] height:SizeY width:sizeX menu:rc_MainMenu    style:#(#style_toolwindow, #style_sysmenu,#style_resizing) lockHeight:false lockWidth:false -- 	  style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing,#style_minimizebox)
+-- Only run if this is the first time LPM was launched in this scene
+if freshOpen then
+(
+	-- Create Default Pass
+	filein (LPM_Dir+@"QuickScripts\01Beauty Pass.ms")
 
-	-- Only run if this is the first time LPM was launched in this scene
-	if freshOpen then
-	(
-		-- Create Default Pass
-		filein (LPM_Dir+@"QuickScripts\01Beauty Pass.ms")
-
-		-- Create Default Shot
-		theShot=LPM_Fun.createShot LPM_Root
-		theShot.name = "LPM_Shot_v001"
-		shotNode=LPM_treeview_rollout.createShotTv theShot
-		LPM_treeview_rollout.addShotTv shotNode
-	)
+	-- Create Default Shot
+	theShot=LPM_Fun.createShot LPM_Root
+	theShot.name = "LPM_Shot_v001"
+	shotNode=LPM_treeview_rollout.createShotTv theShot
+	LPM_treeview_rollout.addShotTv shotNode
 )

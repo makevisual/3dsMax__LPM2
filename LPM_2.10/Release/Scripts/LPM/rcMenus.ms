@@ -1,4 +1,4 @@
-filein @"rcMenus\rcMenu_vrayOverride.ms"
+filein @"rcMenus\rcMenu_vrayOverride.ms" 						-- Dabelow
 filein @"rcMenus\rcMenu_deadlineOverride.ms" 					-- Dabelow
 filein @"rcMenus\rcMenu_Utilities.ms" 							-- Dabelow
 filein @"rcMenus\rcMenu_vrayRenderElementsOverride.ms" 			-- Dabelow vrayRenderElements
@@ -47,74 +47,50 @@ filein @"rcMenus\rcMenu_aeExport.ms"							-- Dabelow aeExport
 		on lightSetProps open do
 		(
 			LPM_treeview_rollout.FreezeWindow()
-			theLightSet=LPM_treeview_rollout.tv.selectedNode.tag.value
-
-			pEnable.selection=theLightSet.pEnable
-			pCastShadows.selection=theLightSet.pCastShadows
-
-			pColorEnable.checked=theLightSet.pColorEnable
-			pColor.enabled = pColorEnable.checked
-			pColor.color=theLightSet.pColor
+			theLightSet  						=LPM_treeview_rollout.tv.selectedNode.tag.value
+			pEnable.selection 					= theLightSet.pEnable
+			pCastShadows.selection 				= theLightSet.pCastShadows
+			pColorEnable.checked 				= theLightSet.pColorEnable
+			pColor.enabled 						= pColorEnable.checked
+			pColor.color 						= theLightSet.pColor
 
 			try
 			(
-
-				pMultiplierEnable.checked = theLightSet.pMultiplierEnable
-				pMultiplier.enabled = pMultiplierEnable.checked
-				pMultiplier.value = theLightSet.pMultiplier
-
-				pAffectDiffuse.selection=theLightSet.pAffectDiffuse
-				pAffectSpecular.selection=theLightSet.pAffectSpecular
-				pAffectReflections.selection=theLightSet.pAffectReflections
-				pUseTexture.selection=theLightSet.pUseTexture
-
-				pVrayInvisible.selection=theLightSet.pVrayInvisible
-
-				pTextureEnable.checked = theLightSet.pTextureEnable
-				pTexture.map = theLightSet.pTexture
-
+				pMultiplierEnable.checked 		= theLightSet.pMultiplierEnable
+				pMultiplier.enabled 			= pMultiplierEnable.checked
+				pMultiplier.value 				= theLightSet.pMultiplier
+				pAffectDiffuse.selection 		= theLightSet.pAffectDiffuse
+				pAffectSpecular.selection 		= theLightSet.pAffectSpecular
+				pAffectReflections.selection 	= theLightSet.pAffectReflections
+				pUseTexture.selection 			= theLightSet.pUseTexture
+				pVrayInvisible.selection 		= theLightSet.pVrayInvisible
+				pTextureEnable.checked 			= theLightSet.pTextureEnable
+				pTexture.map 					= theLightSet.pTexture
 			)
-			catch
-			(
+			catch()
 
-			)
-
-			if pAffectDiffuse.selection == 0 then
-			(
-				pAffectDiffuse.selection=pAffectSpecular.selection=pAffectReflections.selection=1
-			)
-
+			if pAffectDiffuse.selection == 0 then ( pAffectDiffuse.selection=pAffectSpecular.selection=pAffectReflections.selection=1 )
 		)
 
 
 		on lightSetProps close do
 		(
 			theLightSet=LPM_treeview_rollout.tv.selectedNode.tag.value
-
-
 			theLightSet.pEnable=pEnable.selection
-
 			theLightSet.pMultiplierEnable = pMultiplierEnable.checked
 			theLightSet.pMultiplier = pMultiplier.value
-
 			theLightSet.pColorEnable=pColorEnable.checked
 			theLightSet.pColor=pColor.color
-
 			theLightSet.pCastShadows=pCastShadows.selection
 			theLightSet.pAffectDiffuse=pAffectDiffuse.selection
 			theLightSet.pAffectSpecular=pAffectSpecular.selection
 			theLightSet.pAffectReflections=pAffectReflections.selection
 			theLightSet.pUseTexture=pUseTexture.selection
-
 			theLightSet.pVrayInvisible = pVrayInvisible.selection
-
 			theLightSet.pTextureEnable=pTextureEnable.checked
 			theLightSet.pTexture=pTexture.map
-
-
 			LPM_Fun.setIcon LPM_treeview_rollout.tv.selectedNode
 			LPM_treeview_rollout.UnFreezeWindow()
-
 		)
 
 		on pTexture picked TmpMap do
@@ -199,11 +175,7 @@ filein @"rcMenus\rcMenu_aeExport.ms"							-- Dabelow aeExport
 				)
 			)
 		)
-
 	)
-
-
-
 
 -------------------------------------------------------------------------------------------------------   LPM_objectSetProps   -------------------------------------------------------------------------------------------------------
 
@@ -1520,11 +1492,16 @@ rcMenu rc_MainMenu
 (
 	local scenePath=(getdir #maxroot)+"Scenes\\LPM\\"
 
-	menuItem	renderDialog	"Render"
-	
+	subMenu "Settings"
+	(
+		menuItem	renderDialog	"Output"
+	)
+
 	subMenu "Utilities"
 	(
-		menuItem nukeSceneGenerate "Build scene from Nuke Script"
+		menuItem quickScriptsLaunch "Create Pass from Preset"
+		seperator s0
+		menuItem nukeSceneGenerate "Load settings from Nuke Script"
 		seperator s1
 		menuitem elementGenerate "Generate Default Elements"
 	)
@@ -1532,6 +1509,11 @@ rcMenu rc_MainMenu
 	subMenu		"Help"
 	(
 		menuItem	HelpMenuNew	"LPM Help"
+	)
+
+	on presetsLaunch picked do 
+	(
+		LPM_Fun.QuickScripts()
 	)
 
 	on elementGenerate picked do
@@ -1557,9 +1539,9 @@ rcMenu rc_MainMenu
 		)
 	)
 
-	on quickScripts picked do( LPM_Fun.quickScripts() )
-	on helpMenuNew picked do( shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" "" )
-	on renderDialog picked do( filein (LPM_Dir + "RenderRO.ms")
+	on quickScriptsLaunch 	picked do( LPM_Fun.quickScripts() )
+	on helpMenuNew 			picked do( shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" "" )
+	on renderDialog 		picked do( filein (LPM_Dir + "RenderRO.ms")
 
 	)
 )

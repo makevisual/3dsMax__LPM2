@@ -1401,46 +1401,7 @@ fn generateRenderImageName cp=
 fn generateVray6PropName cp=
 (
 	theName = ""
-
-
-	if (cp.qualityType == 1) then
-	(
-		theName = "[Final/Prev] "
-	)else if (cp.qualityType == 2) then
-	(
-		theName = "[Final] "
-	)else if (cp.qualityType == 3) then
-	(
-		theName = "[Prev] "
-	)
-
 	theName += "Vray6 Override "
-
-	if (cp.global_switches_check) then
-	(
-		theName += "[Globals] "
-	)
-	if (cp.anti_aliasing_check) then
-	(
-		theName += "[AA] "
-	)
-	if (cp.GI_check) then
-	(
-		theName += "[GI] "
-	)
-	if (cp.moblur_check) then
-	(
-		theName += "[Moblur] "
-	)
-	if (cp.prog_check) then
-	(
-		theName += "[Prog] "
-	)
-	if (cp.dmc_check) then
-	(
-		theName += "[DMC] "
-	)
-
 	theName
 ),
 

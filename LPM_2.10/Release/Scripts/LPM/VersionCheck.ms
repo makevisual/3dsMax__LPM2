@@ -141,7 +141,9 @@ then
 	else 									-- Compare versions and warn if opening a newer scene in an older version of LPM
 	(
 		result = compareVersions loadedVersion LPM_VersionNumber
-		if result == "newer"then (showLPMVersionTooNewWarning())
+		if result == "newer"
+		then ( showLPMVersionTooNewWarning())
+		else ( LPM_ContinueLoad = true)
 	)
 )
 
