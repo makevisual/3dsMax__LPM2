@@ -16,25 +16,21 @@ rollout LPM_RenderRo "Output Dialog" width:500 height:220
 	label 			lab_filetype 			"Filetype:" 	pos:[12,100] height:20
 	edittext 			edt_filetype 		"" 				pos:[60  ,lab_filetype.pos[2]-2] width:48 height:20 enabled:true readOnly:true	
 	button 				btn_filetypePick 	"Pick" 			pos:[110  ,lab_filetype.pos[2]-2] width:40 height:20
+	label 				lab_vrayExr 		"NOTE: V-Ray Renders always revert to .EXR" pos:[160  ,lab_filetype.pos[2]+1] height:20 enabled:false
 
 	GroupBox 		grp_preview 			"Preview" 		pos:[5,130] width:490 height:80
 		dotNetControl 	rtb_preview 		"System.Windows.Forms.RichTextBox" pos:[10,grp_preview.pos[2]+15] width:480 height:60
 
 	fn updatePathPreview=
 	(
-		-- Generate the full filepath
-		fullFilePath 			= " "
-		fullFilePath 			+= LPM_Root.rootDir
-		fullFilePath 			+= LPM_Root.pathString
-		fullFilePath 			+= (".####." + LPM_Root.fileType)
+		-- Bring in the output path functions
+		output_pathFunctions 	= output_pathFunctionsStr()
 
 		-- Update the various ui items
-		rtb_preview.text 		= fullFilePath
+		rtb_preview.text 		= output_pathFunctions.genPreviewOutput()
 		edt_directoryText.text 	= LPM_Root.rootDir
 		edt_filenameText.text 	= LPM_Root.pathString
 		edt_filetype.text 		= LPM_Root.fileType
-
-		--print("hellloooo?")
 	)
 
 	on edt_directoryText TextChanged do

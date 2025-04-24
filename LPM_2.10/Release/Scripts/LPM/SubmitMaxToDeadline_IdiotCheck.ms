@@ -183,15 +183,18 @@ struct SMTDIdiotCheck
 	 	results = #()
 	 	chkMessage = "IC: Checked if rendereing hidden lights disabled"
 	 	re = renderers.current 
+		
+		-- TryCatch because this is a VRAY Property that will fail on non-vray renders
+		try(
+			if re.options_hiddenLights == false 
+			then 
+			(
+				result = (  " Hidden lights are disabled and will not render, this is not advised"  )
+				join results #( result )
 
-		if re.options_hiddenLights == false 
-		then 
-		(
-			result = (  " Hidden lights are disabled and will not render, this is not advised"  )
-			join results #( result )
-
-			return #("fail", 2, results, chkMessage )
-		)
+				return #("fail", 2, results, chkMessage )
+			)
+		)catch()
 
 	  	return #("pass", 0,"0", chkMessage )
 

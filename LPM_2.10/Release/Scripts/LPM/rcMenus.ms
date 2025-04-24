@@ -1176,7 +1176,7 @@ rollout LPM_commonRollout "Common Properties" width:370 height:350
 		checkbox 		renderTypeTgl "" 				pos:[4,209] width:15 height:16
 		dropdownList 	renderTypeDDL "" 				pos:[34,216] width:315 height:21 items:#("view", "region", "crop", "blowup")
 
-	GroupBox 			grp5 "File Type Override" 		pos:[24,251] width:335 height:50 enabled:false
+	GroupBox 			grp5 "File Type Override ( V-Ray will revert to .exr )" 		pos:[24,251] width:335 height:50 enabled:false
 		checkbox 		fileTypeTgl "" 					pos:[4,258] width:15 height:20
 		button 			pickTypeButton "Pick" 			pos:[30,270] width:60 height:20 enabled:false
 		edittext 		_fileType "" 					pos:[91,270] width:53 height:20 readOnly:true

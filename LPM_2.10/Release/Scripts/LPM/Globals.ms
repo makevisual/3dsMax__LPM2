@@ -37,6 +37,7 @@ global LPM_VersionNumber 					-- Dabelow
 global LPM_SMTDSettings 					-- Dabelow
 global LPM_NukeAPI 							-- Dabelow
 global LPM_RenderDispatchThePass 			-- Dabelow Render Dispatch ( future renderer compatable )
+global LPM_RenderDispatchTheShot 			-- Dabelow Render Dispatch ( future renderer compatable )
 global LPM_RenderDispatchAction 			-- Dabelow Render Dispatch ( future renderer compatable )
 global LPM_RenderDispatchRestoreData 		-- Dabelow Render Dispatch ( future renderer compatable )
 global LPM_OperatorData 					-- Dabelow 

@@ -6,6 +6,7 @@ version:2
 	(
 		type type:#string
 		rootDir type:#string
+		fullOutputPath type:#string
 		fileType type:#string
 		pathString type:#string
 		quietMode type:#boolean default:true

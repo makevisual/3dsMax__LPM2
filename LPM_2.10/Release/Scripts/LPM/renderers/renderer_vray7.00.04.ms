@@ -59,7 +59,6 @@ struct Vray7_RestoreDataStr
     dmcMult                 = undefined
 )
 
-
 ---------- GLOBAL SWITCHES ----------
 
 ---- Prerender Globals
@@ -77,6 +76,13 @@ function preRenderAction_ProductionGlobals =
     if renderers.current.output_rawFileName == undefined
     then ( Vray7_RestoreData.output_rawFileName  = "" )
     else ( Vray7_RestoreData.output_rawFileName  = renderers.current.output_rawFileName )
+
+
+
+-- TODO: Attach the deep hooks
+--    renderers.current.output_rawExrDeep = cp.deepEXR
+
+
 
     -- stores various other output and frame buffer settings
     Vray7_RestoreData.output_saveRawFile        = renderers.current.output_saveRawFile
@@ -106,12 +112,7 @@ function preRenderAction_ProductionGlobals =
     renderers.current.output_on             = true                           -- force vray frame buffer on
 
     -- NOTE: Forcing .exr filetype over other filetypes for compatability with the VRAY Frame buffer memory management benefits
-    --renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
-    -- TODO: Activly Fixing filetype override
-    print ( "---------rendOutputFilename - " + rendOutputFilename)
-    renderers.current.output_rawFileName    = (rendOutputFilename)   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
-
-
+    renderers.current.output_rawFileName    = (thePath + theFile + ".exr")   -- ( previously rendOutputFilename ) steal the name from the 3dsmax render output filename global ( set in render.ms )
     renderers.current.output_saveRawFile    = true                           -- enable saving the file
     renderers.current.output_splitgbuffer   = true                           -- enable render elements to be stored in the output ??????
     renderers.current.output_genpreview     = true                           -- Not sure if this needs to be on or not
@@ -161,7 +162,6 @@ function postRenderAction_ProductionGlobals =
     -- Open the material editor if it was open
     if Vray7_RestoreData.matEditor_open then (MatEditor.Open())
 )
-
 
 ---------- RENDER ELEMENTS OPERATOR ----------
 
@@ -232,7 +232,6 @@ function postRenderAction_RenderElements =
     ----------------- Could be, because vray VFB has them set before the render and then rests them?
 )
 
-
 ---------- UTILITIES ----------
 
 -- Add optionRE metadata to the .exr files
@@ -284,9 +283,6 @@ function preRenderAction_OptionRECustomMetadata =
 
 -- TODO:
 ---------- CAMERA OVERSCAN OPERATOR ----------
----------- NUKE EXPORT OPERATOR ----------
----------- AFTER EFFECTS EXPORT OPERATOR ----------
-
 
 
 ---------- PROGRAM FLOW ---------- 
@@ -306,9 +302,6 @@ function preRenderAction_Production =
 ---- Pre-Render Action for Preview
 function preRenderAction_Preview =
 (
---    clearListener()
-    print"=========== PreRender Preview ==============="
-
     -- Construct object for storing pre-render state for use for restoring later
     LPM_RenderDispatchRestoreData = Vray7_RestoreDataStr()
 
@@ -329,14 +322,71 @@ function postRenderAction_Production =
         try( Vray7_Override_PostRender() )catch() -- TODO: remove later????
     )
 
-     postRenderAction_RenderElements()
-
     -- call each of the postrender functions
+    postRenderAction_RenderElements()
+)
+
+function localRenderAction =
+(
+    theShot = LPM_RenderDispatchTheShot
+
+    SetQuietMode LPM_Root.quietMode
+    cp=LPM_Fun.firstChildByType theShot "commonProps"
+
+    if cp._rendTimeType == 1 then
+    (
+        -- print("Single")
+        render fromframe:currentTime toframe:currentTime
+    )
+    
+    if cp._rendTimeType == 2 then
+    (
+        -- print("Active Timeline")
+        render fromframe:animationRange.start toframe:animationRange.end
+    )
+    
+    if cp._rendTimeType == 3 then
+    (
+        -- print("Range")
+        render fromframe:( cp._rendStart) toframe:( cp._rendEnd )
+    )
+    
+    if cp._rendTimeType == 4 then
+    (
+        print("Frame List")
+
+        frames = #()
+        parts = filterString cp._rendPickupFrames "," -- split on commas
+        
+        for part in parts do
+        (
+            if findString part "-" != undefined then
+            (
+                rangeParts = filterString part "-"
+                if rangeParts.count == 2 then
+                (
+                    startVal    = rangeParts[1] as integer
+                    endVal      = rangeParts[2] as integer
+                    for i       = startVal to endVal do append frames i
+                )
+            )
+            else ( append frames (part as integer) )
+        )
+        
+        -- Render each of the frames from the built list
+        for frame in frames do ( render fromframe:(frame) toframe:(frame) )
+    )
+
+    -- print(cp._rendTimeType)
+    -- print(cp._rendStart)
+    -- print(cp._rendEnd)
+    -- print(cp._rendPickupFrames)
 )
 
 ---------- API HOOKS ---------- 
 
 -- Cases for each of the methods a dispatch can be called.
-if LPM_RenderDispatchAction == #preRender then preRenderAction_Production()
-if LPM_RenderDispatchAction == #PreviewRender then  preRenderAction_Preview()
-if LPM_RenderDispatchAction == #postRender then postRenderAction_Production()
+if LPM_RenderDispatchAction == #preRender       then preRenderAction_Production()
+if LPM_RenderDispatchAction == #PreviewRender   then preRenderAction_Preview()
+if LPM_RenderDispatchAction == #LocalRender     then localRenderAction()
+if LPM_RenderDispatchAction == #postRender      then postRenderAction_Production()

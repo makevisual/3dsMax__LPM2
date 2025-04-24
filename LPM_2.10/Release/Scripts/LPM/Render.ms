@@ -87,7 +87,7 @@ struct LPM_RenderAPI
 			if(cp.cameraTgl) then(viewport.setCamera cp._Camera)
 			if(cp.renderTypeTgl) then(setRenderType (cp.renderType as name))
 
-			renderers.current.output_rawExrDeep = cp.deepEXR
+--			renderers.current.output_rawExrDeep = cp.deepEXR
 			rendSaveFile=not cp.disableFinalOutput
 		)
 
@@ -460,7 +460,11 @@ struct LPM_RenderAPI
 				)
 
 				-- rendOutputFilename
-				rendOutputFilename=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewMode:false RendPreviewMode:isPreviewMode elementName:""
+				--------- THIS IS WHERE THE FILENAME IS MADE -------------
+				--rendOutputFilename=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewMode:false RendPreviewMode:isPreviewMode elementName:""
+
+-- New Output path Handling - Dabelow
+rendOutputFilename=LPM_Root.fullOutputPath=LPM_Fun.getPassPath LPM_Root thePass theShot:theShot previewMode:false RendPreviewMode:isPreviewMode elementName:""
 
 				--Save current renderer settings
 				AdjpreRenderSettings=undefined
@@ -1348,12 +1352,12 @@ LPM_Render=LPM_RenderAPI()
 
 fn LPM_renderPass thePass renderType theShot:undefined=
 (
-
+	renderDebugMode = True
 ---- TODO: Put the ONE try catch around this block to restore render on bad execution
 
 	---- Begin render saftey try Catch Block ----
 	recoveryException = #none	
-	try(
+--	try(
 
 		-- Store if the render dialog is opened, and close if open
 		RndDialogOpened = false
@@ -1402,71 +1406,77 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 		-- For testing recovery
 		-- throw(recoveryException = #prerender)
-	)
-	catch(recoveryException = #prerender)
+--	)
+--	catch(recoveryException = #prerender)
 
 --	try(
 		-- Render calls for #local and #preview
 		with defaultAction #logmsg
 		(
 
+-------- TODO: Move This into the render Dispatch
+
 			-- If Local Mode Mode
 			if(renderType==#local)
 			then
 			(
-				SetQuietMode LPM_Root.quietMode
-				cp=LPM_Fun.firstChildByType theShot "commonProps"
 
-				-- TODO: Fix frame range by reading frame list from CP properties
+				-- Sends job to renderer dispatch to make any renderer specific last minuet adjustments
+				LPM_RenderDispatchTheShot 	= theShot
+				LPM_RenderDispatchAction 	= #LocalRender
+				filein (LPM_Dir+"renderer_dispatch.ms")
 
-				if cp._rendTimeType == 1 then
-				(
-					-- print("Single")
-					render fromframe:currentTime toframe:currentTime
-				)
-				
-				if cp._rendTimeType == 2 then
-				(
-					-- print("Active Timeline")
-					render fromframe:animationRange.start toframe:animationRange.end
-				)
-				
-				if cp._rendTimeType == 3 then
-				(
-					-- print("Range")
-					render fromframe:( cp._rendStart) toframe:( cp._rendEnd )
-				)
-				
-				if cp._rendTimeType == 4 then
-				(
-					print("Frame List")
-
-				    frames = #()
-				    parts = filterString cp._rendPickupFrames "," -- split on commas
-				    
-				    for part in parts do
-				    (
-				        if findString part "-" != undefined then
-				        (
-				            rangeParts = filterString part "-"
-				            if rangeParts.count == 2 then
-				            (
-				                startVal 	= rangeParts[1] as integer
-				                endVal 		= rangeParts[2] as integer
-				                for i 		= startVal to endVal do append frames i
-				            )
-				        )
-				        else ( append frames (part as integer) )
-				    )
-				    
-				    -- Render each of the frames from the built list
-				    for frame in frames do ( render fromframe:(frame) toframe:(frame) )
-				)
-
-				print(cp._rendTimeType)
-				print(cp._rendStart)
-				print(cp._rendEnd)
-				print(cp._rendPickupFrames)
+--				SetQuietMode LPM_Root.quietMode
+--				cp=LPM_Fun.firstChildByType theShot "commonProps"
+--
+--				if cp._rendTimeType == 1 then
+--				(
+--					-- print("Single")
+--					render fromframe:currentTime toframe:currentTime
+--				)
+--				
+--				if cp._rendTimeType == 2 then
+--				(
+--					-- print("Active Timeline")
+--					render fromframe:animationRange.start toframe:animationRange.end
+--				)
+--				
+--				if cp._rendTimeType == 3 then
+--				(
+--					-- print("Range")
+--					render fromframe:( cp._rendStart) toframe:( cp._rendEnd )
+--				)
+--				
+--				if cp._rendTimeType == 4 then
+--				(
+--					print("Frame List")
+--
+--				    frames = #()
+--				    parts = filterString cp._rendPickupFrames "," -- split on commas
+--				    
+--				    for part in parts do
+--				    (
+--				        if findString part "-" != undefined then
+--				        (
+--				            rangeParts = filterString part "-"
+--				            if rangeParts.count == 2 then
+--				            (
+--				                startVal 	= rangeParts[1] as integer
+--				                endVal 		= rangeParts[2] as integer
+--				                for i 		= startVal to endVal do append frames i
+--				            )
+--				        )
+--				        else ( append frames (part as integer) )
+--				    )
+--				    
+--				    -- Render each of the frames from the built list
+--				    for frame in frames do ( render fromframe:(frame) toframe:(frame) )
+--				)
+--
+--				print(cp._rendTimeType)
+--				print(cp._rendStart)
+--				print(cp._rendEnd)
+--				print(cp._rendPickupFrames)
 
 				-- render fromframe:cp._rendStart toframe:cp._rendEnd
 			)
@@ -1475,6 +1485,11 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			-- If Preview Mode
 			if(renderType==#preview)
 			then(render() )
+
+
+------------------------------
+
+
 
 			-- For testing recovery
 			--throw(recoveryException = #render)

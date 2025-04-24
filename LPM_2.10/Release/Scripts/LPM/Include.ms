@@ -12,6 +12,7 @@ then (
 
 	filein (LPM_Dir+"include.mcr")
 	filein (LPM_Dir+"CA.ms")
+	filein (LPM_Dir+"output_paths.ms") 		-- Added by Aaron Dabelow
 	filein (LPM_Dir+"functions.ms")
 	filein (LPM_Dir+"render.ms")
 	filein (LPM_Dir+"rcMenus.ms")

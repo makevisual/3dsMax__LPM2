@@ -5,9 +5,7 @@ curRenderer = ( renderers.current as string )
 
 case curRenderer of
 (
-    default                                                 : ()
-    "Default_Scanline_Renderer:Default_Scanline_Renderer"   : ()
-    "V_Ray_6__update_2:V_Ray_6__update_2"                   : ( filein ( LPM_Dir + @"renderers\" +"renderer_vray6.20.02.ms" ) )
-    "V_Ray_7_Beta:V_Ray_7_Beta"                             : ( filein ( LPM_Dir + @"renderers\" +"renderer_vray7beta.ms" ) )
+    default                                                 : ( messagebox("Render Engine not found in render Dispatch!"))
+    "Default_Scanline_Renderer:Default_Scanline_Renderer"   : ( filein ( LPM_Dir + @"renderers\" +"Default_Scanline_Renderer.ms" ) )
     "V_Ray_7_Hotfix_1:V_Ray_7_Hotfix_1"                     : ( filein ( LPM_Dir + @"renderers\" +"renderer_vray7.00.04.ms" ) )
 )
