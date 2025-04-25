@@ -54,7 +54,9 @@ DLini = ( PROGRAMDATA + @"\Thinkbox\Deadline10\deadline.ini" )
 -- if doesFileExist DLini then ( LPM_deadlineInfo.dl_NetworkRoot = ( getinisetting dlini "Deadline" "NetworkRoot" ) )
 
 -- Back to hard coded because of locked and bad ini file from aws thinkbox
-LPM_deadlineInfo.dl_NetworkRoot = (getUserProp LPM_Root "DeadlineRepository")
+--LPM_deadlineInfo.dl_NetworkRoot = (getUserProp LPM_Root "DeadlineRepository")
+LPM_deadlineInfo.dl_NetworkRoot = LPM_Root.deadlinePath
+
 
 -- This used to be hard coded, now it runs off of the deadline ini file
 LPM_deadlineInfo.dl_fnScript = ( LPM_deadlineInfo.dl_NetworkRoot + @"\submission\3dsmax\Main\SubmitMaxToDeadline_Functions.ms" )

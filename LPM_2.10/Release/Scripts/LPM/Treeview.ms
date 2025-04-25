@@ -2434,11 +2434,12 @@ if freshOpen then
 	filein (LPM_Dir+@"makeRenderElements.ms")
 
 	-- Set studio defaults
-	LPM_Root.deadlinePathOverridden = false
-	LPM_Root.pathString = "$Shot\\$Pass\\$Pass" 								-- Set Fileoutput Path Token String to default
-	LPM_Root.renderType = 3 													-- Force to shots
-	LPM_Root.rootdir=(getDir #renderoutput )+"\\"
-	LPM_Root.fileType=LPM_Fun.getIni "Settings" "Default Format" string "exr" 	-- Set default filetype
+	LPM_Root.deadlinePathOverridden = false 																			-- Sets Deadline pathing to Automatic
+	LPM_Root.deadlinePath 			= (dotNetClass "System.Environment").GetEnvironmentVariable "DEADLINE_CUSTOM_PATH" 	-- Gets the automatic Deadline Path
+	LPM_Root.pathString 			= "$Shot\\$Pass\\$Pass" 															-- Set Fileoutput Path Token String to default
+	LPM_Root.renderType 			= 3 																				-- Force to shots
+	LPM_Root.rootdir 				= (getDir #renderoutput )+"\\"  													-- Sets the root dir
+	LPM_Root.fileType 				= LPM_Fun.getIni "Settings" "Default Format" string "exr" 							-- Set default filetype
 )
 
 createDialog LPM_treeview_rollout pos:[xPos,yPos] height:SizeY width:sizeX menu:rc_MainMenu    style:#(#style_toolwindow, #style_sysmenu,#style_resizing) lockHeight:false lockWidth:false -- 	  style:#(#style_titlebar,#style_border, #style_sysmenu,#style_resizing,#style_minimizebox)

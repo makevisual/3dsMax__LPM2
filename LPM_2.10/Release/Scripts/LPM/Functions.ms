@@ -53,6 +53,8 @@ fn cleanSet theSet=
 	theSet.nodes=for it in theSet.nodes where (isvalidnode it) collect it
 ),
 
+
+-- TODO! -- This is that noisy section
 fn firstChildByType theParent type=
 (
 	print( theParent.children )
