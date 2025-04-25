@@ -8,6 +8,10 @@ version:2
 		rootDir type:#string
 		fullOutputPath type:#string
 		processorActive type:#integer
+		deadlinePath type:#string
+		deadlinePathManual type:#string
+		deadlinePathManualEnabled type:#boolean
+--		deadlinePathOverridden type:#boolean
 		fileType type:#string
 		pathString type:#string
 		quietMode type:#boolean default:true

@@ -1494,7 +1494,8 @@ rcMenu rc_MainMenu
 
 	subMenu "Settings"
 	(
-		menuItem	renderDialog	"Output"
+		menuItem	renderDialog			"File Output"
+		menuItem	deadlineSettingsDialog	"Deadline Settings"
 	)
 
 	subMenu "Utilities"
@@ -1539,11 +1540,10 @@ rcMenu rc_MainMenu
 		)
 	)
 
-	on quickScriptsLaunch 	picked do( LPM_Fun.quickScripts() )
-	on helpMenuNew 			picked do( shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" "" )
-	on renderDialog 		picked do( filein (LPM_Dir + "RenderRO.ms")
-
-	)
+	on quickScriptsLaunch 			picked do( LPM_Fun.quickScripts() )
+	on helpMenuNew 					picked do( shellLaunch "https://makevisual.com/brain/mediawiki/index.php?title=Using_LPM_for_rendering_in_3dsMax" "" )
+	on renderDialog 				picked do( filein (LPM_Dir + "RenderRO.ms"))
+	on deadlineSettingsDialog 		picked do( filein (LPM_Dir + "deadlineRO.ms"))
 )
 
 -------------------------------------------------------------------------------------------------------   RootMenu   -------------------------------------------------------------------------------------------------------

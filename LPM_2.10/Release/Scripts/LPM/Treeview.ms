@@ -2434,6 +2434,7 @@ if freshOpen then
 	filein (LPM_Dir+@"makeRenderElements.ms")
 
 	-- Set studio defaults
+	LPM_Root.deadlinePathOverridden = false
 	LPM_Root.pathString = "$Shot\\$Pass\\$Pass" 								-- Set Fileoutput Path Token String to default
 	LPM_Root.renderType = 3 													-- Force to shots
 	LPM_Root.rootdir=(getDir #renderoutput )+"\\"
