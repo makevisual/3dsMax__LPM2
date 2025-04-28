@@ -1390,8 +1390,14 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 			if(renderType==#previewHalf) then
 			(
+				-- print ( "------------- RENDER PREVIEW 50% CHUNK " )
+				-- print ( "----- LPM_Root.previewSize - " + LPM_Root.previewSize as string )
+
 				renderHeight 	=(renderHeight 	* (LPM_Root.previewSize as float) / 100.0)
 				renderWidth 	=(renderWidth 	* (LPM_Root.previewSize as float) / 100.0)
+
+				-- print ( "----- renderHeight - " + renderHeight as string )
+				-- print ( "----- renderWidth - " + renderWidth as string )
 			)
 		)
 
@@ -1418,10 +1424,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			)
 			else()
 
-			-- If Preview Mode
-			if(renderType==#preview)
-			then(render() )
-
+		-- Start the render if it is preview
+		if (renderType == #preview or renderType == #previewHalf) then (render())
 
 ------------------------------
 

@@ -1368,6 +1368,64 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on tv textChanged arg do()
 
+
+
+	on editBox lostFocus e do
+	(
+		hideEditBox()
+	)
+
+	on editBox MouseWheel e do
+	(
+		hideEditBox()
+	)
+	on editBox keyUp e do
+	(
+		print("------ Starting Here ")
+		case e.keycode.tostring() of
+		(
+			"Return":
+			(
+		print("------ Return Hit ")
+				theNode=rNode
+				type = theNode.tag.value.type
+				word=editBox.text
+				if(type=="shot" or type=="pass") then word=LPM_Fun.removeBadChars word
+
+				theNode.text = word
+				case type of
+				(
+					"wildcard": (	theNode.Parent.tag.value.wildCard[theNode.tag.value.index]=word)
+					"shot":
+					(
+						pos=findstring word "[["
+						if(pos!=undefined) then
+							theNode.tag.value.name="LPM_"+(substring word 1 pos)
+						else
+							theNode.tag.value.name="LPM_"+word
+						theNode.text=LPM_Fun.getShotName theNode.tag.value
+					)
+					"pass":
+					(
+						theNode.tag.value.name="LPM_"+word
+						theNode.text = LPM_Fun.generatePassName theNode.tag.value
+						updatePassDDL()
+					)
+					default:	(try(theNode.tag.value.name="LPM_"+word)catch())
+
+				)
+				hideEditBox()
+
+				LPM_treeview_rollout.updateTV()
+			)
+			"Escape":
+			(
+				hideEditBox()
+
+			)
+		)
+	)
+
 	on tv keyDown e do
 	(
 		if (keyboard.controlpressed)and ((e.keycode.tostring())=="Z") then

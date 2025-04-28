@@ -57,7 +57,10 @@ fn cleanSet theSet=
 -- TODO! -- This is that noisy section
 fn firstChildByType theParent type=
 (
-	print( theParent.children )
+	-- print( theParent.children )
+
+	-- GPT suggested this
+    if theParent == undefined do return undefined
 
 	for kids in theParent.children where kids.type==type do
 	(
