@@ -1812,6 +1812,7 @@ rcMenu rc_shotMenu
 
 	menuItem nameIncrement "Increment name (alt + numpad8)"
 	menuItem nameDecrement "Decrement name (alt + numpad2)"
+	menuItem renameShot "Rename Shot"
 
 	seperator s0
 	menuItem SelectPasses "Include Passes..."
@@ -1826,13 +1827,19 @@ rcMenu rc_shotMenu
 	menuItem    AddNukeExport "Add Nuke Export" 					-- Dabelow nukeExport
 	menuItem    AddAeExport "Add After Effect Export" 				-- Dabelow aeExport
 
-	seperator s4
-	menuItem renderShot "Submit Local"
-	menuItem renderShotNetwork "Submit Network"
+--	seperator s4
+--	menuItem renderShot "Submit Local"
+--	menuItem renderShotNetwork "Submit Network"
 
 	seperator sepr4
 	menuItem duplicateShot "Duplicate Shot"
 	menuItem deleteShot "Delete Shot"
+
+
+	on renameShot picked do 
+	(
+		LPM_treeview_rollout.renameNode LPM_treeview_rollout.tv.selectedNode
+	)
 
 	on nameIncrement picked do 
 	(
@@ -1998,6 +2005,7 @@ rcMenu rc_PassMenu
 	menuItem	renderThisPassNetwork "Submit Network"
 	seperator set2
 	menuItem editPassSettings "Edit..."
+	menuItem renamePassSettings "Rename"
 	subMenu "Add"
 	(
 		menuItem objectSetAdd "Object Set"
@@ -2024,6 +2032,10 @@ rcMenu rc_PassMenu
 	on editPassSettings picked do
 	(
 		filein (LPM_Dir + "passSettingsRO.ms")
+	)
+	on renamePassSettings picked do
+	(
+		LPM_treeview_rollout.renameNode LPM_treeview_rollout.tv.selectedNode
 	)
 	on deletePass picked do
 	(

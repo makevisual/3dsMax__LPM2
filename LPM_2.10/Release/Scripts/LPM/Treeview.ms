@@ -119,6 +119,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	dropDownList    	ddl_selectProcessor 	"" 			pos:[40,200] items:processorList width:200
 		button 			btn_execute 			" Execute " pos:[40,200] width:120
 
+	-- This is the rename filed
+	dotNetControl editBox "TextBox"  pos:[0,70] height:20 width:120
+
 	fn FreezeWindow =
 	(
 		tv.enabled 							= false
@@ -1151,9 +1154,39 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		createDialog matPicker pos:(LPM_Fun.getRoPos matPicker.width)
 	)
 
+	fn hideEditBox=
+	(
+		editBox.visible = false
+		tv.enabled = true
+		tv.refresh()
+		tv.focus()
+	)
+
+	-- TODO: Finish Fixing this 
+	fn showEditBox=
+	(
+		if(rNode==undefined) then
+			return false
+		tv.enabled = false
+		editBox.pos = [tv.pos.x+rNode.bounds.x,tv.pos.y+rNode.bounds.y]
+		if rNode.tag.value.type == "pass" then
+		(
+			editBox.text = LPM_Fun.getName rNode.tag.value.name
+		)
+		else
+		(
+			editBox.text = rNode.text
+		)
+
+		editBox.visible = true
+		editBox.focus()
+	)
+
+	-- TODO: Finish Fixing this 
 	fn renameNode iNode=
 	(
 		rNode=iNode
+		showEditBox()
 	)
 
 	fn hideBySet theSet=
@@ -1409,7 +1442,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					(
 						theNode.tag.value.name="LPM_"+word
 						theNode.text = LPM_Fun.generatePassName theNode.tag.value
-						updatePassDDL()
+--						updatePassDDL()
 					)
 					default:	(try(theNode.tag.value.name="LPM_"+word)catch())
 
@@ -1718,6 +1751,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on tv MouseUp arg do
 	(
+		print "click"
+
 		nTime=timestamp()
 		delta=nTime - sTime
 		sTime=0 --Assume its an invalid click, if its valid we will the timestamp later
@@ -1749,6 +1784,8 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					sTime=nTime
 					if (delta > 600) and (delta < 1100) and (oldHitNode==hitNode)  then
 					(
+						print "Rename Double Click"
+						print ("hitNode - " + ( hitNode as string ) )
 						renameNode hitNode
 					)
 				)
@@ -2390,12 +2427,41 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on LPM_treeview_rollout open do
 	(
+--		lpm_fun.preFileOpenCallback_Add()
+--		lpm_fun.vrayDR_restartSlaves_check() -- dabelow
+--
+--		editBox.visible = false
+--		editBox.borderStyle = (dotNetClass "BorderStyle").FixedSingle
+--
+--		proMode=LPM_ReadLicense()
+--
+--		if(proMode) then LPM_Treeview_Rollout.title+=""
+--		else
+--		(
+--			LPM_Treeview_Rollout.title+=" DEMO"
+--			if(LPM_AdPopUp==undefined) then
+--			(
+--				purchase()
+--				global LPM_AdPopUp=false
+--			)
+--		)
+--
+--		initTreeView tv
+--		fillInTreeView tv
+
+
+
 		print(LPM_Root.rootDir)
 		dnc_textBoxOutputPath.text = LPM_Root.rootDir
 
+		editBox.visible = false
+		editBox.borderStyle = (dotNetClass "BorderStyle").FixedSingle
+
 		lpm_fun.preFileOpenCallback_Add()
+		
 		initTreeView tv
 		fillInTreeView tv
+
 		for i=1 to ddl_previewSize.items.count do
 			if((LPM_root.previewSize as string)==ddl_previewSize.items[i]) do
 				ddl_previewSize.selection=i
