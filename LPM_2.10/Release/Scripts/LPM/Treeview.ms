@@ -1414,12 +1414,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	)
 	on editBox keyUp e do
 	(
-		print("------ Starting Here ")
 		case e.keycode.tostring() of
 		(
 			"Return":
 			(
-		print("------ Return Hit ")
 				theNode=rNode
 				type = theNode.tag.value.type
 				word=editBox.text
@@ -1442,7 +1440,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 					(
 						theNode.tag.value.name="LPM_"+word
 						theNode.text = LPM_Fun.generatePassName theNode.tag.value
---						updatePassDDL()
 					)
 					default:	(try(theNode.tag.value.name="LPM_"+word)catch())
 
