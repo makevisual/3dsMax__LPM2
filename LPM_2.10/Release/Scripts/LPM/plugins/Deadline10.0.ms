@@ -51,12 +51,9 @@ LPM_deadlineInfo = LPM_deadlineInfoStr()
 Environment 			= dotNetClass "System.Environment"
 PROGRAMDATA 			= Environment.GetEnvironmentVariable "PROGRAMDATA"
 DLini = ( PROGRAMDATA + @"\Thinkbox\Deadline10\deadline.ini" )
--- if doesFileExist DLini then ( LPM_deadlineInfo.dl_NetworkRoot = ( getinisetting dlini "Deadline" "NetworkRoot" ) )
 
 -- Back to hard coded because of locked and bad ini file from aws thinkbox
---LPM_deadlineInfo.dl_NetworkRoot = (getUserProp LPM_Root "DeadlineRepository")
 LPM_deadlineInfo.dl_NetworkRoot = LPM_Root.deadlinePath
-
 
 -- This used to be hard coded, now it runs off of the deadline ini file
 LPM_deadlineInfo.dl_fnScript = ( LPM_deadlineInfo.dl_NetworkRoot + @"\submission\3dsmax\Main\SubmitMaxToDeadline_Functions.ms" )
@@ -195,14 +192,6 @@ struct LPM_DeadlineAPI
 				LPM_Fun.SetIni "Deadline Settings" "FrameBufferMode"  				LPM_deadlineInfo.sticky_frameBufferMode
 				LPM_Fun.SetIni "Deadline Settings" "RenderElementsToEXR"  			LPM_deadlineInfo.sticky_renderElementsExr
 				LPM_Fun.SetIni "Deadline Settings" "SubmitAsSuspended"  			LPM_deadlineInfo.sticky_submitAsSuspended
-			)
-
-			-- Gets the location of the currently active deadline
-			fn deadline_getDeadlinePath =
-			(
-				Environment = dotNetClass "System.Environment"
-				deadline_path = Environment.GetEnvironmentVariable "deadline_path"
-				return deadline_path
 			)
 
 			-- Toggle visibility of the UI items within this function
@@ -924,6 +913,7 @@ struct LPM_DeadlineAPI
 	 				then ( idiotCheck_skip() )
  					else ( idiotCheck_run() )
  					
+-- TODO: Relink Idiot checks 					
 --	 				if LPM_treeview_rollout.skipIdiotChecks.checked
 --	 				then ( idiotCheck_skip() )
 -- 					else ( idiotCheck_run() )

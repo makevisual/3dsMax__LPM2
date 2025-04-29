@@ -5,6 +5,7 @@
 global LPM_renderAPI
 global LPM_NetworkPlugins=#()
 global LPM_Fun
+global LPM_FunDeadline
 global LPM_Root
 global LPM_treeview_rollout
 global LPM_RenderRo

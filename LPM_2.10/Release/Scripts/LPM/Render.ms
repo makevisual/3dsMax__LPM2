@@ -1348,7 +1348,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 	---- Begin render saftey try Catch Block ----
 	recoveryException = #none	
---	try(
+	try(
 
 		-- Store if the render dialog is opened, and close if open
 		RndDialogOpened = false
@@ -1403,10 +1403,10 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 		-- For testing recovery
 		-- throw(recoveryException = #prerender)
---	)
---	catch(recoveryException = #prerender)
+	)
+	catch(recoveryException = #prerender)
 
---	try(
+	try(
 		-- Render calls for #local and #preview
 		with defaultAction #logmsg
 		(
@@ -1434,8 +1434,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			-- For testing recovery
 			--throw(recoveryException = #render)
 		)
---	)
---	catch(recoveryException = #render)
+	)
+	catch(recoveryException = #render)
 
 	if recoveryException != #none
 	then ( messagebox("An error has occured in LPM during "+ recoveryException + "\nAttempting to restore the scene."))

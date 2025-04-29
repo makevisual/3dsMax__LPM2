@@ -14,6 +14,7 @@ then (
 	filein (LPM_Dir+"CA.ms")
 	filein (LPM_Dir+"output_paths.ms") 		-- Added by Aaron Dabelow
 	filein (LPM_Dir+"functions.ms")
+	filein (LPM_Dir+"functions_deadline.ms")-- Added by Aaron Dabelow
 	filein (LPM_Dir+"render.ms")
 	filein (LPM_Dir+"rcMenus.ms")
 	filein (LPM_Dir+"LPM_SMTDSettings.ms") 	-- Added by Aaron Dabelow

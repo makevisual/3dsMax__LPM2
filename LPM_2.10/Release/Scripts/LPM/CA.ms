@@ -11,7 +11,7 @@ version:2
 		deadlinePath type:#string
 		deadlinePathManual type:#string
 		deadlinePathManualEnabled type:#boolean
---		deadlinePathOverridden type:#boolean
+		deadlinePathOverridden type:#boolean
 		fileType type:#string
 		pathString type:#string
 		quietMode type:#boolean default:true
