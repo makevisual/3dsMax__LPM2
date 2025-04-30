@@ -109,9 +109,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 	"Export - After Effects Camera"
 	)
 
- 	dropDownList 		ddl_previewSize 		"" 			pos:[160,32] items:#("10","25","50","75","100","150","200") width:45 -- visible:false-----------------------------------------------------------------------------------------------
-		dropDownList 	ddl_previewType 					pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp") -- visible:false--------------------------------------------------------------------------------------
- 		dropDownList 	ddl_camera 				"" 			pos:[0,32] width:100 items:#("-----------------------") -- visible:false----------------------------------------------------------------------------------------------------------------
+ 	dropDownList 		ddl_camera 				"" 			pos:[0,32] width:100 items:#("-----------------------")
+		dropDownList 	ddl_previewType 					pos:[120,32] width:60 items:#("View", "Selected", "Region", "Crop", "BlowUp")
+ 		dropDownList 	ddl_previewSize 		"" 			pos:[160,32] items:#("10","25","50","75","100","150","200") width:45
+		button  	 	btn_quickScripts 		"" 			pos:[160,70] height:20 width:20 images:#(LPM_iconPath+"bolt.bmp",undefined,1,1,1,1,1,true)
+
 	dotNetControl 		tv 						"TreeView"  pos:[0,(54-33)] align:#left
 	dotNetControl 		dnc_textBoxOutputPath 	"TextBox" 	pos:[0,60] align:#left
 		button 			btn_setRenderDir 		"Set" 		pos:[185,200] height:21 width:20 tooltip:"Sets the render directory"
@@ -1000,10 +1002,10 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 		-- Place each of the objects
 		ddl_camera.pos 					= [0,0]
-		ddl_camera.width 				= amax #(20, (xSize-103))
-		ddl_previewType.pos 			= [ xSize-104, 	ddl_camera.pos[2] ]
-		ddl_previewSize.pos 			= [ xSize-45, 	ddl_camera.pos[2] ]
-
+		ddl_camera.width 				= amax #(20, (xSize-123))
+		ddl_previewType.pos 			= [ xSize-124, 	ddl_camera.pos[2] ]
+		ddl_previewSize.pos 			= [ xSize-65, 	ddl_camera.pos[2] ]
+		btn_quickScripts.pos 			= [ xSize-20, 	ddl_camera.pos[2] ]
 		tv.size 						= dotNetSize
 
 		dnc_textBoxOutputPath.pos 		= [0,yPos+2]
@@ -1304,6 +1306,11 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		)
 
 		LPM_treeview_rollout.updateTV()
+	)
+
+	on btn_quickScripts pressed do
+	(
+		LPM_Fun.quickScripts()
 	)
 
 	on btn_setRenderDir pressed do
