@@ -131,7 +131,7 @@ function preRenderAction_ProductionGlobals =
     else( renderers.current.output_useram = false )
 
     ---- Auto assign the correct deadline limit if deadline has been initialized ----
-    if SMTDSettings.LimitGroupsToUse != undefined 
+    if SMTDSettings != undefined and SMTDSettings.LimitGroupsToUse != undefined 
     then(
         append SMTDSettings.LimitGroupsToUse "v-ray 7"                                  -- adds "v-ray 7" to the list of limits
         SMTDSettings.LimitGroupsToUse = (makeUniqueArray SMTDSettings.LimitGroupsToUse) -- Removes any duplicates from the list

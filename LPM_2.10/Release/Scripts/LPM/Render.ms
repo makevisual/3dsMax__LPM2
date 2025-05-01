@@ -547,17 +547,16 @@ struct LPM_RenderAPI
 
 					-- Default paramaters
 					tmp[2]=it.on
-					tmp[3]=it.baseObject.multiplier
-					tmp[4]=it.color
-					tmp[5]=it.baseObject.castShadows
-					tmp[14]=it.baseObject.affectDiffuse
-					tmp[15]=it.baseObject.affectSpecular
+--					tmp[5]=it.baseObject.castShadows
+--					tmp[14]=it.baseObject.affectDiffuse
+--					tmp[15]=it.baseObject.affectSpecular
 					tmp[20]=it.isHidden
 					tmp[21]=it.enabled
 					
 					-- Attempt to modify lights based on engine
 					if ( classof(it) == VRayLight ) then
 					(
+						tmp[3]=it.baseObject.multiplier
 						tmp[6]=it.baseObject.affect_diffuse  		
 						tmp[7]=it.baseObject.affect_specular 		
 						tmp[8]=it.baseObject.affect_reflections  	
@@ -565,14 +564,23 @@ struct LPM_RenderAPI
 						tmp[18]=it.baseObject.texmap_on 			
 						tmp[13]=it.baseObject.castShadows 			
 						tmp[19]=it.baseObject.color_mode
-						tmp[22]=it.baseObject.invisible
-
-						
+						tmp[22]=it.baseObject.invisible						
 					)
-					else
+					-- TODO: soring and restoring vray sun lights is causing errors, disabling override for them for now
+					-- VraySun objects do not have all the same properties as a standard vray light
+					if ( classof(it) == VRaySun ) then
 					(
-						tmp[16]=it.baseObject.projectorMap 			
-						tmp[17]=it.baseObject.projector 			
+						-- print("Storing Vray Sun")
+						-- tmp[6]=it.baseObject.affect_diffuse  		
+						-- tmp[7]=it.baseObject.affect_specular 		
+						-- tmp[19]=it.baseObject.color_mode
+						-- tmp[22]=it.baseObject.invisible		
+					)
+					if (classof(it) != VRayLight) and (classof(it) != VRaySun) then
+					(
+						try( tmp[4]=it.color 						)catch(print" problem storting light ")
+						try( tmp[16]=it.baseObject.projectorMap 	)catch(print" problem storting light ")
+						try( tmp[17]=it.baseObject.projector 		)catch(print" problem storting light ")
 					)
 
 					tmp
@@ -1122,13 +1130,12 @@ struct LPM_RenderAPI
 					theNode.on=it[2]
 					theNode.isHidden = it[20]
 					theNode.enabled = it[21]
-					theNode.baseObject.multiplier=it[3]
-					theNode.color=it[4]
-					theNode.baseObject.castShadows=it[5]
+					-- theNode.baseObject.castShadows=it[5]
 
 					-- Attempt to modify lights based on engine
 					if ( classof(theNode) == VRayLight ) then
 					(
+						theNode.baseObject.multiplier=it[3]
 						theNode.baseObject.affect_diffuse=it[6]
 						theNode.baseObject.affect_specular=it[7]
 						theNode.baseObject.affect_reflections=it[8]
@@ -1136,14 +1143,26 @@ struct LPM_RenderAPI
 						theNode.baseObject.texmap_on=it[18]
 						theNode.baseObject.invisible=it[22]
 					)
-					else 
+					
+					-- Added handling for vray sun nodes
+					-- TODO: soring and restoring vray sun lights is causing errors, disabling override for them for now
+					else if ( classof(theNode) == VRaySun ) then
 					(
-						theNode.baseObject.projectorMap=it[16]
-						theNode.baseObject.projector=it[17]
+						-- print("Restoring Vray Sun")
+						-- it.baseObject.affect_diffuse  			= tmp[6]
+						-- it.baseObject.affect_specular 			= tmp[7]
+						-- it.baseObject.color_mode 				= tmp[19]
+						-- it.baseObject.invisible		 			= tmp[22]
+					)
+					if (classof(it) != VRayLight) and (classof(it) != VRaySun) then
+					(
+						try( theNode.color=it[4]    					)catch()--print" problem restorting light ")
+						try( theNode.baseObject.projectorMap=it[16]    	)catch()--print" problem restorting light ")
+						try( theNode.baseObject.projector=it[17]    	)catch()--print" problem restorting light ")
+						try( theNode.baseObject.affectDiffuse=it[14]   	)catch()--print" problem restorting light ")
+						try( theNode.baseObject.affectSpecular=it[15]   )catch()--print" problem restorting light ")
 					)
 					-- Default paramaters
-					theNode.baseObject.affectDiffuse=it[14]
-					theNode.baseObject.affectSpecular=it[15]
 				)
 
 				--Generic Nodes
@@ -1348,7 +1367,7 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 	---- Begin render saftey try Catch Block ----
 	recoveryException = #none	
-	try(
+--	try(
 
 		-- Store if the render dialog is opened, and close if open
 		RndDialogOpened = false
@@ -1403,10 +1422,10 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 
 		-- For testing recovery
 		-- throw(recoveryException = #prerender)
-	)
-	catch(recoveryException = #prerender)
+--	)
+--	catch(recoveryException = #prerender)
 
-	try(
+--	try(
 		-- Render calls for #local and #preview
 		with defaultAction #logmsg
 		(
@@ -1434,8 +1453,8 @@ fn LPM_renderPass thePass renderType theShot:undefined=
 			-- For testing recovery
 			--throw(recoveryException = #render)
 		)
-	)
-	catch(recoveryException = #render)
+--	)
+--	catch(recoveryException = #render)
 
 	if recoveryException != #none
 	then ( messagebox("An error has occured in LPM during "+ recoveryException + "\nAttempting to restore the scene."))
