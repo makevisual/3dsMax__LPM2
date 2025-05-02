@@ -29,5 +29,7 @@ def countlines(start, lines=0, header=True, begin_start=None):
 
     return lines
 
-countlines(R"C:\Users\AaronDabelow\Documents\GitHub\3dsMax__LPM2\LPM_2.10\Release\Scripts\LPM")
-countlines(R"U:\Make_Tools\LPM2\LPM_2.10.3\Release\Scripts\LPM")
+#countlines(R"C:\Users\AaronDabelow\Documents\GitHub\3dsMax__LPM2\LPM_2.10\Release\Scripts\LPM")
+#countlines(R"U:\Make_Tools\LPM2\LPM_2.10.3\Release\Scripts\LPM")
+countlines(R"C:\Users\theon\OneDrive\Documents\GitHub\3dsMax__LPM2\LPM_2.9.2")
+countlines(R"C:\Users\theon\OneDrive\Documents\GitHub\3dsMax__LPM2\LPM_2.10")

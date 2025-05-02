@@ -193,10 +193,12 @@ function makeRenderElements =
 
 	for id in elements do 									-- go through the list of members of the struct
 	(
-		curElementFunction = (getProperty elementsStr id)	-- Retrive the function out of the struct
-		curElement = ( curElementFunction() )				-- Execute the function, and assign it to curElement
+		try(
+			curElementFunction = (getProperty elementsStr id)	-- Retrive the function out of the struct
+			curElement = ( curElementFunction() )				-- Execute the function, and assign it to curElement
 
-		append newElements curElement
+			append newElements curElement
+		)catch(print("LPM - Unable to create render element - "+(id as string)))
 	)
 
 	qsort newElements sortByElementName 					-- Alphabetize the names 

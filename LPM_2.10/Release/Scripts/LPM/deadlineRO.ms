@@ -23,7 +23,7 @@ rollout LPM_RenderRo "Deadline Settings Dialog" width:400 height:150
 	-- Retrieves the deadline environment variable - set through deadline monitor
 	fn getDeadlineAutomaticPath =
 	(
-		return LPM_FunDeadline.LPM_FunDeadline()
+		return LPM_FunDeadline.deadline_GetRepoPath()
 --		return (dotNetClass "System.Environment").GetEnvironmentVariable "DEADLINE_CUSTOM_PATH"
 	)
 
@@ -31,8 +31,8 @@ rollout LPM_RenderRo "Deadline Settings Dialog" width:400 height:150
 	fn setRepositoryAutomatic =
 	(
 		-- Update Data
-		LPM_Root.deadlinePathManualEnabled 	= false 								-- Set override enabled / disabled
-		LPM_Root.deadlinePath 				= LPM_FunDeadline.LPM_FunDeadline() 	-- Gets the automatic Deadline Path
+		LPM_Root.deadlinePathManualEnabled 	= false 									-- Set override enabled / disabled
+		LPM_Root.deadlinePath 				= LPM_FunDeadline.deadline_GetRepoPath()	-- Gets the automatic Deadline Path
 
 		-- Update UI
 		chk_automatic.checked 				= true

@@ -169,7 +169,7 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "Shot"
 		getIconFromBitmap "ShotOff"
 		getIconFromBitmap "ShotRoot"
-		getIconFromBitmap "missing" --"xrefProps"
+		getIconFromBitmap "xrefOn" --"xrefProps"
 		getIconFromBitmap "xrefOn"
 		getIconFromBitmap "xrefOff"
 		getIconFromBitmap "CommonOff"
@@ -187,9 +187,9 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 		getIconFromBitmap "missing" --"Node_group"
 		getIconFromBitmap "missing"
 		getIconFromBitmap "missing"
-		getIconFromBitmap "missing" --"xrefObjProps"
-		getIconFromBitmap "missing" --"xrefObjPropsOff"
-		getIconFromBitmap "missing" --"xrefPropsOff"
+		getIconFromBitmap "xrefOn" 	--"xrefObjProps"
+		getIconFromBitmap "xrefOff" --"xrefObjPropsOff"
+		getIconFromBitmap "xrefOff" --"xrefPropsOff"
 		getIconFromBitmap "missing"
 		getIconFromBitmap "missing"
 		getIconFromBitmap "missing"
@@ -2564,7 +2564,7 @@ if freshOpen then
 	-- Set studio defaults
 	LPM_Root.deadlinePathOverridden = false 																								-- Sets Deadline pathing to Automatic
 --	try( LPM_Root.deadlinePath 		= (dotNetClass "System.Environment").GetEnvironmentVariable "DEADLINE_REPOSITORY_PATH")catch() 	 		-- Gets the automatic Deadline Path
-	LPM_Root.deadlinePath 			= LPM_FunDeadline.LPM_FunDeadline() 	 																-- Gets the automatic Deadline Path
+	LPM_Root.deadlinePath 			= LPM_FunDeadline.deadline_GetRepoPath()	 															-- Gets the automatic Deadline Path
 	LPM_Root.pathString 			= "$Shot\\$Pass\\$Pass" 																				-- Set Fileoutput Path Token String to default
 	LPM_Root.renderType 			= 3 																									-- Force to shots
 	LPM_Root.rootdir 				= (getDir #renderoutput )+"\\"  																		-- Sets the root dir
