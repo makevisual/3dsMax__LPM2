@@ -23,7 +23,8 @@ rollout LPM_RenderRo "Deadline Settings Dialog" width:400 height:150
 	-- Retrieves the deadline environment variable - set through deadline monitor
 	fn getDeadlineAutomaticPath =
 	(
-		return (dotNetClass "System.Environment").GetEnvironmentVariable "DEADLINE_CUSTOM_PATH"
+		return LPM_FunDeadline.LPM_FunDeadline()
+--		return (dotNetClass "System.Environment").GetEnvironmentVariable "DEADLINE_CUSTOM_PATH"
 	)
 
 	-- Set all UI and Data properties if the automatic repository is chosen
