@@ -30,5 +30,5 @@ then (
 	-- TODO: Consider moving these to CA.ms on rootCA
 	setUserProp LPM_Root "DeadlineRepository" @"N:\DeadlineRepository10"    -- Set your deadline Repository
 	setUserProp LPM_Root "LPM_VersionNumber" LPM_VersionNumber    			-- Set your LPM Version Number
-)
-else()
+
+)else()

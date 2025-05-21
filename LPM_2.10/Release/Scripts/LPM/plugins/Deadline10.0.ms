@@ -908,10 +908,19 @@ struct LPM_DeadlineAPI
 	 				ui_loadStickySettings()
 	 				ui_update()
 
+	 				print("LPM_IdiotChecksEnabled - " + (LPM_IdiotChecksEnabled as string))
 	 				-- Perform Idiot checks, or skip if enabled
 	 				if LPM_IdiotChecksEnabled = False
-	 				then ( idiotCheck_skip() )
- 					else ( idiotCheck_run() )
+	 				then
+	 				(
+	 					print "IC SKIP"
+	 					idiotCheck_skip()
+	 				)
+ 					else
+ 					(
+ 						print "IC SKIP"
+ 						idiotCheck_run()
+ 					)
  					
 -- TODO: Relink Idiot checks 					
 --	 				if LPM_treeview_rollout.skipIdiotChecks.checked
