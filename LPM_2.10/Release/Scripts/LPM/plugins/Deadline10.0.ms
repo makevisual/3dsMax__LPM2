@@ -908,24 +908,10 @@ struct LPM_DeadlineAPI
 	 				ui_loadStickySettings()
 	 				ui_update()
 
-	 				print("LPM_IdiotChecksEnabled - " + (LPM_IdiotChecksEnabled as string))
 	 				-- Perform Idiot checks, or skip if enabled
-	 				if LPM_IdiotChecksEnabled = False
-	 				then
-	 				(
-	 					print "IC SKIP"
-	 					idiotCheck_skip()
-	 				)
- 					else
- 					(
- 						print "IC SKIP"
- 						idiotCheck_run()
- 					)
- 					
--- TODO: Relink Idiot checks 					
---	 				if LPM_treeview_rollout.skipIdiotChecks.checked
---	 				then ( idiotCheck_skip() )
--- 					else ( idiotCheck_run() )
+	 				if LPM_IdiotChecksEnabled == False
+	 				then ( idiotCheck_skip() )
+ 					else ( idiotCheck_run() )
  	
 	 				-- Move Log to bottom of Dialog
 	 				submitLog.pos=[ 3 , 630 ]

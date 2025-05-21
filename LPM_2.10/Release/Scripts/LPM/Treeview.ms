@@ -1755,8 +1755,6 @@ rollout LPM_treeview_rollout ( "LPM v" + LPM_VersionNumber )
 
 	on tv MouseUp arg do
 	(
-		print "click"
-
 		nTime=timestamp()
 		delta=nTime - sTime
 		sTime=0 --Assume its an invalid click, if its valid we will the timestamp later
