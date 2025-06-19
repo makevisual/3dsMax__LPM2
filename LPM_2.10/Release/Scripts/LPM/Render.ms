@@ -546,7 +546,8 @@ struct LPM_RenderAPI
 					for i=2 to 22 do(tmp[i] = undefined)
 
 					-- Default paramaters
-					tmp[2]=it.on
+
+					try(tmp[2]=it.on)catch() --TODO: handling for vraySun, IES lights, and Luminaries 
 --					tmp[5]=it.baseObject.castShadows
 --					tmp[14]=it.baseObject.affectDiffuse
 --					tmp[15]=it.baseObject.affectSpecular
@@ -1127,7 +1128,7 @@ struct LPM_RenderAPI
 				for it in lightBackup do
 				(
 					theNode=it[1]
-					theNode.on=it[2]
+					try(theNode.on=it[2])catch() --TODO: handling for vraySun, IES lights, and Luminaries 
 					theNode.isHidden = it[20]
 					theNode.enabled = it[21]
 					-- theNode.baseObject.castShadows=it[5]
